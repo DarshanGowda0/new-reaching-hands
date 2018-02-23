@@ -12,6 +12,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestore, AngularFirestoreModule } from 'angularfire2/firestore';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
@@ -27,8 +28,8 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    CommonModule
-
+    CommonModule,
+    CoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
