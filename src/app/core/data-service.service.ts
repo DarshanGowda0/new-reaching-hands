@@ -21,4 +21,10 @@ export class DataService {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
 
+  getItems(subCategory: string, queryString: string) {
+    return this.firestore.collection<Item>(`items`, ref => ref.where('subCategory', '==', subCategory)
+      .where('itemName', '>', `${queryString}`).where('itemName', '<', `${queryString}z`)
+      .orderBy('itemName')).valueChanges();
+  }
+
 }

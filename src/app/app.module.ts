@@ -15,12 +15,14 @@ import { CommonModule } from '@angular/common';
 import { CoreModule } from './core/core.module';
 import { InventoryComponent } from './components/inventory/inventory/inventory.component';
 import { AddNewComponent } from './components/common/add-new/add-new.component';
+import { SubCatListingComponent } from './components/inventory/sub-cat-listing/sub-cat-listing.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     InventoryComponent,
-    AddNewComponent
+    AddNewComponent,
+    SubCatListingComponent
   ],
   imports: [
     BrowserModule,
