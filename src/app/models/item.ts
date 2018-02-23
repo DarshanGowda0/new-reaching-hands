@@ -6,4 +6,5 @@ export interface Item {
     unit: string;
     category: string;
     subCategory: string;
+    addedBy: string;
 }

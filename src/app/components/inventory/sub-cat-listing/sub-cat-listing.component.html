@@ -6,8 +6,8 @@
   <mat-grid-list cols="{{nColumns}}" rowHeight="350px" (window:resize)="onResize($event)">
     <mat-grid-tile *ngFor="let item of items | async">
       <div class="ui raised card">
-        <div class="image" (click)="onTap(item.itemIid,item.unit)">
-          <img src="assets/tom.jpg" width="200px" height="200px" (click)="onTap(item.itemId, item.unit)">
+        <div class="image" (click)="onTap(item.itemId)">
+          <img src="assets/tom.jpg" width="200px" height="200px" (click)="onTap(item.itemId)">
         </div>
         <div class="content">
 
