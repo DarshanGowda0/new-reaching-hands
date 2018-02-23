@@ -1,0 +1,8 @@
+.add-container {
+    display: flex;
+    flex-direction: column;
+}
+  
+.add-container > * {
+    width: 100%;
+}

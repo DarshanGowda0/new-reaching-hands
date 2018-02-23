@@ -13,10 +13,14 @@ import { AngularFirestore, AngularFirestoreModule } from 'angularfire2/firestore
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CoreModule } from './core/core.module';
+import { InventoryComponent } from './components/inventory/inventory/inventory.component';
+import { AddNewComponent } from './components/common/add-new/add-new.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    InventoryComponent,
+    AddNewComponent
   ],
   imports: [
     BrowserModule,
