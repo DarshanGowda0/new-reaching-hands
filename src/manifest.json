@@ -1,0 +1,20 @@
+{
+    "short_name": "RH",
+    "name": "Reaching Hands",
+    "start_url": "/",
+
+    "theme_color": "#303f9f",
+    "background_color": "#ffffff",
+
+    "display": "standalone",
+    "orientation": "portrait",
+
+    "icons": [
+        {
+            "src": "/assets/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+
+}
