@@ -64,7 +64,8 @@ export class AddNewComponent implements OnInit {
       'lastModified': dateCreated,
       'unit': this.selectedUnit,
       'category': category,
-      'subCategory': this.selectedCategory
+      'subCategory': this.selectedCategory,
+      'addedBy': ''
     };
 
     if (item.itemName === undefined || this.selectedCategory === undefined || this.selectedUnit === undefined) {

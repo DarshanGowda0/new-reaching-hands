@@ -16,13 +16,17 @@ import { CoreModule } from './core/core.module';
 import { InventoryComponent } from './components/inventory/inventory/inventory.component';
 import { AddNewComponent } from './components/common/add-new/add-new.component';
 import { SubCatListingComponent } from './components/inventory/sub-cat-listing/sub-cat-listing.component';
+import { ItemDetailsComponent } from './components/inventory/item-details/item-details.component';
+import { AddLogComponent } from './components/inventory/add-log/add-log.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     InventoryComponent,
     AddNewComponent,
-    SubCatListingComponent
+    SubCatListingComponent,
+    ItemDetailsComponent,
+    AddLogComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +42,9 @@ import { SubCatListingComponent } from './components/inventory/sub-cat-listing/s
     CoreModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    AddLogComponent
+  ]
 })
 export class AppModule { }
