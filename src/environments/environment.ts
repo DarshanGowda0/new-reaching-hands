@@ -6,11 +6,11 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyCx4Mh6FJQtGfGa94c7a8dTldQY962cr9E',
-    authDomain: 'newhome-285d1.firebaseapp.com',
-    databaseURL: 'https://newhome-285d1.firebaseio.com',
-    projectId: 'newhome-285d1',
-    storageBucket: 'newhome-285d1.appspot.com',
-    messagingSenderId: '18882506083'
+    apiKey: 'AIzaSyCMdxg0n7zzs_56lHQkUxdz_QL7KOYe-BU',
+    authDomain: 'reaching-hands-e2737.firebaseapp.com',
+    databaseURL: 'https://reaching-hands-e2737.firebaseio.com',
+    projectId: 'reaching-hands-e2737',
+    storageBucket: 'reaching-hands-e2737.appspot.com',
+    messagingSenderId: '756626350318'
   }
 };
