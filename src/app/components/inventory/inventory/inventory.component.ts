@@ -8,6 +8,10 @@ import { Router } from '@angular/router';
 })
 export class InventoryComponent implements OnInit {
 
+  category = [
+    'Assets', 'Groceries', 'Toiletries', 'Stationary', 'Perishablegoods', 'Miscellaneous', 'Genericmeds'
+  ];
+
   constructor(private router: Router) { }
 
   ngOnInit() {

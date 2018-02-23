@@ -67,13 +67,19 @@ export class AddNewComponent implements OnInit {
       'subCategory': this.selectedCategory
     };
 
-    this.dataService.addItem(item).then(() => {
-      console.log('added item succesfully');
+    if (item.itemName === undefined || this.selectedCategory === undefined || this.selectedUnit === undefined) {
+      alert('fill all details');
       // TODO: add toast or alert here
-      this.router.navigate(['']);
-    }).catch(err => {
-      console.error('error adding item', err);
-    });
+    } else {
+      this.dataService.addItem(item).then(() => {
+        console.log('added item succesfully');
+        // TODO: add toast or alert here
+        this.router.navigate(['']);
+      }).catch(err => {
+        console.error('error adding item', err);
+      });
+    }
+
 
   }
 
