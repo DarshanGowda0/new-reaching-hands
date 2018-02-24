@@ -1,0 +1,15 @@
+<mat-tab-group>
+  <mat-tab label="Vehicle" class="inner-content">
+    <app-sub-cat-listing [subCategory]="category[0]"></app-sub-cat-listing>
+  </mat-tab>
+  <mat-tab label="Campus" class="inner-content">
+    <app-sub-cat-listing [subCategory]="category[1]"></app-sub-cat-listing>
+  </mat-tab>
+  <mat-tab label="Monthly Bills" class="inner-content">
+    <app-sub-cat-listing [subCategory]="category[2]"></app-sub-cat-listing>
+  </mat-tab>
+</mat-tab-group>
+
+<button mat-fab class="fab-button" (click)="onAdd()">
+  <mat-icon>add</mat-icon>
+</button>
