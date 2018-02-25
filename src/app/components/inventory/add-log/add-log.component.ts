@@ -18,7 +18,7 @@ export class AddLogComponent implements OnInit {
   item: Item;
   logFormControl = new FormControl();
 
-  commonsOptions = ['Boys', 'Girls', 'Common'];
+  commonsOptions = ['Boys', 'Girls', 'Common', 'HomeSchool'];
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   constructor(public dialogRef: MatDialogRef<AddLogComponent>,
