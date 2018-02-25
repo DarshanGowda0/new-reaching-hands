@@ -52,7 +52,8 @@ import { MaintenanceComponent } from './components/maintenance/maintenance/maint
   providers: [],
   bootstrap: [AppComponent],
   entryComponents: [
-    AddLogComponent
+    AddLogComponent,
+    AddLog1Component
   ]
 })
 export class AppModule { }
