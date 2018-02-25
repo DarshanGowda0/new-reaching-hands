@@ -13,7 +13,7 @@ import { Item } from '../../../models/item';
 })
 export class AddLog1Component implements OnInit {
 
-  itemLog: ItemLog1 = {} as ItemLog1;
+  itemLog1: ItemLog1 = {} as ItemLog1;
   item: Item;
   logFormControl = new FormControl();
 
@@ -23,8 +23,8 @@ export class AddLog1Component implements OnInit {
   constructor(public dialogRef: MatDialogRef<AddLog1Component>,
     @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
     this.item = data.item;
-    if (data.itemLog) {
-      this.itemLog = data.itemLog;
+    if (data.itemLog1) {
+      this.itemLog1 = data.itemLog1;
     }
   }
 
@@ -33,23 +33,25 @@ export class AddLog1Component implements OnInit {
 
   onAdd() {
     const tempItemLog: ItemLog1 = {
-      'logId': this.itemLog.logId ? this.itemLog.logId : this.dataService.generateId(),
+      'logId': this.itemLog1.logId ? this.itemLog1.logId : this.dataService.generateId(),
       'date': this.dataService.getTimeStamp(),
-      'quantity': this.itemLog.quantity,
-      'selectedCommons': this.itemLog.selectedCommons,
-      'cost': this.itemLog.cost,
-      'remarks': this.itemLog.remarks,
-      'logType': this.itemLog.logType,
+      'quantity': Number(this.itemLog1.quantity),
+      'selectedCommons': this.itemLog1.selectedCommons,
+      'cost': Number(this.itemLog1.cost),
+      'remarks': this.itemLog1.remarks,
+      'logType': this.itemLog1.logType,
       'category': this.item.category,
       'subCategory': this.item.subCategory,
       'itemId': this.item.itemId,
       'addedBy': this.dataService.uid,
-      'name': this.itemLog.name,
-      'servicer': this.itemLog.servicer,
-      'billNumber': this.itemLog.billNumber,
-      'serviceDate': this.itemLog.serviceDate
+      'name': this.itemLog1.name,
+      'servicer': this.itemLog1.servicer,
+      // 'billNumber': this.itemLog1.billNumber,
+      'billNumber': 'dsfdsfs',
+      'serviceDate': this.itemLog1.serviceDate
     };
-    this.dataService.addLog(tempItemLog).then(() => {
+    console.log('check', tempItemLog);
+    this.dataService.addLog1(tempItemLog).then(() => {
       console.log('added log succesfully');
     }).catch(err => {
       console.error('error while adding log', err);

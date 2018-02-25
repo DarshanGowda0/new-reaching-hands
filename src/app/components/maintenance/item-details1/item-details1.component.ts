@@ -7,6 +7,7 @@ import { DataService } from '../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../../../models/item';
 import { AddLog1Component } from '../add-log1/add-log1.component';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-item-details1',
@@ -16,8 +17,10 @@ import { AddLog1Component } from '../add-log1/add-log1.component';
 export class ItemDetails1Component implements OnInit, AfterViewInit {
 
   item: Item = {} as Item;
+  currentQuantity = 0;
 
   displayedColumns = ['serviceDate', 'name', 'servicer', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
+  logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,11 +38,27 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataService.getLogsOfItem(this.item.itemId).subscribe(val => {
+    this.dataService.getLogsOfItem1(this.item.itemId).pipe(
+      tap(val => {
+        this.currentQuantity = this.getCurrentQuantity(val);
+      })
+    ).subscribe(val => {
       this.dataSource = new MatTableDataSource(val);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
+  }
+
+  getCurrentQuantity(val) {
+    let quantity = 0;
+    val.forEach(element => {
+      if (element.logType === this.logTypeOptions[1]) {
+        quantity = quantity - element.quantity;
+      } else {
+        quantity = quantity + element.quantity;
+      }
+    });
+    return quantity;
   }
 
   applyFilter(filterValue: string) {
@@ -64,7 +83,7 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   }
 
   onDelete(logId) {
-    this.dataService.deleteLogById(logId).then(() => {
+    this.dataService.deleteLogById1(logId).then(() => {
       console.log('deleted succesfully');
     }).catch(err => {
       console.error('error in deleting', err);
@@ -72,11 +91,11 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
     });
   }
 
-  onEdit(itemLog) {
+  onEdit(itemLog1) {
     const dialogRef = this.dialog.open(AddLog1Component, {
       width: '450px',
       data: {
-        'itemLog': itemLog,
+        'itemLog1': itemLog1,
         'item': this.item
       },
       disableClose: true
