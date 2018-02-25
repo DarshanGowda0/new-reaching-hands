@@ -7,6 +7,7 @@ import { DataService } from '../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../../../models/item';
 import { AddLogComponent } from '../add-log/add-log.component';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-item-details',
@@ -16,8 +17,10 @@ import { AddLogComponent } from '../add-log/add-log.component';
 export class ItemDetailsComponent implements OnInit, AfterViewInit {
 
   item: Item = {} as Item;
+  currentQuantity = 0;
 
   displayedColumns = ['date', 'quantity', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
+  logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,11 +38,27 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataService.getLogsOfItem(this.item.itemId).subscribe(val => {
+    this.dataService.getLogsOfItem(this.item.itemId).pipe(
+      tap(val => {
+        this.currentQuantity = this.getCurrentQuantity(val);
+      })
+    ).subscribe(val => {
       this.dataSource = new MatTableDataSource(val);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
+  }
+
+  getCurrentQuantity(val) {
+    let quantity = 0;
+    val.forEach(element => {
+      if (element.logType === this.logTypeOptions[1]) {
+        quantity = quantity - element.quantity;
+      } else {
+        quantity = quantity + element.quantity;
+      }
+    });
+    return quantity;
   }
 
   applyFilter(filterValue: string) {
