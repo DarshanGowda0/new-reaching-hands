@@ -13,7 +13,7 @@ import { AddLog1Component } from '../add-log1/add-log1.component';
   templateUrl: './item-details1.component.html',
   styleUrls: ['./item-details1.component.css']
 })
-export class ItemDetails1Component implements OnInit {
+export class ItemDetails1Component implements OnInit, AfterViewInit {
 
   item: Item = {} as Item;
 
