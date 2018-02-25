@@ -18,7 +18,7 @@ export class AddLogComponent implements OnInit {
   item: Item;
   logFormControl = new FormControl();
 
-  commonsOptions = ['Boys', 'Girls', 'Common'];
+  commonsOptions = ['Boys', 'Girls', 'Common', 'HomeSchool'];
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   constructor(public dialogRef: MatDialogRef<AddLogComponent>,
@@ -34,11 +34,11 @@ export class AddLogComponent implements OnInit {
 
   onAdd() {
     const tempItemLog: ItemLog = {
-      'logId': this.itemLog.itemId ? this.itemLog.itemId : this.dataService.generateId(),
+      'logId': this.itemLog.logId ? this.itemLog.logId : this.dataService.generateId(),
       'date': this.dataService.getTimeStamp(),
-      'quantity': this.itemLog.quantity,
+      'quantity': Number(this.itemLog.quantity),
       'selectedCommons': this.itemLog.selectedCommons,
-      'cost': this.itemLog.cost,
+      'cost': Number(this.itemLog.cost),
       'remarks': this.itemLog.remarks,
       'logType': this.itemLog.logType,
       'category': this.item.category,
@@ -47,7 +47,7 @@ export class AddLogComponent implements OnInit {
       'addedBy': this.dataService.uid
     };
     this.dataService.addLog(tempItemLog).then(() => {
-      console.log('added log succesfully');
+      console.log('added log succesfully ', tempItemLog);
     }).catch(err => {
       console.error('error while adding log', err);
       alert('error adding log');

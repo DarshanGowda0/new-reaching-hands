@@ -1,25 +1,25 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog } from '@angular/material';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { ItemLog } from '../../../models/item-log';
+import { ItemLog1 } from '../../../models/item-log';
 import { Observable } from 'rxjs/Observable';
 import { DataService } from '../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../../../models/item';
-import { AddLogComponent } from '../add-log/add-log.component';
+import { AddLog1Component } from '../add-log1/add-log1.component';
 import { tap, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-item-details',
-  templateUrl: './item-details.component.html',
-  styleUrls: ['./item-details.component.css']
+  selector: 'app-item-details1',
+  templateUrl: './item-details1.component.html',
+  styleUrls: ['./item-details1.component.css']
 })
-export class ItemDetailsComponent implements OnInit, AfterViewInit {
+export class ItemDetails1Component implements OnInit, AfterViewInit {
 
   item: Item = {} as Item;
   currentQuantity = 0;
 
-  displayedColumns = ['date', 'quantity', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
+  displayedColumns = ['serviceDate', 'name', 'servicer', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
@@ -38,7 +38,7 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataService.getLogsOfItem(this.item.itemId).pipe(
+    this.dataService.getLogsOfItem1(this.item.itemId).pipe(
       tap(val => {
         this.currentQuantity = this.getCurrentQuantity(val);
       })
@@ -68,7 +68,7 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
   }
 
   addNewLog() {
-    const dialogRef = this.dialog.open(AddLogComponent, {
+    const dialogRef = this.dialog.open(AddLog1Component, {
       width: '450px',
       data: {
         'itemLog': undefined,
@@ -83,7 +83,7 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
   }
 
   onDelete(logId) {
-    this.dataService.deleteLogById(logId).then(() => {
+    this.dataService.deleteLogById1(logId).then(() => {
       console.log('deleted succesfully');
     }).catch(err => {
       console.error('error in deleting', err);
@@ -91,11 +91,11 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onEdit(itemLog) {
-    const dialogRef = this.dialog.open(AddLogComponent, {
+  onEdit(itemLog1) {
+    const dialogRef = this.dialog.open(AddLog1Component, {
       width: '450px',
       data: {
-        'itemLog': itemLog,
+        'itemLog1': itemLog1,
         'item': this.item
       },
       disableClose: true
@@ -105,5 +105,6 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
       console.log('The dialog was closed =>', result);
     });
   }
+
 
 }
