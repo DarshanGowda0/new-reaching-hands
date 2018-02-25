@@ -4,6 +4,7 @@ import * as firebase from 'firebase';
 import { Item } from '../models/item';
 import { AuthService } from './auth.service';
 import { ItemLog } from '../models/item-log';
+import { tap, map } from 'rxjs/operators';
 
 @Injectable()
 export class DataService {

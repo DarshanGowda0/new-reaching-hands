@@ -33,7 +33,7 @@ export class AddLog1Component implements OnInit {
 
   onAdd() {
     const tempItemLog: ItemLog1 = {
-      'logId': this.itemLog.itemId ? this.itemLog.itemId : this.dataService.generateId(),
+      'logId': this.itemLog.logId ? this.itemLog.logId : this.dataService.generateId(),
       'date': this.dataService.getTimeStamp(),
       'quantity': this.itemLog.quantity,
       'selectedCommons': this.itemLog.selectedCommons,
