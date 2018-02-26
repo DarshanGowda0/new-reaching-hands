@@ -27,7 +27,7 @@ export class AddNewComponent implements OnInit {
     {
       name: 'Education',
       category: [
-        'School', 'Extracurricular', 'Tutorials'
+        'School', 'Homeschool', 'Extracurricular', 'Tutorials'
       ]
     },
     {

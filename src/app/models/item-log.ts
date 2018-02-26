@@ -15,7 +15,6 @@ export interface ItemLog1 {
 
     logId: string;
     serviceDate: string;
-    name: string;
     servicer: string;
     quantity: number;
     logType: string; // donation etc
@@ -32,8 +31,10 @@ export interface ItemLog1 {
 export interface ItemLog2 {
     logId: string;
     date: any;
-    quantity: number;
+    startDate: string;
+    endDate: string;
     selectedCommons: string;
+    studentName: string;
     cost: number;
     remarks: string;
     logType: string; // isAdded, isRemoved or isDonated
@@ -44,12 +45,14 @@ export interface ItemLog2 {
 }
 export interface ItemLog3 {
     logId: string;
-    date: any;
-    quantity: number;
+    serviceDate: string;
+    servicer: string;
+    logType: string; // donation etc
     selectedCommons: string;
+    billNumber: string;
     cost: number;
     remarks: string;
-    logType: string; // isAdded, isRemoved or isDonated
+    date: any;
     category: string;
     subCategory: string;
     itemId: string;

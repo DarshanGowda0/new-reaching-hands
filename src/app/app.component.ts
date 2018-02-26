@@ -13,7 +13,7 @@ import { AuthService } from './core/auth.service';
 export class AppComponent implements OnDestroy {
 
   mobileQuery: MediaQueryList;
-  fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance'];
+  fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance', 'AccessControl'];
   private _mobileQueryListener: () => void;
 
   constructor(public auth: AuthService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
