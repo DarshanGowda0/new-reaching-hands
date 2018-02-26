@@ -19,7 +19,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   item: Item = {} as Item;
   currentQuantity = 0;
 
-  displayedColumns = ['serviceDate', 'servicer', 'billNumber' 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
+  displayedColumns = ['serviceDate', 'servicer', 'billNumber', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
@@ -41,6 +41,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
     this.dataService.getLogsOfItem3(this.item.itemId).pipe(
       tap(val => {
         this.currentQuantity = this.getCurrentQuantity(val);
+        console.log(val);
       })
     ).subscribe(val => {
       this.dataSource = new MatTableDataSource(val);
@@ -95,7 +96,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
     const dialogRef = this.dialog.open(AddLog3Component, {
       width: '450px',
       data: {
-        'itemLog3': itemLog,
+        'itemLog': itemLog,
         'item': this.item
       },
       disableClose: true
@@ -104,6 +105,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed =>', result);
     });
+  }
   }
 
 
