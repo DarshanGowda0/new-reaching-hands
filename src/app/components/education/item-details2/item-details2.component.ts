@@ -14,7 +14,7 @@ import { tap, map } from 'rxjs/operators';
   templateUrl: './item-details2.component.html',
   styleUrls: ['./item-details2.component.css']
 })
-export class ItemDetails2Component implements OnInit AfterViewInit {
+export class ItemDetails2Component implements OnInit, AfterViewInit {
 
   item: Item = {} as Item;
   currentQuantity = 0;

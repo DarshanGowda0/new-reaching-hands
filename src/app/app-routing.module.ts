@@ -11,6 +11,7 @@ import { EducationComponent } from './components/education/education/education.c
 import { ServicesComponent } from './components/services/services/services.component';
 import { ItemDetails3Component } from './components/services/item-details3/item-details3.component';
 import { ItemDetails2Component } from './components/education/item-details2/item-details2.component';
+import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,11 @@ const routes: Routes = [
   {
     path: 'Education',
     component: EducationComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'AccessControl',
+    component: AccesscontrolComponent,
     canActivate: [AuthGuard]
   },
   {

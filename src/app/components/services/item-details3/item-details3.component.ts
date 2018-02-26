@@ -96,7 +96,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
     const dialogRef = this.dialog.open(AddLog3Component, {
       width: '450px',
       data: {
-        'itemLog': itemLog,
+        'itemLog3': itemLog,
         'item': this.item
       },
       disableClose: true
@@ -109,4 +109,4 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   }
 
 
-}
+
