@@ -35,7 +35,7 @@ export class AddLog3Component implements OnInit {
     const tempItemLog: ItemLog3 = {
       'logId': this.itemLog3.logId ? this.itemLog3.logId : this.dataService.generateId(),
       'date': this.dataService.getTimeStamp(),
-      'quantity': Number(this.itemLog3.quantity),
+      'cost': Number(this.itemLog3.cost),
       'selectedCommons': this.itemLog3.selectedCommons,
       'remarks': this.itemLog3.remarks,
       'logType': this.itemLog3.logType,
