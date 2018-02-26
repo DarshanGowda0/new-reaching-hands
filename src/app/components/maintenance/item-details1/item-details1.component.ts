@@ -19,7 +19,7 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   item: Item = {} as Item;
   currentQuantity = 0;
 
-  displayedColumns = ['serviceDate', 'servicer', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
+  displayedColumns = ['serviceDate', 'servicer','billNumber', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   dataSource: MatTableDataSource<any>;

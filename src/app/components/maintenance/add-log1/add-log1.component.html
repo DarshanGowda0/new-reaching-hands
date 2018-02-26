@@ -17,6 +17,11 @@
     <input matInput #input placeholder="Enter item quantity" required [(ngModel)]="itemLog1.quantity">
   </mat-form-field>
 
+  <mat-form-field hintLabel="Example: 12345" style="display:block;clear: both;">
+    <input matInput #input placeholder="Enter BillNumber" required [(ngModel)]="itemLog1.billNumber">
+  </mat-form-field>
+
+
 
   <mat-radio-group required [(ngModel)]="itemLog1.selectedCommons" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
     <mat-radio-button *ngFor="let option of commonsOptions" [value]="option" style="margin:2px">
