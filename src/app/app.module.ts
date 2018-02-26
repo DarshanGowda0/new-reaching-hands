@@ -22,6 +22,7 @@ import { ItemDetails1Component } from './components/maintenance/item-details1/it
 import { SubCatListing1Component } from './components/maintenance/sub-cat-listing1/sub-cat-listing1.component';
 import { AddLog1Component } from './components/maintenance/add-log1/add-log1.component';
 import { MaintenanceComponent } from './components/maintenance/maintenance/maintenance.component';
+import { ItemReportComponent } from './components/common/item-report/item-report.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { MaintenanceComponent } from './components/maintenance/maintenance/maint
     ItemDetails1Component,
     SubCatListing1Component,
     AddLog1Component,
-    MaintenanceComponent
+    MaintenanceComponent,
+    ItemReportComponent
   ],
   imports: [
     BrowserModule,
