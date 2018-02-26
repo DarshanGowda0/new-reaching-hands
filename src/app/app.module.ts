@@ -30,6 +30,7 @@ import { SubCatListing3Component } from './components/services/sub-cat-listing3/
 import { ServicesComponent } from './components/services/services/services.component';
 import { AddLog3Component } from './components/services/add-log3/add-log3.component';
 import { ItemDetails3Component } from './components/services/item-details3/item-details3.component';
+import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ItemDetails3Component } from './components/services/item-details3/item-
     SubCatListing3Component,
     ServicesComponent,
     AddLog3Component,
-    ItemDetails3Component
+    ItemDetails3Component,
+    AccesscontrolComponent
   ],
   imports: [
     BrowserModule,
