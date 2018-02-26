@@ -45,8 +45,7 @@ export class AddLog1Component implements OnInit {
       'itemId': this.item.itemId,
       'addedBy': this.dataService.uid,
       'servicer': this.itemLog1.servicer,
-      // 'billNumber': this.itemLog1.billNumber,
-      'billNumber': 'dsfdsfs',
+      'billNumber': this.itemLog1.billNumber,
       'serviceDate': this.itemLog1.serviceDate
     };
     console.log('check', tempItemLog);

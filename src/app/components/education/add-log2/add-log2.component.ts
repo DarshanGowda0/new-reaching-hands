@@ -46,7 +46,7 @@ export class AddLog2Component implements OnInit {
       'addedBy': this.dataService.uid,
       'billNumber': this.itemLog2.billNumber,
       'startDate': this.itemLog2.startDate,
-      'endDate': this.dataService.getTimeStamp()
+      'endDate': this.itemLog2.endDate
     };
     console.log('check', tempItemLog);
     this.dataService.addLog2(tempItemLog).then(() => {

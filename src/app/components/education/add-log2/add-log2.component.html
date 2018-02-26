@@ -12,20 +12,20 @@
     <mat-datepicker touchUi="true" #picker></mat-datepicker>
   </mat-form-field>
 
-  <!-- <mat-form-field>
-    <input matInput [matDatepicker]="picker" placeholder="Choose the End Date" required [(ngModel)]="itemLog2.endDate">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker touchUi="true" #picker></mat-datepicker>
-  </mat-form-field> -->
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker1" placeholder="Choose the End Date" required [(ngModel)]="itemLog2.endDate">
+    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+    <mat-datepicker touchUi="true" #picker1></mat-datepicker>
+  </mat-form-field>
 
 
   <mat-form-field hintLabel="Example: 12345" style="display:block;clear: both;">
     <input matInput #input placeholder="Enter BillNumber" required [(ngModel)]="itemLog2.billNumber">
   </mat-form-field>
 
-  <mat-form-field hintLabel="Example: 12" style="display:block;clear: both;">
-    <span matSuffix>{{item.unit}}</span>
-    <input matInput #input placeholder="Enter item Cost" required [(ngModel)]="itemLog2.cost">
+  <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
+    <span matPrefix>&#8377; </span>
+    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog2.cost">
   </mat-form-field>
 
 
@@ -41,10 +41,8 @@
     </mat-radio-button>
   </mat-radio-group>
 
-  <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
-    <span matPrefix>&#8377; </span>
-    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog2.cost">
-  </mat-form-field>
+  
+
   <mat-form-field style="display:block;clear: both;">
     <textarea matInput placeholder="Remarks" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10" [(ngModel)]="itemLog2.remarks"></textarea>
   </mat-form-field>

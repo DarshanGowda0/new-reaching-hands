@@ -41,11 +41,17 @@
         <mat-cell *matCellDef="let element"> {{element.servicer}} </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="billNumber">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Bill Number </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.billNumber}} </mat-cell>
+      </ng-container>
+
       <!-- cost Column -->
       <ng-container matColumnDef="cost">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Cost </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.cost}} </mat-cell>
       </ng-container>
+
 
       <ng-container matColumnDef="type">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
