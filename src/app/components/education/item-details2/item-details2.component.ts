@@ -1,25 +1,25 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog } from '@angular/material';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { ItemLog1 } from '../../../models/item-log';
+import { ItemLog2 } from '../../../models/item-log';
 import { Observable } from 'rxjs/Observable';
 import { DataService } from '../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../../../models/item';
-import { AddLog1Component } from '../add-log1/add-log1.component';
+import { AddLog2Component } from '../add-log2/add-log2.component';
 import { tap, map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-item-details1',
-  templateUrl: './item-details1.component.html',
-  styleUrls: ['./item-details1.component.css']
+  selector: 'app-item-details2',
+  templateUrl: './item-details2.component.html',
+  styleUrls: ['./item-details2.component.css']
 })
-export class ItemDetails1Component implements OnInit, AfterViewInit {
+export class ItemDetails2Component implements OnInit AfterViewInit {
 
   item: Item = {} as Item;
   currentQuantity = 0;
 
-  displayedColumns = ['serviceDate', 'servicer', 'billNumber', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
+  displayedColumns = ['studentName', 'startDate', 'endDate', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
@@ -38,7 +38,7 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataService.getLogsOfItem1(this.item.itemId).pipe(
+    this.dataService.getLogsOfItem2(this.item.itemId).pipe(
       tap(val => {
         this.currentQuantity = this.getCurrentQuantity(val);
       })
@@ -68,7 +68,7 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   }
 
   addNewLog() {
-    const dialogRef = this.dialog.open(AddLog1Component, {
+    const dialogRef = this.dialog.open(AddLog2Component, {
       width: '450px',
       data: {
         'itemLog': undefined,
@@ -92,10 +92,10 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   }
 
   onEdit(itemLog) {
-    const dialogRef = this.dialog.open(AddLog1Component, {
+    const dialogRef = this.dialog.open(AddLog2Component, {
       width: '450px',
       data: {
-        'itemLog1': itemLog,
+        'itemLog2': itemLog,
         'item': this.item
       },
       disableClose: true

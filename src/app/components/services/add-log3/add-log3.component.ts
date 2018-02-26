@@ -1,19 +1,19 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl } from '@angular/forms';
-import { ItemLog1 } from '../../../models/item-log';
+import { ItemLog3 } from '../../../models/item-log';
 import { DataService } from '../../../core/data-service.service';
 import { Item } from '../../../models/item';
 
 
 @Component({
-  selector: 'app-add-log1',
-  templateUrl: './add-log1.component.html',
-  styleUrls: ['./add-log1.component.css']
+  selector: 'app-add-log3',
+  templateUrl: './add-log3.component.html',
+  styleUrls: ['./add-log3.component.css']
 })
-export class AddLog1Component implements OnInit {
+export class AddLog3Component implements OnInit {
 
-  itemLog1: ItemLog1 = {} as ItemLog1;
+  itemLog3: ItemLog3 = {} as ItemLog3;
   item: Item;
   logFormControl = new FormControl();
 
@@ -32,24 +32,23 @@ export class AddLog1Component implements OnInit {
   }
 
   onAdd() {
-    const tempItemLog: ItemLog1 = {
-      'logId': this.itemLog1.logId ? this.itemLog1.logId : this.dataService.generateId(),
+    const tempItemLog: ItemLog3 = {
+      'logId': this.itemLog3.logId ? this.itemLog3.logId : this.dataService.generateId(),
       'date': this.dataService.getTimeStamp(),
-      'quantity': Number(this.itemLog1.quantity),
-      'selectedCommons': this.itemLog1.selectedCommons,
-      'cost': Number(this.itemLog1.cost),
-      'remarks': this.itemLog1.remarks,
-      'logType': this.itemLog1.logType,
+      'cost': Number(this.itemLog3.cost),
+      'selectedCommons': this.itemLog3.selectedCommons,
+      'remarks': this.itemLog3.remarks,
+      'logType': this.itemLog3.logType,
       'category': this.item.category,
       'subCategory': this.item.subCategory,
       'itemId': this.item.itemId,
       'addedBy': this.dataService.uid,
-      'servicer': this.itemLog1.servicer,
-      'billNumber': this.itemLog1.billNumber,
-      'serviceDate': this.itemLog1.serviceDate
+      'servicer': this.itemLog3.servicer,
+      'billNumber': this.itemLog3.billNumber,
+      'serviceDate': this.itemLog3.serviceDate
     };
     console.log('check', tempItemLog);
-    this.dataService.addLog1(tempItemLog).then(() => {
+    this.dataService.addLog3(tempItemLog).then(() => {
       console.log('added log succesfully');
     }).catch(err => {
       console.error('error while adding log', err);
