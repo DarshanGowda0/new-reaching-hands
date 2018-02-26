@@ -31,6 +31,7 @@ import { ServicesComponent } from './components/services/services/services.compo
 import { AddLog3Component } from './components/services/add-log3/add-log3.component';
 import { ItemDetails3Component } from './components/services/item-details3/item-details3.component';
 import { LoginComponent } from './components/common/login/login.component';
+import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { LoginComponent } from './components/common/login/login.component';
     ServicesComponent,
     AddLog3Component,
     ItemDetails3Component,
-    LoginComponent
+    LoginComponent,
+    AccesscontrolComponent
   ],
   imports: [
     BrowserModule,

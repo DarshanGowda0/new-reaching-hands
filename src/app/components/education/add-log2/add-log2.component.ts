@@ -44,7 +44,6 @@ export class AddLog2Component implements OnInit {
       'studentName': this.itemLog2.studentName,
       'itemId': this.item.itemId,
       'addedBy': this.dataService.uid,
-      'billNumber': this.itemLog2.billNumber,
       'startDate': this.itemLog2.startDate,
       'endDate': this.itemLog2.endDate
     };

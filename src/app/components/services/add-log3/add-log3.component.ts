@@ -20,11 +20,11 @@ export class AddLog3Component implements OnInit {
   commonsOptions = ['Boys', 'Girls', 'Common', 'HomeSchool'];
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
-  constructor(public dialogRef: MatDialogRef<AddLog1Component>,
+  constructor(public dialogRef: MatDialogRef<AddLog3Component>,
     @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
     this.item = data.item;
-    if (data.itemLog1) {
-      this.itemLog1 = data.itemLog1;
+    if (data.itemLog3) {
+      this.itemLog3 = data.itemLog3;
     }
   }
 

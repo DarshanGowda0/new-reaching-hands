@@ -1,0 +1,107 @@
+<mat-card style="padding:2%;">
+
+  <div class="header">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h3>{{item.itemName}}</h3>
+          </mat-panel-title>
+          <mat-panel-description>
+            Quantity : {{currentQuantity}} {{item.unit}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <mat-form-field style="width:100%">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <div class="mat-elevation-z8">
+
+
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+      <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+
+      <ng-container matColumnDef="studentName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.studentName}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="startDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Start Date</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span matTooltip="{{element.date}}"> {{element.startDate|date: 'MM/dd/yyyy'}} </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="endDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>End Date</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span matTooltip="{{element.date}}"> {{element.endDate|date: 'MM/dd/yyyy'}} </span>
+        </mat-cell>
+      </ng-container>
+
+
+
+      <!-- <ng-container matColumnDef="servicer">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Servicer </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.servicer}} </mat-cell>
+      </ng-container> -->
+
+      <ng-container matColumnDef="billNumber">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Bill Number </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.billNumber}} </mat-cell>
+      </ng-container>
+
+      <!-- cost Column -->
+      <ng-container matColumnDef="cost">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Cost </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.cost}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.logType}} </mat-cell>
+      </ng-container>
+
+
+      <ng-container matColumnDef="selectedCommons">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Used By </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span matTooltip="{{element.remarks}}">
+            {{element.selectedCommons}}
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="edit">
+        <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="onEdit(element)">
+            <mat-icon color="warn">edit</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="onDelete(element.logId)">
+            <mat-icon color="warn">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
+    </mat-paginator>
+  </div>
+  <button mat-fab class="fab-button" (click)="addNewLog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</mat-card>
