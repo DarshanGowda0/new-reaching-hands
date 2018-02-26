@@ -3,7 +3,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import * as firebase from 'firebase';
 import { Item } from '../models/item';
 import { AuthService } from './auth.service';
-import { ItemLog, ItemLog1 } from '../models/item-log';
+import { ItemLog, ItemLog1, ItemLog3, ItemLog2 } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 
 @Injectable()
@@ -56,7 +56,7 @@ export class DataService {
     return this.firestore.collection<ItemLog2>(`logs`).doc(log.logId).set(log);
   }
   addLog3(log: ItemLog3) {
-    return this.firestore.collection<ItemLo31>(`logs`).doc(log.logId).set(log);
+    return this.firestore.collection<ItemLog3>(`logs`).doc(log.logId).set(log);
   }
 
   getLogsOfItem(itemId: string) {
