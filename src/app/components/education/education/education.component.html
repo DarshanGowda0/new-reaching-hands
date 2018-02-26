@@ -1,0 +1,18 @@
+<mat-tab-group>
+  <mat-tab label="School" class="inner-content">
+    <app-sub-cat-listing2 [subCategory]="category[0]"></app-sub-cat-listing2>
+  </mat-tab>
+  <mat-tab label="Home-School" class="inner-content">
+    <app-sub-cat-listing2 [subCategory]="category[1]"></app-sub-cat-listing2>
+  </mat-tab>
+  <mat-tab label="Extra-Curricular" class="inner-content">
+    <app-sub-cat-listing2 [subCategory]="category[2]"></app-sub-cat-listing2>
+  </mat-tab>
+  <mat-tab label="Tutorials" class="inner-content">
+    <app-sub-cat-listing2 [subCategory]="category[3]"></app-sub-cat-listing2>
+  </mat-tab>
+</mat-tab-group>
+
+<button mat-fab class="fab-button" (click)="onAdd()">
+  <mat-icon>add</mat-icon>
+</button>
