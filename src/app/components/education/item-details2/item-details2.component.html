@@ -26,19 +26,34 @@
       <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
 
+      <ng-container matColumnDef="studentName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.studentName}} </mat-cell>
+      </ng-container>
 
-      <ng-container matColumnDef="serviceDate">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Service Date</mat-header-cell>
+      <ng-container matColumnDef="startDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Start Date</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <span matTooltip="{{element.date}}"> {{element.serviceDate|date: 'MM/dd/yyyy'}} </span>
+          <span matTooltip="{{element.date}}"> {{element.startDate|date: 'MM/dd/yyyy'}} </span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="endDate">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>End Date</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <span matTooltip="{{element.date}}"> {{element.endDate|date: 'MM/dd/yyyy'}} </span>
         </mat-cell>
       </ng-container>
 
 
 
-      <ng-container matColumnDef="servicer">
+      <!-- <ng-container matColumnDef="servicer">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Servicer </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.servicer}} </mat-cell>
+      </ng-container> -->
+
+      <ng-container matColumnDef="billNumber">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Bill Number </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.billNumber}} </mat-cell>
       </ng-container>
 
       <!-- cost Column -->

@@ -3,28 +3,32 @@
 
 
   <mat-form-field hintLabel="Example: xyz" style="display:block;clear: both;">
-    <input matInput #input placeholder="Enter Servicer" required [(ngModel)]="itemLog1.servicer">
+    <input matInput #input placeholder="Enter Servicer" required [(ngModel)]="itemLog3.servicer">
   </mat-form-field>
 
   <mat-form-field>
-    <input matInput [matDatepicker]="picker" placeholder="Choose the Service Date" required [(ngModel)]="itemLog1.serviceDate">
+    <input matInput [matDatepicker]="picker" placeholder="Choose the Service Date" required [(ngModel)]="itemLog3.serviceDate">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker touchUi="true" #picker></mat-datepicker>
   </mat-form-field>
 
+  <mat-form-field hintLabel="Example: 12345" style="display:block;clear: both;">
+    <input matInput #input placeholder="Enter BillNumber" required [(ngModel)]="itemLog3.billNumber">
+  </mat-form-field>
+
   <mat-form-field hintLabel="Example: 12" style="display:block;clear: both;">
     <span matSuffix>{{item.unit}}</span>
-    <input matInput #input placeholder="Enter item quantity" required [(ngModel)]="itemLog1.quantity">
+    <input matInput #input placeholder="Enter item quantity" required [(ngModel)]="itemLog3.quantity">
   </mat-form-field>
 
 
-  <mat-radio-group required [(ngModel)]="itemLog1.selectedCommons" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
+  <mat-radio-group required [(ngModel)]="itemLog3.selectedCommons" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
     <mat-radio-button *ngFor="let option of commonsOptions" [value]="option" style="margin:2px">
       {{option}}
     </mat-radio-button>
   </mat-radio-group>
 
-  <mat-radio-group required [(ngModel)]="itemLog1.logType" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
+  <mat-radio-group required [(ngModel)]="itemLog3.logType" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
     <mat-radio-button *ngFor="let option of logTypeOptions" [value]="option" style="margin:2px">
       {{option}}
     </mat-radio-button>
@@ -32,10 +36,10 @@
 
   <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
     <span matPrefix>&#8377; </span>
-    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog1.cost">
+    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog3.cost">
   </mat-form-field>
   <mat-form-field style="display:block;clear: both;">
-    <textarea matInput placeholder="Remarks" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10" [(ngModel)]="itemLog1.remarks"></textarea>
+    <textarea matInput placeholder="Remarks" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10" [(ngModel)]="itemLog3.remarks"></textarea>
   </mat-form-field>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close>Cancel</button>
