@@ -11,6 +11,7 @@ import { EducationComponent } from './components/education/education/education.c
 import { ServicesComponent } from './components/services/services/services.component';
 import { ItemDetails3Component } from './components/services/item-details3/item-details3.component';
 import { ItemDetails2Component } from './components/education/item-details2/item-details2.component';
+import { LoginComponent } from './components/common/login/login.component';
 
 const routes: Routes = [
   {
@@ -62,7 +63,12 @@ const routes: Routes = [
     path: 'item-details3/:id',
     component: ItemDetails3Component,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'login',
+    component: LoginComponent
   }
+
 ];
 
 @NgModule({
