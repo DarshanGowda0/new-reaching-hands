@@ -35,5 +35,6 @@ export class AppComponent implements OnDestroy {
   signOut(): void {
     this.auth.signOut();
     console.log('signed out');
+    this.router.navigate(['login']);
   }
 }
