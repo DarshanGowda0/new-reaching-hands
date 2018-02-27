@@ -1,0 +1,15 @@
+<mat-tab-group>
+  <mat-tab label="Student Personal Care" class="inner-content">
+    <app-sub-cat-listing3 [subCategory]="category[0]"></app-sub-cat-listing3>
+  </mat-tab>
+  <mat-tab label="Medical Care" class="inner-content">
+    <app-sub-cat-listing3 [subCategory]="category[1]"></app-sub-cat-listing3>
+  </mat-tab>
+  <mat-tab label="Transportation" class="inner-content">
+    <app-sub-cat-listing3 [subCategory]="category[2]"></app-sub-cat-listing3>
+  </mat-tab>
+</mat-tab-group>
+
+<button mat-fab class="fab-button" (click)="onAdd()">
+  <mat-icon>add</mat-icon>
+</button>

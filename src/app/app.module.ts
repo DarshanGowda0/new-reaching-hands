@@ -22,6 +22,16 @@ import { ItemDetails1Component } from './components/maintenance/item-details1/it
 import { SubCatListing1Component } from './components/maintenance/sub-cat-listing1/sub-cat-listing1.component';
 import { AddLog1Component } from './components/maintenance/add-log1/add-log1.component';
 import { MaintenanceComponent } from './components/maintenance/maintenance/maintenance.component';
+import { EducationComponent } from './components/education/education/education.component';
+import { AddLog2Component } from './components/education/add-log2/add-log2.component';
+import { ItemDetails2Component } from './components/education/item-details2/item-details2.component';
+import { SubCatListing2Component } from './components/education/sub-cat-listing2/sub-cat-listing2.component';
+import { SubCatListing3Component } from './components/services/sub-cat-listing3/sub-cat-listing3.component';
+import { ServicesComponent } from './components/services/services/services.component';
+import { AddLog3Component } from './components/services/add-log3/add-log3.component';
+import { ItemDetails3Component } from './components/services/item-details3/item-details3.component';
+import { LoginComponent } from './components/common/login/login.component';
+import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +44,17 @@ import { MaintenanceComponent } from './components/maintenance/maintenance/maint
     ItemDetails1Component,
     SubCatListing1Component,
     AddLog1Component,
-    MaintenanceComponent
+    MaintenanceComponent,
+    EducationComponent,
+    AddLog2Component,
+    ItemDetails2Component,
+    SubCatListing2Component,
+    SubCatListing3Component,
+    ServicesComponent,
+    AddLog3Component,
+    ItemDetails3Component,
+    LoginComponent,
+    AccesscontrolComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +73,9 @@ import { MaintenanceComponent } from './components/maintenance/maintenance/maint
   bootstrap: [AppComponent],
   entryComponents: [
     AddLogComponent,
-    AddLog1Component
+    AddLog1Component,
+    AddLog2Component,
+    AddLog3Component
   ]
 })
 export class AppModule { }
