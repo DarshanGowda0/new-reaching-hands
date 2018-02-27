@@ -1,0 +1,38 @@
+<div style="padding:1%;overflow:inherit;">
+  <mat-form-field style="width:100%;padding:2%">
+    <input matInput placeholder="Search Education" type="search" (keyup)="search($event)">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+  <mat-grid-list cols="{{nColumns}}" rowHeight="350px" (window:resize)="onResize($event)">
+    <mat-grid-tile *ngFor="let item of items | async">
+      <div class="ui raised card">
+        <div class="image" (click)="onTap(item.itemId)">
+          <img src="assets/tom.jpg" width="200px" height="200px" (click)="onTap(item.itemId)">
+        </div>
+        <div class="content">
+
+          <div class="header">
+            {{item.itemName}}
+            <span class="right floated">
+              <button class="circular ui icon button" (click)="onDelete(item.itemId)">
+                <i class="trash icon"></i>
+              </button>
+              <div class="ui blue label">
+                {{item.quantity}} {{item.unit}}
+              </div>
+            </span>
+          </div>
+          <div class="meta">
+            <a>{{item.category}}</a>
+          </div>
+        </div>
+        <div class="extra content">
+          <span>
+            <i class="history icon"></i>
+            {{item.lastModified|date: "h:mma  'on' MM/dd/yyyy"}}
+          </span>
+        </div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

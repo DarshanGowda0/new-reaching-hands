@@ -18,13 +18,8 @@
     </mat-accordion>
   </div>
 
-  <div class="mat-elevation-z8">
-
-
+  <div class="mat-elevation-z2">
     <mat-table #table [dataSource]="dataSource" matSort>
-
-      <!--- Note that these columns can be defined in any order.
-                  The actual rendered columns are set as a property on the row definition" -->
 
       <!-- date Column -->
       <ng-container matColumnDef="date">
@@ -83,6 +78,13 @@
     <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
     </mat-paginator>
   </div>
+
+  <div class="mat-elevation-z2" style="margin-top:1%;padding:2%">
+    <h4>Reports</h4>
+    <!-- <app-item-report>
+    </app-item-report> -->
+  </div>
+
   <button mat-fab class="fab-button" (click)="addNewLog()">
     <mat-icon>add</mat-icon>
   </button>
