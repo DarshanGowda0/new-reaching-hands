@@ -45,7 +45,8 @@ export class AuthService {
       email: user.email,
       roles: {
         editor: true
-      }
+      },
+      check: false
     };
     return userRef.set(data, { merge: true });
   }

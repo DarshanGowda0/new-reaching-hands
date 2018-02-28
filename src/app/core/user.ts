@@ -7,4 +7,5 @@ export interface User {
     uid: string;
     email: string;
     roles: Roles;
+    check: boolean;
 }

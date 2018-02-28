@@ -38,28 +38,24 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataService.getLogsOfItem1(this.item.itemId).pipe(
-      tap(val => {
-        this.currentQuantity = this.getCurrentQuantity(val);
-      })
-    ).subscribe(val => {
+    this.dataService.getLogsOfItem1(this.item.itemId).subscribe(val => {
       this.dataSource = new MatTableDataSource(val);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  getCurrentQuantity(val) {
-    let quantity = 0;
-    val.forEach(element => {
-      if (element.logType === this.logTypeOptions[1]) {
-        quantity = quantity - element.quantity;
-      } else {
-        quantity = quantity + element.quantity;
-      }
-    });
-    return quantity;
-  }
+  // getCurrentQuantity(val) {
+  //   let quantity = 0;
+  //   val.forEach(element => {
+  //     if (element.logType === this.logTypeOptions[1]) {
+  //       quantity = quantity - element.quantity;
+  //     } else {
+  //       quantity = quantity + element.quantity;
+  //     }
+  //   });
+  //   return quantity;
+  // }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();

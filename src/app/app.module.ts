@@ -32,6 +32,8 @@ import { AddLog3Component } from './components/services/add-log3/add-log3.compon
 import { ItemDetails3Component } from './components/services/item-details3/item-details3.component';
 import { LoginComponent } from './components/common/login/login.component';
 import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
+import { MAT_CHECKBOX_CLICK_ACTION } from '@angular/material';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -67,9 +69,10 @@ import { AccesscontrolComponent } from './components/common/accesscontrol/access
     ReactiveFormsModule,
     BrowserAnimationsModule,
     CommonModule,
-    CoreModule
+    CoreModule,
+    MatCheckboxModule
   ],
-  providers: [],
+  providers: [{provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}],
   bootstrap: [AppComponent],
   entryComponents: [
     AddLogComponent,
