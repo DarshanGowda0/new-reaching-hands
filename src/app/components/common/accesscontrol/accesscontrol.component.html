@@ -5,15 +5,15 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <h3>{{item.itemName}}</h3>
+            <h3>USERS</h3>
           </mat-panel-title>
-          <mat-panel-description>
+          <!-- <mat-panel-description>
             Quantity : {{currentQuantity}} {{item.unit}}
-          </mat-panel-description>
+          </mat-panel-description> -->
         </mat-expansion-panel-header>
-        <mat-form-field style="width:100%">
+        <!-- <mat-form-field style="width:100%">
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-        </mat-form-field>
+        </mat-form-field> -->
       </mat-expansion-panel>
     </mat-accordion>
   </div>
@@ -26,12 +26,14 @@
       <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
 
-      <ng-container matColumnDef="studentName">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.studentName}} </mat-cell>
-      </ng-container>
+      <!-- <mat-radio-group required [(ngModel)]="user.authn" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
+        <mat-radio-button *ngFor="let option of logTypeOptions" [value]="option" style="margin:2px">
+          {{option}}
+        </mat-radio-button>
+      </mat-radio-group> -->
 
-      <ng-container matColumnDef="startDate">
+
+      <!-- <ng-container matColumnDef="startDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Start Date</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span matTooltip="{{element.date}}"> {{element.startDate|date: 'MM/dd/yyyy'}} </span>
@@ -42,7 +44,7 @@
         <mat-cell *matCellDef="let element">
           <span matTooltip="{{element.date}}"> {{element.endDate|date: 'MM/dd/yyyy'}} </span>
         </mat-cell>
-      </ng-container>
+      </ng-container> -->
 
 
 
@@ -51,12 +53,59 @@
         <mat-cell *matCellDef="let element"> {{element.servicer}} </mat-cell>
       </ng-container> -->
 
-      <ng-container matColumnDef="billNumber">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Bill Number </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.billNumber}} </mat-cell>
+      <ng-container matColumnDef="email" class="mat-column-title">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Email Id </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
       </ng-container>
 
-      <!-- cost Column -->
+     <!-- <ng-container matColumnDef="roles" class="mat-column-title">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Roles </mat-header-cell>
+        <! <mat-cell *matCellDef="let element"> {{element.roles.admin?'admin':'ss'}} <mat-checkbox [checked]="element.roles"></mat-checkbox></mat-cell> -->
+        <!-- <mat-cell *matCellDef="let element"> {{element.roles.admin ? 'admin':'admin'}} </mat-cell>
+      </ng-container> --> 
+
+      <!-- <ng-container matColumnDef="admin">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ADMIN </mat-header-cell>
+        <mat-cell *matCellDef="let element">Admin</mat-cell>       
+      </ng-container> -->
+
+      <ng-container matColumnDef="checkAdmin">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>ADMIN</mat-header-cell>
+        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.checkAdmin"></mat-checkbox> </mat-cell>       
+      </ng-container>
+     
+
+      <!-- <ng-container matColumnDef="editor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> EDITOR </mat-header-cell>
+        <mat-cell *matCellDef="let element">Editor</mat-cell>       
+      </ng-container> -->
+
+      <ng-container matColumnDef="checkEditor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> EDITOR </mat-header-cell>
+        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.checkEditor"></mat-checkbox> </mat-cell>       
+      </ng-container>
+     
+
+      <!-- <ng-container matColumnDef="roles">{{element.roles.admin?'editor':'editor'}
+        <mat-header-cell *matHeaderCellDef> EditRole</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="onEdit(element)">
+            <mat-icon color="warn">edit</mat-icon>
+          </button>
+        </mat-cell> -->
+      <!-- </ng-container>  -->
+      <!-- <ng-container matColumnDef="roles">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Roles </mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.roles.admin?'admin':'editor'}}</mat-cell>
+      <! <mat-radio-group required [(ngModel)]="user.roles" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
+        <mat-radio-button *ngFor="let option of roles" [value]="option" style="margin:2px">
+          {{option}}
+        </mat-radio-button>
+      </mat-radio-group> -->
+      <!-- </ng-container> --> 
+    
+<!-- 
+      cost Column
       <ng-container matColumnDef="cost">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Cost </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.cost}} </mat-cell>
@@ -65,19 +114,19 @@
       <ng-container matColumnDef="type">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.logType}} </mat-cell>
-      </ng-container>
+      </ng-container> -->
 
 
-      <ng-container matColumnDef="selectedCommons">
+      <!-- <ng-container matColumnDef="selectedCommons">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Used By </mat-header-cell>
         <mat-cell *matCellDef="let element">
           <span matTooltip="{{element.remarks}}">
             {{element.selectedCommons}}
           </span>
         </mat-cell>
-      </ng-container>
+      </ng-container> -->
 
-      <ng-container matColumnDef="edit">
+      <!-- <ng-container matColumnDef="edit">
         <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
         <mat-cell *matCellDef="let element">
           <button mat-icon-button (click)="onEdit(element)">
@@ -93,7 +142,7 @@
             <mat-icon color="warn">delete</mat-icon>
           </button>
         </mat-cell>
-      </ng-container>
+      </ng-container> -->
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
@@ -101,7 +150,5 @@
     <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
     </mat-paginator>
   </div>
-  <button mat-fab class="fab-button" (click)="addNewLog()">
-    <mat-icon>add</mat-icon>
-  </button>
+ 
 </mat-card>

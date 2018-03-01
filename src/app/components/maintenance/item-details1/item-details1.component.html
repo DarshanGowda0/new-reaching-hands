@@ -7,9 +7,6 @@
           <mat-panel-title>
             <h3>{{item.itemName}}</h3>
           </mat-panel-title>
-          <mat-panel-description>
-            Quantity : {{currentQuantity}} {{item.unit}}
-          </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-form-field style="width:100%">
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
