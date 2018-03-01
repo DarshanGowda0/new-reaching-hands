@@ -63,6 +63,11 @@ export class DataService {
   getLogsOfItem(itemId: string) {
     return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
   }
+
+  getLogsOfItemAsce(itemId: string) {
+    return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date')).valueChanges();
+  }
+
   getLogsOfItem1(itemId: string) {
     return this.firestore.collection<ItemLog1>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
   }
