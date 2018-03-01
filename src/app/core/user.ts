@@ -7,4 +7,6 @@ export interface User {
     uid: string;
     email: string;
     roles: Roles;
+    checkAdmin: boolean;
+    checkEditor: boolean;
 }
