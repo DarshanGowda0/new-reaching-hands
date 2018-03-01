@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 import { Observer } from 'rxjs/Observer';
+
 
 // shared/google-chart.resolver.ts
 declare const google: any;
