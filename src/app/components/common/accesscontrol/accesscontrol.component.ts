@@ -17,7 +17,7 @@ export class AccesscontrolComponent implements OnInit, AfterViewInit {
   user: User = {} as User;
   
 
-  displayedColumns = ['email','roles','check'];
+  displayedColumns = ['email', 'checkAdmin', 'checkEditor'];
   roles = ['Admin', 'Editor'];
   ELEMENT_DATA: User[] = [];
   // checked: boolean;
@@ -54,9 +54,9 @@ export class AccesscontrolComponent implements OnInit, AfterViewInit {
       console.log(val, 'valffffffffffffffff');
       for (let i  in val) {
         if(val[i].roles.admin)
-        // val.check = true;
-        val[i].check = true;
-        console.log( val[i].roles.admin, 'i');
+        val[i].checkAdmin = true;
+        if(val[i].roles.editor)
+        val[i].checkEditor = true;  
       }
       this.dataSource = new MatTableDataSource(val);
       this.dataSource.sort = this.sort;
