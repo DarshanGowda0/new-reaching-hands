@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
 import { MatDatepickerInputEvent } from '@angular/material';
@@ -10,8 +10,8 @@ import { MatDatepickerInputEvent } from '@angular/material';
 })
 export class ItemReportComponent implements OnInit {
 
-  itemId = 'OAbQXmwQf9DuwD3DjXK9';
-  private google: any;
+  @Input() itemId: string;
+  @Input() google: any;
   data = [];
   startDate: any = null;
   endDate: any = null;
@@ -20,7 +20,7 @@ export class ItemReportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.google = this.route.snapshot.data.google;
+
   }
 
   fetchDataAndAddChart() {
