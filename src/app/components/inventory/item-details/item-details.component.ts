@@ -16,6 +16,8 @@ import { tap, map } from 'rxjs/operators';
 })
 export class ItemDetailsComponent implements OnInit, AfterViewInit {
 
+  private google: any;
+
   item: Item = {} as Item;
   currentQuantity = 0;
 
@@ -29,6 +31,7 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
   constructor(private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.google = this.route.snapshot.data.google;
     this.route.params.subscribe(params => {
       this.item.itemId = params['id'];
       this.dataService.getItemById(this.item.itemId).subscribe(item => {

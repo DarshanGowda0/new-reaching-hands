@@ -1,12 +1,12 @@
 <div  style="width:50%;">
   <mat-form-field style="margin:1.5%">
-    <input matInput [matDatepicker]="picker1" placeholder="Choose a starting date">
+    <input matInput [matDatepicker]="picker1" placeholder="Choose a starting date" (dateInput)="addEventStart('input', $event)">
     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
     <mat-datepicker touchUi="true" #picker1></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field style="margin:1.5%">
-    <input matInput [matDatepicker]="picker" placeholder="Choose an ending date">
+    <input matInput [matDatepicker]="picker" placeholder="Choose an ending date" (dateInput)="addEventEnd('input', $event)">
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker touchUi="true" #picker></mat-datepicker>
   </mat-form-field>
