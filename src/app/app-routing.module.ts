@@ -55,6 +55,7 @@ const routes: Routes = [
   {
     path: 'item-details/:id',
     component: ItemDetailsComponent,
+    resolve: { google: GoogleChartResolver },
     canActivate: [AuthGuard]
   },
   {
