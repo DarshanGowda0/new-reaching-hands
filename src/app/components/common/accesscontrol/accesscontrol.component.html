@@ -64,18 +64,29 @@
         <!-- <mat-cell *matCellDef="let element"> {{element.roles.admin ? 'admin':'admin'}} </mat-cell>
       </ng-container> --> 
 
-      <ng-container matColumnDef="roles">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Roles Editor </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.roles.admin?'admin':'editor'}} </mat-cell>       
-      </ng-container>
+      <!-- <ng-container matColumnDef="admin">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ADMIN </mat-header-cell>
+        <mat-cell *matCellDef="let element">Admin</mat-cell>       
+      </ng-container> -->
 
-      <ng-container matColumnDef="check">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Choose </mat-header-cell>
-        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.check"></mat-checkbox> </mat-cell>       
+      <ng-container matColumnDef="checkAdmin">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>ADMIN</mat-header-cell>
+        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.checkAdmin"></mat-checkbox> </mat-cell>       
       </ng-container>
      
 
-      <!-- <ng-container matColumnDef="roles">
+      <!-- <ng-container matColumnDef="editor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> EDITOR </mat-header-cell>
+        <mat-cell *matCellDef="let element">Editor</mat-cell>       
+      </ng-container> -->
+
+      <ng-container matColumnDef="checkEditor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> EDITOR </mat-header-cell>
+        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.checkEditor"></mat-checkbox> </mat-cell>       
+      </ng-container>
+     
+
+      <!-- <ng-container matColumnDef="roles">{{element.roles.admin?'editor':'editor'}
         <mat-header-cell *matHeaderCellDef> EditRole</mat-header-cell>
         <mat-cell *matCellDef="let element">
           <button mat-icon-button (click)="onEdit(element)">
