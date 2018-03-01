@@ -13,6 +13,8 @@ import { ItemDetails3Component } from './components/services/item-details3/item-
 import { ItemDetails2Component } from './components/education/item-details2/item-details2.component';
 import { LoginComponent } from './components/common/login/login.component';
 import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
+import { GoogleChartResolver } from './core/google-chart-resolver';
+import { ItemReportComponent } from './components/common/item-report/item-report.component';
 
 const routes: Routes = [
   {
@@ -73,6 +75,12 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'reports',
+    component: ItemReportComponent,
+    resolve: { google: GoogleChartResolver },
+    canActivate: [AuthGuard]
   }
 
 ];

@@ -19,8 +19,8 @@ export class AuthGuard implements CanActivate {
       map(user => user && this.auth.isAuthorized(user) ? true : false),
       tap(isUser => {
         if (!isUser) {
-          this.signInWithGoogle();
           console.error('Access denied - Admins only');
+          this.router.navigate(['login']);
           return false;
         } else {
           console.log('Áccess granted');
@@ -29,7 +29,5 @@ export class AuthGuard implements CanActivate {
       }));
   }
 
-  signInWithGoogle(): void {
-    this.auth.googleLogin().then(() => this.router.navigate(['']));
-  }
+
 }
