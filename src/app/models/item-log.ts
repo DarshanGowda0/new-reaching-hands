@@ -16,7 +16,6 @@ export interface ItemLog1 {
     logId: string;
     serviceDate: string;
     servicer: string;
-    quantity: number;
     logType: string; // donation etc
     selectedCommons: string;
     billNumber: string;

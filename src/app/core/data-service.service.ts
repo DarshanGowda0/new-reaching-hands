@@ -5,6 +5,7 @@ import { Item } from '../models/item';
 import { AuthService } from './auth.service';
 import { ItemLog, ItemLog1, ItemLog3, ItemLog2 } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
+import { User } from './user';
 
 @Injectable()
 export class DataService {
