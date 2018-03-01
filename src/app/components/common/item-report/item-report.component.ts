@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
+import { MatDatepickerInputEvent } from '@angular/material';
 
 @Component({
   selector: 'app-item-report',
@@ -12,13 +13,18 @@ export class ItemReportComponent implements OnInit {
   itemId = 'OAbQXmwQf9DuwD3DjXK9';
   private google: any;
   data = [];
+  startDate: any = null;
+  endDate: any = null;
 
   constructor(private route: ActivatedRoute, private dataService: DataService) {
   }
 
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
-    this.dataService.getLogsOfItemAsce(this.itemId).subscribe(val => {
+  }
+
+  fetchDataAndAddChart() {
+    this.dataService.getLogsOfItemAsce(this.itemId, this.startDate, this.endDate).subscribe(val => {
       this.data = [];
       val.forEach(element => {
         const row = [];
@@ -53,5 +59,29 @@ export class ItemReportComponent implements OnInit {
     const chart_lines = new google.visualization.LineChart(document.getElementById('piechart'));
     chart_lines.draw(data, options_lines);
   }
+
+  addEventStart(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.startDate = event.value;
+    if (this.endDate !== null) {
+      console.log('show graph');
+      this.fetchDataAndAddChart();
+    }
+  }
+
+  addEventEnd(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.endDate = event.value;
+    if (this.startDate !== null) {
+      console.log('show graph');
+      this.fetchDataAndAddChart();
+    }
+  }
+
+  // validDate(): boolean {
+  //   if (this.endDate < this.startDate) {
+  //     alert('invalid date range');
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
 }
