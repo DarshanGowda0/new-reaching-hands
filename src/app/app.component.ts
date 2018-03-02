@@ -16,13 +16,34 @@ export class AppComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance', 'AccessControl'];
   private _mobileQueryListener: () => void;
+  email: string;
+  roles: string;
+  image: string;
 
   constructor(public auth: AuthService, public notification: NotificationService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     private router: Router, private afs: AngularFirestore) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
+    this.loadUserDetails();
   }
+
+
+  loadUserDetails() {
+    this.auth.user.subscribe(val => {
+      this.email = val.email;
+      if ((val.checkAdmin)) {
+        this.roles = "admin";
+      }
+     if ((val.checkEditor)) {
+        this.roles = "editor";
+      }
+    });
+    this.auth.authUser.subscribe(val => {
+      this.image = val.photoURL;
+    });
+  }
+
 
 
   ngOnDestroy(): void {
@@ -33,16 +54,17 @@ export class AppComponent implements OnDestroy {
     this.router.navigate(['']);
   }
 
-  sendNotification(){
-    console.log('clicked send notification'); 
-    this.notification.getPermission();  
-    this.notification.receiveMessage();
-    console.log(this.notification.currentMessage);
-  }
-  
+  // sendNotification(){
+  //   console.log('clicked send notification'); 
+  //   this.notification.getPermission();  
+  //   this.notification.receiveMessage();
+  //   console.log(this.notification.currentMessage);
+  // }
+
+
   signOut(): void {
     this.auth.signOut();
     console.log('signed out');
-    this.router.navigate(['login']);
   }
+
 }

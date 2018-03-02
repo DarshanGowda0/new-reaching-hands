@@ -10,8 +10,9 @@ import { switchMap } from 'rxjs/operators';
 export class AuthService {
 
   user: Observable<User>;
-
+  authUser;
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private router: Router) {
+    this.authUser = this.afAuth.authState;
     this.user = this.afAuth.authState.switchMap(user => {
       if (user) {
         return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
@@ -35,6 +36,7 @@ export class AuthService {
 
   signOut() {
     this.afAuth.auth.signOut();
+    this.router.navigate(['login']);
   }
 
   private updateUserData(user) {
@@ -43,44 +45,30 @@ export class AuthService {
     const data: User = {
       uid: user.uid,
       email: user.email,
-      roles: {
-        editor: true
-      },
-      checkAdmin: false,
-      checkEditor: false
+     // checkAdmin: user.checkAdmin,
+      //checkEditor: user.checkEditor
     };
     return userRef.set(data, { merge: true });
   }
 
   canRead(user: User): boolean {
     const allowed = ['admin', 'editor'];
-    return this.checkAuthorization(user, allowed);
+    return user.checkAdmin || user.checkEditor;
   }
 
   canEdit(user: User): boolean {
-    const allowed = ['admin', 'editor'];
-    return this.checkAuthorization(user, allowed);
+    const allowed = ['admin'];
+    return user.checkAdmin;
   }
 
   canDelete(user: User): boolean {
     const allowed = ['admin'];
-    return this.checkAuthorization(user, allowed);
+    return user.checkAdmin;
   }
 
-  isAuthorized(user): boolean {
+  isAuthorized(user: User): boolean {
     const isAllowed = ['admin', 'editor'];
-    return this.checkAuthorization(user, isAllowed);
+    return user.checkAdmin || user.checkEditor;
   }
 
-  private checkAuthorization(user: User, allowedRoles: string[]): boolean {
-    if (!user) {
-      return false;
-    }
-    for (const role of allowedRoles) {
-      if (user.roles[role]) {
-        return true;
-      }
-    }
-    return false;
-  }
 }
