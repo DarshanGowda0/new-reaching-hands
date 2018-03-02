@@ -16,21 +16,27 @@
       </mat-icon>
     </button>
     <span class="toolbar-spacer"></span>
-    <button mat-icon-button color="basic" (click)="sendNotification()" style="position:absolute;right:40px;">
+    <!-- <button mat-icon-button color="basic" (click)="sendNotification()" style="position:absolute;right:40px;">
       <mat-icon aria-label="Example icon-button with a heart icon">
         <i class="material-icons">settings_power</i>
       </mat-icon>
-    </button>
+    </button> -->
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
     <mat-sidenav class="sidebar" #snav [mode]="mobileQuery.matches ? 'over' : 'over'" [fixedInViewport]="mobileQuery.matches"
       fixedTopGap="56">
       <mat-list>
+        <mat-nav-list>
+            <div><img src="{{image}}" alt="NO IMAGE AVAILABLE" style="border-radius: 50%;position:absolute;height:60px;width:60px;top:8%;left:50%;transform:translate(-50%,-50%);"></div>
+            <br><br><br><div class="detail" style="color:blue;">{{email}}</div>
+            <div style="position:absolute;left:70px;right:50px;color:red;">{{roles}}</div>
+            <br>
         <mat-list-item *ngFor="let item of fillerNav">
           <mat-icon mat-list-icon>folder</mat-icon>
           <a mat-list-item routerLink="./{{item}}">{{item}}</a>
         </mat-list-item>
+      </mat-nav-list>
       </mat-list>
     </mat-sidenav>
     <mat-sidenav-content class="router-content">
