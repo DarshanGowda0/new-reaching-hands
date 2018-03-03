@@ -71,7 +71,7 @@
 
       <ng-container matColumnDef="checkAdmin">
         <mat-header-cell *matHeaderCellDef mat-sort-header>ADMIN</mat-header-cell>
-        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.checkAdmin"></mat-checkbox> </mat-cell>       
+        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.checkAdmin" (change)="onCheckAdmin($event,element.uid)"></mat-checkbox> </mat-cell>       
       </ng-container>
      
 
@@ -82,7 +82,7 @@
 
       <ng-container matColumnDef="checkEditor">
         <mat-header-cell *matHeaderCellDef mat-sort-header> EDITOR </mat-header-cell>
-        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.checkEditor"></mat-checkbox> </mat-cell>       
+        <mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.checkEditor" (change)="onCheckEditor($event,element.uid)"></mat-checkbox> </mat-cell>       
       </ng-container>
      
 

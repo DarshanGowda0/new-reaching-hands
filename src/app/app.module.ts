@@ -83,7 +83,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     AddLogComponent,
     AddLog1Component,
     AddLog2Component,
-    AddLog3Component
+    AddLog3Component,
+    AccesscontrolComponent
   ]
 })
 export class AppModule { }
