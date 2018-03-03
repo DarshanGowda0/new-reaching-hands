@@ -1,4 +1,4 @@
-<div  style="width:50%;">
+<div>
   <mat-form-field style="margin:1.5%">
     <input matInput [matDatepicker]="picker1" placeholder="Choose a starting date" (dateInput)="addEventStart('input', $event)">
     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -11,8 +11,20 @@
     <mat-datepicker touchUi="true" #picker></mat-datepicker>
   </mat-form-field>
 
-  <div id="piechart">
+  <button mat-raised-button color="primary" (click)="switchCharts()" style="margin:1.5%">
+    {{chartType ? 'Quantity' : 'Cost'}}
+  </button>
 
+  <div>
+
+    <div style="width:100%">
+      <div id="quantityChart"></div>
+    </div>
   </div>
+
+  <div style="width:100%;">
+    <div id="costChart"></div>
+  </div>
+
 
 </div>

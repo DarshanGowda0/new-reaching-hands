@@ -1,6 +1,12 @@
 <mat-card style="padding:2%;">
 
-  <div class="header">
+  <div class="mat-elevation-z2" style="margin-top:1%;padding:2%">
+    <h4>Reports</h4>
+    <app-item-report [google]="google" [itemId]="item.itemId">
+    </app-item-report>
+  </div>
+
+  <!-- <div class="header"> -->
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
@@ -16,7 +22,7 @@
         </mat-form-field>
       </mat-expansion-panel>
     </mat-accordion>
-  </div>
+  <!-- </div> -->
 
   <div class="mat-elevation-z2">
     <mat-table #table [dataSource]="dataSource" matSort>
@@ -79,11 +85,7 @@
     </mat-paginator>
   </div>
 
-  <div class="mat-elevation-z2" style="margin-top:1%;padding:2%">
-    <h4>Reports</h4>
-    <app-item-report [google]="google" [itemId]="item.itemId">
-    </app-item-report>
-  </div>
+
 
   <button mat-fab class="fab-button" (click)="addNewLog()">
     <mat-icon>add</mat-icon>
