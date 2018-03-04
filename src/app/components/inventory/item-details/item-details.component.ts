@@ -23,7 +23,7 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
   currentQuantity = 0;
 
   displayedColumns = ['date', 'quantity', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
-  logTypeOptions = ['Added', 'Supplied', 'Donated'];
+  logTypeOptions = ['Added', 'Issued', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
