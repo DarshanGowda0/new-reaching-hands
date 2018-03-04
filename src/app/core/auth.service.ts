@@ -71,4 +71,9 @@ export class AuthService {
     return user.checkAdmin || user.checkEditor;
   }
 
+  canAccess(user: User): boolean {
+    const allowed = ['admin'];
+    return user.checkAdmin;
+  }
+
 }
