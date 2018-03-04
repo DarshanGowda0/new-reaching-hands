@@ -44,6 +44,7 @@ export class AddNewComponent implements OnInit {
   selectedCategory: string;
   selectedUnit: string;
   addFormControl = new FormControl();
+  thresholdValue: number;
 
   constructor(private dataService: DataService, private router: Router) { }
 
@@ -65,7 +66,8 @@ export class AddNewComponent implements OnInit {
       'unit': this.selectedUnit,
       'category': category,
       'subCategory': this.selectedCategory,
-      'addedBy': ''
+      'addedBy': '',
+      'thresholdValue': Number(this.thresholdValue)
     };
 
     if (item.itemName === undefined || this.selectedCategory === undefined || this.selectedUnit === undefined) {
