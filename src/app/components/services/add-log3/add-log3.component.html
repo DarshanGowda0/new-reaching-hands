@@ -18,7 +18,7 @@
 
   <mat-form-field hintLabel="Example: 12" style="display:block;clear: both;">
     <span matSuffix>{{item.unit}}</span>
-    <input matInput #input placeholder="Enter item quantity" required [(ngModel)]="itemLog3.quantity">
+    <input matInput #input placeholder="Enter item quantity" required [(ngModel)]="itemLog3.quantity" pattern="[0-9]*">
   </mat-form-field>
 
 
@@ -36,7 +36,7 @@
 
   <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
     <span matPrefix>&#8377; </span>
-    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog3.cost">
+    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog3.cost" pattern="[0-9]*">
   </mat-form-field>
   <mat-form-field style="display:block;clear: both;">
     <textarea matInput placeholder="Remarks" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10" [(ngModel)]="itemLog3.remarks"></textarea>
