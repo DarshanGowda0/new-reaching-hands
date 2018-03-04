@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
 import { MatDatepickerInputEvent } from '@angular/material';
 import { forEach } from '@firebase/util';
+import { tap } from 'rxjs/operators/tap';
 
 @Component({
   selector: 'app-item-report',
@@ -19,6 +20,10 @@ export class ItemReportComponent implements OnInit {
   startDate: any = null;
   endDate: any = null;
   chartType = 0;
+  sum = 0;
+  agg = 0;
+  mean ;
+  standardDeviation ;
 
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
@@ -31,7 +36,22 @@ export class ItemReportComponent implements OnInit {
 
   fetchDataAndAddChart() {
     this.dataService.getLogsOfItemAsce(this.itemId, this.startDate, this.endDate)
-      .subscribe(val => {
+    .pipe(
+      tap(val => {
+        val.forEach(element => {
+          this.sum += element.cost;
+        });
+        
+        this.mean = this.sum / val.length;
+        
+        val.forEach(element => {
+          this.agg += Math.pow(element.cost - this.mean , 2);
+        });
+
+        this.standardDeviation = Math.pow(this.agg/val.length,1/2);
+
+      })
+    ).subscribe(val => {
         this.calculateCost(val);
         this.calculateQuantity(val);
 
@@ -80,8 +100,8 @@ export class ItemReportComponent implements OnInit {
       const row = [];
       row.push(element.date);
       row.push(element.cost);
-      row.push(element.cost - 20);
-      row.push(element.cost + 20);
+      row.push(element.cost - this.standardDeviation);
+      row.push(element.cost + this.standardDeviation);
       this.costDataWithSD.push(row);
     });
     this.drawCostChart();
