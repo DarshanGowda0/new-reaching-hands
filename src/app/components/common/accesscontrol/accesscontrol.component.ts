@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/core';
-import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,6 +7,7 @@ import { tap, map } from 'rxjs/operators';
 import { User } from '../../../core/user';
 import { DataService } from '../../../core/data-service.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-accesscontrol',
@@ -25,20 +26,41 @@ export class AccesscontrolComponent implements OnInit, AfterViewInit {
 
 
   private detailsCollection: AngularFirestoreCollection<User>;
-  constructor(private route: ActivatedRoute, private afs: AngularFirestore,
+  constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute, private afs: AngularFirestore,
     private dataService: DataService) { }
 
+
+  popUp(message: string, action: string) {
+      this.snackBar.open(message, action, {
+        duration: 2500,
+      });
+    }
+
   onCheckEditor($even, uid) {
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canAccess(val)) {
     this.afs.collection<User>(`users`).doc(uid).set({
       checkEditor: $even.checked
     }, { merge: true });
+  } else {
+    console.log('No Access to Modify');
+    this.popUp('Not Admin : ', 'No Access');
+  }
+});
   }
 
 
   onCheckAdmin($event, uid) {
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canAccess(val)) {
     this.afs.collection<User>(`users`).doc(uid).set({
       checkAdmin: $event.checked
     }, { merge: true });
+  } else {
+    console.log('No Access to Modify');
+    this.popUp('Not Admin : ', 'No Access');
+  }
+});
 
   }
 
@@ -56,5 +78,12 @@ export class AccesscontrolComponent implements OnInit, AfterViewInit {
       this.dataSource.paginator = this.paginator;
     });
   }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase();
+    this.dataSource.filter = filterValue;
+  }
+
 
 }
