@@ -72,6 +72,7 @@ export class ItemReportComponent implements OnInit {
     let currentQuantity = 0, currentCost = 0;
     this.quantityData = [];
     this.costData = [];
+    this.initializeReportDetails();
     val.forEach(ele => {
       let row = [], costRow = [];
       if (ele.logType === this.logTypeOptions[0]) {
