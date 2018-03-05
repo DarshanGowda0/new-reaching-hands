@@ -32,11 +32,11 @@ export class AppComponent implements OnDestroy {
   loadUserDetails() {
     this.auth.user.subscribe(val => {
       this.email = val.email;
-      if ((val.checkAdmin)) {
-        this.roles = "admin";
-      }
      if ((val.checkEditor)) {
         this.roles = "editor";
+      }
+      if ((val.checkAdmin)) {
+        this.roles = "admin";
       }
     });
     this.auth.authUser.subscribe(val => {
