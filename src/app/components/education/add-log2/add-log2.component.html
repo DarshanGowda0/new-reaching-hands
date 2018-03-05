@@ -3,7 +3,7 @@
 
 
   <mat-form-field hintLabel="Example: xyz" style="display:block;clear: both;">
-    <input matInput #input placeholder="Enter Student Name" required [(ngModel)]="itemLog2.studentName">
+    <input matInput #input placeholder="Enter Student Name" required [(ngModel)]="itemLog2.studentName" pattern="[a-zA-Z]*">
   </mat-form-field>
 
   <mat-form-field>
@@ -20,7 +20,7 @@
 
   <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
     <span matPrefix>&#8377; </span>
-    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog2.cost">
+    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog2.cost" pattern="[0-9]*">
   </mat-form-field>
 
 

@@ -17,14 +17,46 @@
 
   <div>
 
+    <div *ngIf="isDone">
+      <div class="ui segment">
+        <h4 class="ui left floated header">Quantity</h4>
+        <div class="ui clearing hidden divider"></div>
+        <a class="ui olive large label">Purchased
+          <div class="detail">{{reportDetails.addedQuantity}}</div>
+        </a>
+        <a class="ui green large label">Issued
+          <div class="detail">{{reportDetails.issuedQuantity}}</div>
+        </a>
+        <a class="ui teal large label">Donated
+          <div class="detail">{{reportDetails.donatedQuantity}}</div>
+        </a>
+
+        <div class="ui clearing divider"></div>
+
+        <h4 class="ui left floated header">Price</h4>
+        <div class="ui clearing hidden divider"></div>
+        <a class="ui olive large label">Purchased
+          <div class="detail">{{reportDetails.addedCost}}</div>
+        </a>
+        <a class="ui green large label">Issued
+          <div class="detail">{{reportDetails.issuedCost}}</div>
+        </a>
+        <a class="ui teal large label">Donated
+          <div class="detail">{{reportDetails.donatedCost}}</div>
+        </a>
+      </div>
+    </div>
+
+
     <div style="width:100%">
       <div id="quantityChart"></div>
     </div>
+    <div style="width:100%;">
+      <div id="costChart"></div>
+    </div>
   </div>
 
-  <div style="width:100%;">
-    <div id="costChart"></div>
-  </div>
+
 
 
 </div>
