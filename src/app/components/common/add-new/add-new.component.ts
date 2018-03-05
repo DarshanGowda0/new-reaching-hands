@@ -21,7 +21,7 @@ export class AddNewComponent implements OnInit {
     {
       name: 'Services',
       category: [
-        'Studentpersonalcare', 'Medicalcare', 'Transportation'
+        'Studentpersonelcare', 'Medicalcare', 'Transportation'
       ]
     },
     {
