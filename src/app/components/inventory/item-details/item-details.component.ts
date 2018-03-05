@@ -29,7 +29,8 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
+  constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute,
+    private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.google = this.route.snapshot.data.google;

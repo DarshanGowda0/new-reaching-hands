@@ -3,12 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
 import { MatDatepickerInputEvent } from '@angular/material';
 import { forEach } from '@firebase/util';
+import { tap } from 'rxjs/operators/tap';
+import { ReportDetails } from '../../../models/report-details';
 
 @Component({
   selector: 'app-item-report',
   templateUrl: './item-report.component.html',
   styleUrls: ['./item-report.component.css']
 })
+
 export class ItemReportComponent implements OnInit {
 
   @Input() itemId: string;
@@ -20,21 +23,47 @@ export class ItemReportComponent implements OnInit {
   endDate: any = null;
   chartType = 0;
 
+
   logTypeOptions = ['Added', 'Issued', 'Donated'];
+
+  sum = 0;
+  agg = 0;
+  mean;
+  standardDeviation;
+  reportDetails: ReportDetails;
+  isDone = false;
+
 
   constructor(private route: ActivatedRoute, private dataService: DataService) {
   }
 
   ngOnInit() {
-
+    this.initializeReportDetails();
   }
 
+  // changing this only for issued
   fetchDataAndAddChart() {
     this.dataService.getLogsOfItemAsce(this.itemId, this.startDate, this.endDate)
-      .subscribe(val => {
+      .pipe(
+        tap(val => {
+          let count = 0;
+          val.forEach(element => {
+            if (element.logType === this.logTypeOptions[1]) {
+              this.sum += element.cost;
+              count++;
+            }
+          });
+          this.mean = this.sum / count;
+          val.forEach(element => {
+            if (element.logType === this.logTypeOptions[1]) {
+              this.agg += Math.pow(element.cost - this.mean, 2);
+            }
+          });
+          this.standardDeviation = Math.pow(this.agg / count, 1 / 2);
+        })
+      ).subscribe(val => {
         this.calculateCost(val);
         this.calculateQuantity(val);
-
       });
   }
 
@@ -53,6 +82,9 @@ export class ItemReportComponent implements OnInit {
         currentCost += ele.cost;
         costRow = [ele.date, ele.cost, 0, 0, currentCost];
 
+        this.reportDetails.addedCost += ele.cost;
+        this.reportDetails.addedQuantity += ele.quantity;
+
       } else if (ele.logType === this.logTypeOptions[1]) {
 
         currentQuantity -= ele.quantity;
@@ -60,6 +92,9 @@ export class ItemReportComponent implements OnInit {
 
         currentCost -= ele.cost;
         costRow = [ele.date, 0, ele.cost, 0, currentCost];
+
+        this.reportDetails.issuedCost += ele.cost;
+        this.reportDetails.issuedQuantity += ele.quantity;
       } else {
 
         currentQuantity += ele.quantity;
@@ -67,6 +102,9 @@ export class ItemReportComponent implements OnInit {
 
         currentCost += ele.cost;
         costRow = [ele.date, 0, 0, ele.cost, currentCost];
+
+        this.reportDetails.donatedCost += ele.cost;
+        this.reportDetails.donatedQuantity += ele.quantity;
       }
       this.quantityData.push(row);
       this.costData.push(costRow);
@@ -78,11 +116,13 @@ export class ItemReportComponent implements OnInit {
     this.costDataWithSD = [];
     val.forEach(element => {
       const row = [];
-      row.push(element.date);
-      row.push(element.cost);
-      row.push(element.cost - 20);
-      row.push(element.cost + 20);
-      this.costDataWithSD.push(row);
+      if (element.logType === this.logTypeOptions[1]) {
+        row.push(element.date);
+        row.push(element.cost);
+        row.push(element.cost - this.standardDeviation);
+        row.push(element.cost + this.standardDeviation);
+        this.costDataWithSD.push(row);
+      }
     });
     this.drawCostChart();
   }
@@ -102,6 +142,13 @@ export class ItemReportComponent implements OnInit {
       curveType: 'function',
       lineWidth: 4,
       intervals: { 'style': 'area' },
+      animation: {
+        duration: 1000,
+        easing: 'in',
+        startup: true
+      },
+      pointSize: 7,
+      dataOpacity: 0.3,
       height: 360,
     };
 
@@ -146,6 +193,7 @@ export class ItemReportComponent implements OnInit {
     this.startDate = event.value;
     if (this.endDate !== null) {
       console.log('show graph');
+      this.isDone = true;
       this.fetchDataAndAddChart();
     }
   }
@@ -154,6 +202,7 @@ export class ItemReportComponent implements OnInit {
     this.endDate = event.value;
     if (this.startDate !== null) {
       console.log('show graph');
+      this.isDone = true;
       this.fetchDataAndAddChart();
     }
   }
@@ -161,6 +210,17 @@ export class ItemReportComponent implements OnInit {
   switchCharts() {
     this.chartType = 1 - this.chartType;
     this.drawQuantityChart();
+  }
+
+  initializeReportDetails() {
+    this.reportDetails = {
+      addedCost: 0,
+      addedQuantity: 0,
+      donatedCost: 0,
+      donatedQuantity: 0,
+      issuedCost: 0,
+      issuedQuantity: 0
+    };
   }
 
 }
