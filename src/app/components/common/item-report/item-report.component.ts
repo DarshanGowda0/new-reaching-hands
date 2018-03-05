@@ -115,8 +115,9 @@ export class ItemReportComponent implements OnInit {
       if (element.logType === this.logTypeOptions[1]) {
         row.push(element.date);
         row.push(element.cost);
-        row.push(element.cost - this.standardDeviation);
-        row.push(element.cost + this.standardDeviation);
+        row.push(this.mean);
+        row.push(this.mean - 2 * this.standardDeviation);
+        row.push(this.mean + 2 * this.standardDeviation);
         this.costDataWithSD.push(row);
       }
     });
@@ -126,7 +127,8 @@ export class ItemReportComponent implements OnInit {
   drawCostChart() {
     const data = new this.google.visualization.DataTable();
     data.addColumn('datetime', 'x');
-    data.addColumn('number', 'values');
+    data.addColumn('number', 'cost');
+    data.addColumn('number', 'mean');
     data.addColumn({ id: 'i0', type: 'number', role: 'interval' });
     data.addColumn({ id: 'i1', type: 'number', role: 'interval' });
 
@@ -134,7 +136,7 @@ export class ItemReportComponent implements OnInit {
 
     // The intervals data as narrow lines (useful for showing raw source data)
     const options_lines = {
-      title: 'Line intervals, default',
+      title: 'Consumption rate',
       curveType: 'function',
       lineWidth: 4,
       intervals: { 'style': 'area' },
@@ -146,6 +148,10 @@ export class ItemReportComponent implements OnInit {
       pointSize: 7,
       dataOpacity: 0.3,
       height: 360,
+      series: {
+        1: { lineDashStyle: [4, 1] }
+      },
+      colors: ['#e2431e', '#4374e0'],
     };
 
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
