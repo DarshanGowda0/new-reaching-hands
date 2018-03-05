@@ -7,4 +7,5 @@ export interface Item {
     category: string;
     subCategory: string;
     addedBy: string;
+    thresholdValue: number;
 }

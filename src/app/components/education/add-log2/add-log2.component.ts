@@ -18,7 +18,7 @@ export class AddLog2Component implements OnInit {
   logFormControl = new FormControl();
 
   commonsOptions = ['Boys', 'Girls', 'Common', 'HomeSchool'];
-  logTypeOptions = ['Added', 'Supplied', 'Donated'];
+  logTypeOptions = ['Added', 'Issued', 'Donated'];
 
   constructor(public dialogRef: MatDialogRef<AddLog2Component>,
     @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {

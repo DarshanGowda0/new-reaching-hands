@@ -20,7 +20,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   currentQuantity = 0;
 
   displayedColumns = ['serviceDate', 'servicer', 'billNumber', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
-  logTypeOptions = ['Added', 'Supplied', 'Donated'];
+  logTypeOptions = ['Added', 'Issued', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
@@ -38,29 +38,24 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   }
 
   ngAfterViewInit() {
-    this.dataService.getLogsOfItem3(this.item.itemId).pipe(
-      tap(val => {
-        this.currentQuantity = this.getCurrentQuantity(val);
-        console.log(val);
-      })
-    ).subscribe(val => {
+    this.dataService.getLogsOfItem3(this.item.itemId).subscribe(val => {
       this.dataSource = new MatTableDataSource(val);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  getCurrentQuantity(val) {
-    let quantity = 0;
-    val.forEach(element => {
-      if (element.logType === this.logTypeOptions[1]) {
-        quantity = quantity - element.quantity;
-      } else {
-        quantity = quantity + element.quantity;
-      }
-    });
-    return quantity;
-  }
+  // getCurrentQuantity(val) {
+  //   let quantity = 0;
+  //   val.forEach(element => {
+  //     if (element.logType === this.logTypeOptions[1]) {
+  //       quantity = quantity - element.quantity;
+  //     } else {
+  //       quantity = quantity + element.quantity;
+  //     }
+  //   });
+  //   return quantity;
+  // }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();

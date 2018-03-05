@@ -15,6 +15,8 @@ import { LoginComponent } from './components/common/login/login.component';
 import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
 import { GoogleChartResolver } from './core/google-chart-resolver';
 import { ItemReportComponent } from './components/common/item-report/item-report.component';
+import { CanAccessGuard } from './core/can-access.guard';
+import { PageunresponsiveComponent } from './components/common/pageunresponsive/pageunresponsive.component';
 
 const routes: Routes = [
   {
@@ -45,7 +47,7 @@ const routes: Routes = [
   {
     path: 'AccessControl',
     component: AccesscontrolComponent,
-    canActivate: [AuthGuard]
+    canActivate: [CanAccessGuard]
   },
   {
     path: 'add',
@@ -82,6 +84,10 @@ const routes: Routes = [
     component: ItemReportComponent,
     resolve: { google: GoogleChartResolver },
     canActivate: [AuthGuard]
+  },
+  {
+    path: '**',
+    component: PageunresponsiveComponent,
   }
 
 ];
