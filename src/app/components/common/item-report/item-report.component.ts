@@ -22,8 +22,8 @@ export class ItemReportComponent implements OnInit {
   chartType = 0;
   sum = 0;
   agg = 0;
-  mean ;
-  standardDeviation ;
+  mean;
+  standardDeviation;
 
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
@@ -34,27 +34,29 @@ export class ItemReportComponent implements OnInit {
 
   }
 
+  // changing this only for issued
   fetchDataAndAddChart() {
     this.dataService.getLogsOfItemAsce(this.itemId, this.startDate, this.endDate)
-    .pipe(
-      tap(val => {
-        val.forEach(element => {
-          this.sum += element.cost;
-        });
-        
-        this.mean = this.sum / val.length;
-        
-        val.forEach(element => {
-          this.agg += Math.pow(element.cost - this.mean , 2);
-        });
-
-        this.standardDeviation = Math.pow(this.agg/val.length,1/2);
-
-      })
-    ).subscribe(val => {
+      .pipe(
+        tap(val => {
+          let count = 0;
+          val.forEach(element => {
+            if (element.logType === this.logTypeOptions[1]) {
+              this.sum += element.cost;
+              count++;
+            }
+          });
+          this.mean = this.sum / count;
+          val.forEach(element => {
+            if (element.logType === this.logTypeOptions[1]) {
+              this.agg += Math.pow(element.cost - this.mean, 2);
+            }
+          });
+          this.standardDeviation = Math.pow(this.agg / count, 1 / 2);
+        })
+      ).subscribe(val => {
         this.calculateCost(val);
         this.calculateQuantity(val);
-
       });
   }
 
@@ -98,11 +100,13 @@ export class ItemReportComponent implements OnInit {
     this.costDataWithSD = [];
     val.forEach(element => {
       const row = [];
-      row.push(element.date);
-      row.push(element.cost);
-      row.push(element.cost - this.standardDeviation);
-      row.push(element.cost + this.standardDeviation);
-      this.costDataWithSD.push(row);
+      if (element.logType === this.logTypeOptions[1]) {
+        row.push(element.date);
+        row.push(element.cost);
+        row.push(element.cost - this.standardDeviation);
+        row.push(element.cost + this.standardDeviation);
+        this.costDataWithSD.push(row);
+      }
     });
     this.drawCostChart();
   }
@@ -122,6 +126,13 @@ export class ItemReportComponent implements OnInit {
       curveType: 'function',
       lineWidth: 4,
       intervals: { 'style': 'area' },
+      animation: {
+        duration: 1000,
+        easing: 'in',
+        startup: true
+      },
+      pointSize: 7,
+      dataOpacity: 0.3,
       height: 360,
     };
 
