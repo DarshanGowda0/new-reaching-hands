@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatTableDataSource, MatSort, MatPaginator, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatSnackBar } from '@angular/material';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { ItemLog2 } from '../../../models/item-log';
 import { Observable } from 'rxjs/Observable';
@@ -8,6 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../../../models/item';
 import { AddLog2Component } from '../add-log2/add-log2.component';
 import { tap, map } from 'rxjs/operators';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-item-details2',
@@ -26,7 +27,7 @@ export class ItemDetails2Component implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
+  constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -78,29 +79,49 @@ export class ItemDetails2Component implements OnInit, AfterViewInit {
     });
   }
 
+
+  popUp(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2500,
+    });
+  }
+
   onDelete(logId) {
-    this.dataService.deleteLogById1(logId).then(() => {
-      console.log('deleted succesfully');
-    }).catch(err => {
-      console.error('error in deleting', err);
-      alert('error while deleting!');
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canDelete(val)) {
+        this.dataService.deleteLogById(logId).then(() => {
+          console.log('deleted succesfully');
+        }).catch(err => {
+          console.error('error in deleting', err);
+          alert('error while deleting!');
+        });
+      } else {
+        console.log('No Access to Delete');
+        this.popUp('Not Admin : ', 'No Access to Delete');
+      }
     });
   }
 
   onEdit(itemLog) {
-    const dialogRef = this.dialog.open(AddLog2Component, {
-      width: '450px',
-      data: {
-        'itemLog2': itemLog,
-        'item': this.item
-      },
-      disableClose: true
-    });
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canEdit(val)) {
+        const dialogRef = this.dialog.open(AddLog2Component, {
+          width: '450px',
+          data: {
+            'itemLog2': itemLog,
+            'item': this.item
+          },
+          disableClose: true
+        });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed =>', result);
+        dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed =>', result);
+        });
+      } else {
+        console.log('No Access to Edit');
+        this.popUp('Not Admin : ', 'No Access to Edit');
+      }
     });
   }
-
 
 }
