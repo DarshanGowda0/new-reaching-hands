@@ -4,12 +4,14 @@ import { DataService } from '../../../core/data-service.service';
 import { MatDatepickerInputEvent } from '@angular/material';
 import { forEach } from '@firebase/util';
 import { tap } from 'rxjs/operators/tap';
+import { ReportDetails } from '../../../models/report-details';
 
 @Component({
   selector: 'app-item-report',
   templateUrl: './item-report.component.html',
   styleUrls: ['./item-report.component.css']
 })
+
 export class ItemReportComponent implements OnInit {
 
   @Input() itemId: string;
@@ -24,14 +26,15 @@ export class ItemReportComponent implements OnInit {
   agg = 0;
   mean;
   standardDeviation;
-
+  reportDetails: ReportDetails;
+  isDone = false;
   logTypeOptions = ['Added', 'Supplied', 'Donated'];
 
   constructor(private route: ActivatedRoute, private dataService: DataService) {
   }
 
   ngOnInit() {
-
+    this.initializeReportDetails();
   }
 
   // changing this only for issued
@@ -75,6 +78,9 @@ export class ItemReportComponent implements OnInit {
         currentCost += ele.cost;
         costRow = [ele.date, ele.cost, 0, 0, currentCost];
 
+        this.reportDetails.addedCost += ele.cost;
+        this.reportDetails.addedQuantity += ele.quantity;
+
       } else if (ele.logType === this.logTypeOptions[1]) {
 
         currentQuantity -= ele.quantity;
@@ -82,6 +88,9 @@ export class ItemReportComponent implements OnInit {
 
         currentCost -= ele.cost;
         costRow = [ele.date, 0, ele.cost, 0, currentCost];
+
+        this.reportDetails.issuedCost += ele.cost;
+        this.reportDetails.issuedQuantity += ele.quantity;
       } else {
 
         currentQuantity += ele.quantity;
@@ -89,6 +98,9 @@ export class ItemReportComponent implements OnInit {
 
         currentCost += ele.cost;
         costRow = [ele.date, 0, 0, ele.cost, currentCost];
+
+        this.reportDetails.donatedCost += ele.cost;
+        this.reportDetails.donatedQuantity += ele.quantity;
       }
       this.quantityData.push(row);
       this.costData.push(costRow);
@@ -177,6 +189,7 @@ export class ItemReportComponent implements OnInit {
     this.startDate = event.value;
     if (this.endDate !== null) {
       console.log('show graph');
+      this.isDone = true;
       this.fetchDataAndAddChart();
     }
   }
@@ -185,6 +198,7 @@ export class ItemReportComponent implements OnInit {
     this.endDate = event.value;
     if (this.startDate !== null) {
       console.log('show graph');
+      this.isDone = true;
       this.fetchDataAndAddChart();
     }
   }
@@ -192,6 +206,17 @@ export class ItemReportComponent implements OnInit {
   switchCharts() {
     this.chartType = 1 - this.chartType;
     this.drawQuantityChart();
+  }
+
+  initializeReportDetails() {
+    this.reportDetails = {
+      addedCost: 0,
+      addedQuantity: 0,
+      donatedCost: 0,
+      donatedQuantity: 0,
+      issuedCost: 0,
+      issuedQuantity: 0
+    };
   }
 
 }
