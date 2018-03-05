@@ -72,7 +72,6 @@ export class AccesscontrolComponent implements OnInit, AfterViewInit {
     this.detailsCollection = this.afs.collection<User>(path);
 
     this.detailsCollection.valueChanges().subscribe(val => {
-      console.log(val, 'valffffffffffffffff');
       this.dataSource = new MatTableDataSource(val);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
