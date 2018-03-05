@@ -10,7 +10,7 @@
           "/index.html"
         ],
         "urls": [
-          "https://fonts.googleapis.com/icon?family=Material+Icons",
+          "https://fonts.googleapis.com/icon?family=Material+Icons"
         ],
         "versionedFiles": [
           "/*.bundle.css",

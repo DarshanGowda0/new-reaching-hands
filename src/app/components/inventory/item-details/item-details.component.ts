@@ -17,7 +17,7 @@ import { AuthService } from '../../../core/auth.service';
 })
 export class ItemDetailsComponent implements OnInit, AfterViewInit {
 
-  private google: any;
+  google: any;
 
   item: Item = {} as Item;
   currentQuantity = 0;
