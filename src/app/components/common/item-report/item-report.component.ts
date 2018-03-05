@@ -22,13 +22,17 @@ export class ItemReportComponent implements OnInit {
   startDate: any = null;
   endDate: any = null;
   chartType = 0;
+
+
+  logTypeOptions = ['Added', 'Issued', 'Donated'];
+
   sum = 0;
   agg = 0;
   mean;
   standardDeviation;
   reportDetails: ReportDetails;
   isDone = false;
-  logTypeOptions = ['Added', 'Supplied', 'Donated'];
+
 
   constructor(private route: ActivatedRoute, private dataService: DataService) {
   }
@@ -63,7 +67,7 @@ export class ItemReportComponent implements OnInit {
       });
   }
 
-  // row = ['date','added','supplied','donated','currentQuantity']
+  // row = ['date','added','Issued','donated','currentQuantity']
   calculateQuantity(val) {
     let currentQuantity = 0, currentCost = 0;
     this.quantityData = [];

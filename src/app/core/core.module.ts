@@ -8,6 +8,7 @@ import { DataService } from './data-service.service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth }     from 'angularfire2/auth';
 import { GoogleChartResolver } from './google-chart-resolver';
+import { CanAccessGuard } from './can-access.guard';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { GoogleChartResolver } from './google-chart-resolver';
     AngularFireAuthModule
   ],
   declarations: [],
-  providers: [AuthService, AuthGuard, DataService, GoogleChartResolver, NotificationService, AngularFireAuth, AngularFireDatabase]
+  providers: [AuthService, AuthGuard, DataService, GoogleChartResolver, NotificationService, AngularFireAuth, AngularFireDatabase, CanAccessGuard]
 })
 export class CoreModule { }
