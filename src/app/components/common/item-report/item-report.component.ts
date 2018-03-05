@@ -72,15 +72,16 @@ export class ItemReportComponent implements OnInit {
     let currentQuantity = 0, currentCost = 0;
     this.quantityData = [];
     this.costData = [];
+    this.initializeReportDetails();
     val.forEach(ele => {
       let row = [], costRow = [];
       if (ele.logType === this.logTypeOptions[0]) {
 
         currentQuantity += ele.quantity;
-        row = [ele.date, ele.quantity, 0, 0, currentQuantity];
+        row = [this.dateFormat(ele.date), ele.quantity, 0, 0, currentQuantity];
 
         currentCost += ele.cost;
-        costRow = [ele.date, ele.cost, 0, 0, currentCost];
+        costRow = [this.dateFormat(ele.date), ele.cost, 0, 0, currentCost];
 
         this.reportDetails.addedCost += ele.cost;
         this.reportDetails.addedQuantity += ele.quantity;
@@ -88,20 +89,20 @@ export class ItemReportComponent implements OnInit {
       } else if (ele.logType === this.logTypeOptions[1]) {
 
         currentQuantity -= ele.quantity;
-        row = [ele.date, 0, ele.quantity, 0, currentQuantity];
+        row = [this.dateFormat(ele.date), 0, ele.quantity, 0, currentQuantity];
 
         currentCost -= ele.cost;
-        costRow = [ele.date, 0, ele.cost, 0, currentCost];
+        costRow = [this.dateFormat(ele.date), 0, ele.cost, 0, currentCost];
 
         this.reportDetails.issuedCost += ele.cost;
         this.reportDetails.issuedQuantity += ele.quantity;
       } else {
 
         currentQuantity += ele.quantity;
-        row = [ele.date, 0, 0, ele.quantity, currentQuantity];
+        row = [this.dateFormat(ele.date), 0, 0, ele.quantity, currentQuantity];
 
         currentCost += ele.cost;
-        costRow = [ele.date, 0, 0, ele.cost, currentCost];
+        costRow = [this.dateFormat(ele.date), 0, 0, ele.cost, currentCost];
 
         this.reportDetails.donatedCost += ele.cost;
         this.reportDetails.donatedQuantity += ele.quantity;
@@ -117,7 +118,7 @@ export class ItemReportComponent implements OnInit {
     val.forEach(element => {
       const row = [];
       if (element.logType === this.logTypeOptions[1]) {
-        row.push(element.date);
+        row.push(this.dateFormat(element.date));
         row.push(element.cost);
         row.push(this.mean);
         row.push(this.mean - 2 * this.standardDeviation);
@@ -130,7 +131,7 @@ export class ItemReportComponent implements OnInit {
 
   drawCostChart() {
     const data = new this.google.visualization.DataTable();
-    data.addColumn('datetime', 'x');
+    data.addColumn('string', 'x');
     data.addColumn('number', 'cost');
     data.addColumn('number', 'mean');
     data.addColumn({ id: 'i0', type: 'number', role: 'interval' });
@@ -164,7 +165,7 @@ export class ItemReportComponent implements OnInit {
 
   drawQuantityChart() {
     const data = new this.google.visualization.DataTable();
-    data.addColumn('datetime', 'date');
+    data.addColumn('string', 'date');
     data.addColumn('number', 'Purchased');
     data.addColumn('number', 'Issued');
     data.addColumn('number', 'Donated');
@@ -227,6 +228,11 @@ export class ItemReportComponent implements OnInit {
       issuedCost: 0,
       issuedQuantity: 0
     };
+  }
+
+  dateFormat(date) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return String(date.toLocaleString('en-US'));
   }
 
 }
