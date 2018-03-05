@@ -3,6 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import { Item } from '../../../models/item';
 import { DataService } from '../../../core/data-service.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/auth.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-sub-cat-listing2',
@@ -15,7 +17,7 @@ export class SubCatListing2Component implements OnInit {
   nColumns: number;
   items: Observable<Item[]>;
 
-  constructor(private dataService: DataService, private router: Router) {
+  constructor(public snackBar: MatSnackBar, private auth: AuthService, private dataService: DataService, private router: Router) {
     const mWidth = window.innerWidth;
     this.setWidth(mWidth);
   }
@@ -61,7 +63,15 @@ export class SubCatListing2Component implements OnInit {
     this.router.navigate(['item-details2', id]);
   }
 
+  popUp(message: string,action: string) {
+    this.snackBar.open(message,action,{
+      duration:2500,
+    });
+  }
+
   onDelete(id) {
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canDelete(val)) {
     this.dataService.deleteItemById(id).then(() => {
       console.log('deleted item succesfully');
     }).catch(err => {
@@ -69,5 +79,13 @@ export class SubCatListing2Component implements OnInit {
       alert('error in deleting');
     });
   }
+  else{
+    this.popUp('Not Admin : ','No Access to Delete');
+  }
+});
+  }
 
 }
+
+
+
