@@ -236,3 +236,8 @@ export class ItemReportComponent implements OnInit {
   }
 
 }
+
+// arr = ['in','main']
+
+// for each i in arr:
+//    data.push([i,'1234']) =  or row.push(i);row.push(1234)

@@ -3,7 +3,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import * as firebase from 'firebase';
 import { Item } from '../models/item';
 import { AuthService } from './auth.service';
-import { ItemLog, ItemLog1, ItemLog3, ItemLog2 } from '../models/item-log';
+import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
 
@@ -98,5 +98,9 @@ export class DataService {
   }
   deleteLogById3(logId: string) {
     return this.firestore.collection<ItemLog3>(`logs`).doc(logId).delete();
+  }
+
+  getSummary() {
+    return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
   }
 }
