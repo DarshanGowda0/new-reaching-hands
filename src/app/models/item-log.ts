@@ -7,6 +7,7 @@ export interface ItemAbstract {
     subCategory: string;
     itemId: string;
     addedBy: string;
+    logType: string;
 }
 
 export interface ItemLog {
