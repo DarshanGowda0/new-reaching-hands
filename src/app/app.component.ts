@@ -14,7 +14,7 @@ import { NotificationService } from './core/notification.service';
 export class AppComponent implements OnDestroy {
 
   mobileQuery: MediaQueryList;
-  fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance', 'AccessControl'];
+  fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance', 'SummaryReport', 'AccessControl'];
   private _mobileQueryListener: () => void;
   email: string;
   roles: string;
