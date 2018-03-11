@@ -38,6 +38,7 @@ import { ItemReportComponent } from './components/common/item-report/item-report
 import { MAT_CHECKBOX_CLICK_ACTION } from '@angular/material';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { PageunresponsiveComponent } from './components/common/pageunresponsive/pageunresponsive.component';
+import { SummaryReportComponent} from './components/common/summary-report/summary-report.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { PageunresponsiveComponent } from './components/common/pageunresponsive/
     LoginComponent,
     AccesscontrolComponent,
     ItemReportComponent,
-    PageunresponsiveComponent
+    PageunresponsiveComponent,
+    SummaryReportComponent
   ],
   imports: [
     BrowserModule,
