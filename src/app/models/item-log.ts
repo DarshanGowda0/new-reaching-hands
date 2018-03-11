@@ -1,3 +1,14 @@
+export interface ItemAbstract {
+    logId: string;
+    date: any;
+    quantity: number;
+    cost: number;
+    category: string;
+    subCategory: string;
+    itemId: string;
+    addedBy: string;
+}
+
 export interface ItemLog {
     logId: string;
     date: any;
