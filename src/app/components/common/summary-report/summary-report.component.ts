@@ -37,16 +37,16 @@ export class SummaryReportComponent implements OnInit {
     const row = [];
     val.forEach(element => {
 
-      if (element.category === this.categoryList[0] && !(element.logType === 'Issued')) {
+      if (element.category === this.categoryList[0] && (element.logType !== 'Issued')) {
         this.costComp[0] += element.cost;
       }
-      else if (element.category === this.categoryList[1] && !(element.logType === 'Issued')) {
+      else if (element.category === this.categoryList[1] && (element.logType !== 'Issued')) {
         this.costComp[1] += element.cost;
       }
-     else if (element.category === this.categoryList[2] && !(element.logType === 'Issued')) {
+     else if (element.category === this.categoryList[2] && (element.logType !== 'Issued')) {
         this.costComp[2] += element.cost;
       }
-      else if (element.category === this.categoryList[3] && !(element.logType === 'Issued')) {
+      else if (element.category === this.categoryList[3] && (element.logType !== 'Issued')) {
         this.costComp[3] += element.cost;
       }
     });
