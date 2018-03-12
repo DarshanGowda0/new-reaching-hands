@@ -2,19 +2,32 @@
 
   <!-- <div class="header"> -->
   <mat-accordion>
-    <mat-expansion-panel>
+    <div class="ui inverted segment">
+      <div class="ui three statistics">
+        <div class="ui inverted statistic">
+            {{item.itemName}}
+        </div>
+        <div class="ui inverted statistic" >
+            Quantity : {{currentQuantity}} {{item.unit}}
+        </div>
+        <div class="ui inverted statistic">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" style="background:#d3d3d3">
+        </div>
+      </div>
+    </div>
+    <!--<mat-expansion-panel>
       <mat-expansion-panel-header style="background:#d3d3d3">
         <mat-panel-title>
           <h3>{{item.itemName}}</h3>
         </mat-panel-title>
-        <mat-panel-description>
+        <div class="ui statistic" >
           Quantity : {{currentQuantity}} {{item.unit}}
-        </mat-panel-description>
+        </div>
       </mat-expansion-panel-header>
       <mat-form-field style="width:100%">
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
-    </mat-expansion-panel>
+    </mat-expansion-panel>-->
   </mat-accordion>
   <!-- </div> -->
 
