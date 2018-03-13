@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 
 export interface IHash {
-  [details: string] : number;
+  [details: string]: number;
 }
 
 @Component({
@@ -36,7 +36,7 @@ export class SummaryReportComponent implements OnInit {
       })
     ).subscribe(val => {
       console.log(val);
-  
+
     });
   }
 
@@ -48,14 +48,11 @@ export class SummaryReportComponent implements OnInit {
 
       if (element.category === this.categoryList[0] && (element.logType !== 'Issued')) {
         this.costComp[0] += element.cost;
-      }
-      else if (element.category === this.categoryList[1] && (element.logType !== 'Issued')) {
+      } else if (element.category === this.categoryList[1] && (element.logType !== 'Issued')) {
         this.costComp[1] += element.cost;
-      }
-      else if (element.category === this.categoryList[2] && (element.logType !== 'Issued')) {
+      } else if (element.category === this.categoryList[2] && (element.logType !== 'Issued')) {
         this.costComp[2] += element.cost;
-      }
-      else if (element.category === this.categoryList[3] && (element.logType !== 'Issued')) {
+      } else if (element.category === this.categoryList[3] && (element.logType !== 'Issued')) {
         this.costComp[3] += element.cost;
       }
     });
@@ -74,21 +71,20 @@ export class SummaryReportComponent implements OnInit {
   computeCost1(val) {
     this.costData = [];
     const row = [];
-    let myhash: IHash ={};   
-   
+    const myhash: IHash = {};
+
     val.forEach(element => {
-     
-          
-          myhash[element.itemId] = 0;
-       
-      });
-    val.forEach(element => {
-        myhash[element.itemId] += element.cost;
+
+      myhash[element.itemId] = 0;
+
     });
-    
+    val.forEach(element => {
+      myhash[element.itemId] += element.cost;
+    });
+
     console.log('hashValues:', myhash);
 
-//assign the top 10 values to two different arrays and pass
+    // assign the top 10 values to two different arrays and pass
 
     for (let i = 0; i < this.categoryList.length; i++) {
       this.costData.push([this.categoryList[i], this.costComp[i]]);
@@ -101,41 +97,41 @@ export class SummaryReportComponent implements OnInit {
 
 
   drawChart() {
-    let data = new this.google.visualization.DataTable()
+    const data = new this.google.visualization.DataTable()
     data.addColumn('string', 'category');
     data.addColumn('number', 'cost');
     data.addRows(this.costData);
 
 
-    var options = {
+    const options = {
       title: 'Cost Summary',
       pieHole: 0.4,
     };
 
-    var chart = new this.google.visualization.PieChart(document.getElementById('donutchart'));
+    const chart = new this.google.visualization.PieChart(document.getElementById('donutchart'));
     chart.draw(data, options);
 
   }
 
   drawChart1() {
-    let data = new this.google.visualization.DataTable()
+    const data = new this.google.visualization.DataTable()
     data.addColumn('string', 'item');
     data.addColumn('number', 'costAggr');
     data.addRows(this.costData);
 
 
-    let view = new this.google.visualization.DataView(data);
+    const view = new this.google.visualization.DataView(data);
     view.setColumns([0, 1]);
 
-    let options = {
-      title: "Top 10 items on expense list",
+    const options = {
+      title: 'Top 10 items on expense list',
       width: 600,
       height: 400,
-      bar: { groupWidth: "95%" },
-      legend: { position: "none" },
+      bar: { groupWidth: '95%' },
+      legend: { position: 'none' },
       colors: ['#000', '#4374e0', '#e2431e', '#4374e0'],
     };
-    let chart = new this.google.visualization.BarChart(document.getElementById("barchart_values"));
+    const chart = new this.google.visualization.BarChart(document.getElementById('barchart_values'));
     chart.draw(view, options);
   }
 }
