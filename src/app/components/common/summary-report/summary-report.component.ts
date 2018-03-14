@@ -4,9 +4,6 @@ import { DataService } from '../../../core/data-service.service';
 import { tap } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 
-export interface IHash {
-  [details: string]: number;
-}
 
 @Component({
   selector: 'app-summary-report',
@@ -71,26 +68,45 @@ export class SummaryReportComponent implements OnInit {
   computeCost1(val) {
     this.costData = [];
     const row = [];
-    const myhash: IHash = {};
+    const myhash = new Map();
 
     val.forEach(element => {
-
-      myhash[element.itemId] = 0;
-
+      if (myhash.has(element.itemId)) {
+        const mCost = myhash.get(element.itemId) + element.cost;
+        myhash.set(element.itemId, mCost);
+      } else {
+        myhash.set(element.itemId, element.cost);
+      }
     });
-    val.forEach(element => {
-      myhash[element.itemId] += element.cost;
+
+    const myArr = new Array();
+    myhash.forEach((value, key) => {
+      myArr.push({
+        'name': key,
+        'value': value
+      });
     });
 
-    console.log('hashValues:', myhash);
+    myArr.sort(function (a, b) {
+      return b.value - a.value;
+    });
 
-    // assign the top 10 values to two different arrays and pass
-
+    // console.log('my val ', myArr);
     for (let i = 0; i < this.categoryList.length; i++) {
       this.costData.push([this.categoryList[i], this.costComp[i]]);
     }
     this.drawChart1();
 
+  }
+
+  compare(a, b) {
+    if (a.last_nom < b.last_nom) {
+      return -1;
+    }
+    if (a.last_nom > b.last_nom) {
+      return 1;
+    }
+    return 0;
   }
 
 
