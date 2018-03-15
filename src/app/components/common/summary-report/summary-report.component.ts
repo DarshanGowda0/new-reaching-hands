@@ -4,6 +4,11 @@ import { DataService } from '../../../core/data-service.service';
 import { tap } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 
+export interface CostModel {
+  purchased: number;
+  donated: number;
+  total: number;
+}
 
 @Component({
   selector: 'app-summary-report',
@@ -18,23 +23,27 @@ export class SummaryReportComponent implements OnInit {
   temp: string = null;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
   costComp: number[] = [0, 0, 0, 0];
-
+  logTypeOptions = ['Added', 'Issued', 'Donated'];
 
 
   constructor(private route: ActivatedRoute, private dataService: DataService) { }
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
 
-    this.dataService.getSummary().pipe(
-      tap(val => {
+    this.dataService.getSummary()
+      // .pipe(
+      //   tap(logs => {
 
-        this.computeCost(val);
-        this.computeCost1(val);
-      })
-    ).subscribe(val => {
-      console.log(val);
+      //   })
+      // )
+      .subscribe(logs => {
+        this.dataService.getAllItems().subscribe(items => {
+          this.computeCost(logs);
+          this.computeCost1(logs, items);
+        });
+      });
 
-    });
+
   }
 
 
@@ -65,37 +74,67 @@ export class SummaryReportComponent implements OnInit {
 
 
 
-  computeCost1(val) {
+  computeCost1(logs, items) {
     this.costData = [];
     const row = [];
     const myhash = new Map();
+    const nameHash = new Map();
 
-    val.forEach(element => {
+
+    // ('purchased','donated','full')
+
+    logs.forEach(element => {
       if (myhash.has(element.itemId)) {
-        const mCost = myhash.get(element.itemId) + element.cost;
-        myhash.set(element.itemId, mCost);
+        const mCost = myhash.get(element.itemId);
+        if (element.logType === this.logTypeOptions[0]) {
+          mCost.purchased = mCost.purchased + element.cost;
+          mCost.total = mCost.total + element.cost;
+          myhash.set(element.itemId, mCost);
+        } else if (element.logType === this.logTypeOptions[2]) {
+          mCost.donated = mCost.donated + element.cost;
+          mCost.total = mCost.total + element.cost;
+          myhash.set(element.itemId, mCost);
+        }
       } else {
-        myhash.set(element.itemId, element.cost);
+        const mCost: CostModel = {
+          purchased: 0,
+          donated: 0,
+          total: 0
+        };
+        if (element.logType === this.logTypeOptions[0]) {
+          mCost.purchased = element.cost;
+          mCost.total = element.cost;
+          myhash.set(element.itemId, mCost);
+        } else if (element.logType === this.logTypeOptions[2]) {
+          mCost.donated = element.cost;
+          mCost.total = element.cost;
+          myhash.set(element.itemId, mCost);
+        }
       }
     });
 
-    const myArr = new Array();
+    items.forEach(element => {
+      if (!nameHash.get(element.itemId)) {
+        nameHash.set(element.itemId, element.itemName);
+      }
+    });
+
+    const dataArray = new Array();
     myhash.forEach((value, key) => {
-      myArr.push({
-        'name': key,
-        'value': value
+      dataArray.push({
+        'id': key,
+        'costObject': value
       });
     });
 
-    myArr.sort(function (a, b) {
-      return b.value - a.value;
+    dataArray.sort(function (a, b) {
+      return b.costObject.total - a.costObject.total;
     });
 
-    // console.log('my val ', myArr);
     for (let i = 0; i < this.categoryList.length; i++) {
       this.costData.push([this.categoryList[i], this.costComp[i]]);
     }
-    this.drawChart1();
+    this.drawChart1(dataArray, nameHash);
 
   }
 
@@ -118,7 +157,6 @@ export class SummaryReportComponent implements OnInit {
     data.addColumn('number', 'cost');
     data.addRows(this.costData);
 
-
     const options = {
       title: 'Cost Summary',
       pieHole: 0.4,
@@ -129,25 +167,35 @@ export class SummaryReportComponent implements OnInit {
 
   }
 
-  drawChart1() {
-    const data = new this.google.visualization.DataTable()
-    data.addColumn('string', 'item');
-    data.addColumn('number', 'costAggr');
-    data.addRows(this.costData);
+  drawChart1(dataArray, nameHash) {
 
+    console.log('name ', nameHash);
 
-    const view = new this.google.visualization.DataView(data);
-    view.setColumns([0, 1]);
+    const myData = [];
+    myData.push(['Item', 'Total', 'Purchased', 'Donated']);
+    dataArray.forEach((item) => {
+      myData.push([nameHash.get(item.id), item.costObject.total, item.costObject.purchased, item.costObject.donated]);
+    });
+
+    const data = new this.google.visualization.arrayToDataTable(myData);
 
     const options = {
-      title: 'Top 10 items on expense list',
-      width: 600,
-      height: 400,
-      bar: { groupWidth: '95%' },
-      legend: { position: 'none' },
-      colors: ['#000', '#4374e0', '#e2431e', '#4374e0'],
+      title: 'Top 10 items',
+      legend: { position: 'top' },
+      chart: {
+        title: 'Top 10 items',
+        subtitle: 'Cost comparison'
+      },
+      bars: 'horizontal', // Required for Material Bar Charts.
+      axes: {
+        x: {
+          0: { side: 'top', label: 'Cost' } // Top x-axis.
+        }
+      },
+      bar: { groupWidth: '90%' }
     };
-    const chart = new this.google.visualization.BarChart(document.getElementById('barchart_values'));
-    chart.draw(view, options);
+
+    const chart = new this.google.charts.Bar(document.getElementById('barchart_values'));
+    chart.draw(data, options);
   }
 }
