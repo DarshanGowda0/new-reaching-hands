@@ -9,6 +9,7 @@ import { Item } from '../../../models/item';
 import { AddLog2Component } from '../add-log2/add-log2.component';
 import { tap, map } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth.service';
+import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'app-item-details2',
@@ -27,7 +28,8 @@ export class ItemDetails2Component implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
+  constructor(public snackBar: MatSnackBar, private auth: AuthService,
+    private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
