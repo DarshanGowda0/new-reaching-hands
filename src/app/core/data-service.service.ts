@@ -108,4 +108,16 @@ export class DataService {
     return this.firestore.collection<Item>('items').valueChanges();
   }
 
+  // save the permission token in firestore
+  saveToken(user, token): void {
+
+    const currentTokens = user.fcmTokens || {};
+    // If token does not exist in firestore, update db
+    if (!currentTokens[token]) {
+      const userRef = this.firestore.collection('users').doc(user.uid);
+      const tokens = { ...currentTokens, [token]: true };
+      userRef.update({ fcmTokens: tokens });
+    }
+  }
+
 }

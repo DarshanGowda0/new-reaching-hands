@@ -1,16 +1,19 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { OnDestroy, OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AuthService } from './core/auth.service';
+import { tap, map, take } from 'rxjs/operators';
+import { MessagingService } from './core/messaging-service.service';
+import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements OnDestroy, OnInit {
 
   mobileQuery: MediaQueryList;
   fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance', 'SummaryReport', 'AccessControl'];
@@ -20,11 +23,24 @@ export class AppComponent implements OnDestroy {
   image: string;
 
   constructor(public auth: AuthService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-    private router: Router, private afs: AngularFirestore) {
+    private router: Router, private afs: AngularFirestore, private msg: MessagingService) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
     this.loadUserDetails();
+  }
+
+  ngOnInit() {
+    this.auth.user
+      .filter(user => !!user) // filter null
+      .take(1) // take first real user
+      .subscribe(user => {
+        if (user) {
+          this.msg.getPermission(user);
+          this.msg.monitorRefresh(user);
+          this.msg.receiveMessages();
+        }
+      });
   }
 
 
