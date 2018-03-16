@@ -17,6 +17,7 @@
 *.launch
 .settings/
 *.sublime-workspace
+package-lock.json
 
 # IDE - VSCode
 .vscode/*
@@ -42,3 +43,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Cloud function node node_modules
+/cloud-functions/dev/functions/node_modules
+/cloud-functions/prod/functions/node_modules
+/cloud-functions/dev/functions/package-lock.json
+/cloud-functions/prod/functions/package-lock.json
