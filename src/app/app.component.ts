@@ -15,6 +15,7 @@ import 'rxjs/add/operator/take';
 })
 export class AppComponent implements OnDestroy, OnInit {
 
+
   mobileQuery: MediaQueryList;
   fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance', 'SummaryReport', 'AccessControl'];
   private _mobileQueryListener: () => void;
@@ -73,5 +74,6 @@ export class AppComponent implements OnDestroy, OnInit {
     this.auth.signOut();
     console.log('signed out');
   }
+
 
 }
