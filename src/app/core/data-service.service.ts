@@ -79,8 +79,8 @@ export class DataService {
     return this.firestore.collection<ItemLog3>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
   }
 
-  addAuth(uid: string){
-    
+  addAuth(uid: string) {
+
   }
 
   // getLogsOfSubCat
@@ -103,4 +103,9 @@ export class DataService {
   getSummary() {
     return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
   }
+
+  getAllItems() {
+    return this.firestore.collection<Item>('items').valueChanges();
+  }
+
 }
