@@ -4,8 +4,6 @@ admin.initializeApp(functions.config().firebase);
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
 
-
-    const userId = '4uaHJ1zzB9ZWiySnr610oD3oFat2';
     const payload = {
         notification: {
             title: 'New message!',
@@ -16,19 +14,28 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     }
 
     const db = admin.firestore();
-    const userRef = db.collection('users').doc(userId);
+    const userRef = db.collection('users');
 
     userRef.get()
-        .then(snapshot => snapshot.data())
-        .then(user => {
-
-            const tokens = user.fcmTokens ? Object.keys(user.fcmTokens) : []
-
+        .then(querySnapshot => {
+            let tokens = [];
+            querySnapshot.forEach(userDoc => {
+                if (userDoc.data().fcmTokens) {
+                    tokens = tokens.concat(Object.keys(userDoc.data().fcmTokens));
+                }
+            });
             if (!tokens.length) {
-                throw new Error('User does not have any tokens!')
+                throw new Error('User does not have any tokens!');
             }
-
+            console.log('tokens ', tokens)
             return admin.messaging().sendToDevice(tokens, payload)
+                .then((response) => {
+                    // Response is a message ID string.
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.log('Error sending message:', error);
+                });
         })
         .catch(err => console.log(err))
 
