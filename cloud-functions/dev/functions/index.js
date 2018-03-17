@@ -43,6 +43,50 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     response.send("Hello from Firebase!");
 });
 
+function checkBelowThreshold(modifiedQuantity, thresholdValue, itemId, itemName) {
+    if (modifiedQuantity <= thresholdValue) {
+        sendAlert(itemId, itemName);
+    }
+}
+
+function sendAlert(itemId, itemName) {
+    const payload = {
+        notification: {
+            title: itemName + ' are in Danger!',
+            body: itemName + ' are running out of stock',
+            icon: 'https://goo.gl/Fz9nrQ',
+            click_action: "http://localhost:4200/item-details/" + itemId
+        }
+    }
+
+    const db = admin.firestore();
+    const userRef = db.collection('users');
+
+    userRef.get()
+        .then(querySnapshot => {
+            let tokens = [];
+            querySnapshot.forEach(userDoc => {
+                if (userDoc.data().fcmTokens) {
+                    tokens = tokens.concat(Object.keys(userDoc.data().fcmTokens));
+                }
+            });
+            if (!tokens.length) {
+                throw new Error('User does not have any tokens!');
+            }
+            console.log('tokens ', tokens)
+            return admin.messaging().sendToDevice(tokens, payload)
+                .then((response) => {
+                    // Response is a message ID string.
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.log('Error sending message:', error);
+                });
+        })
+        .catch(err => console.log(err))
+}
+
+
 exports.itemsCreateLog = functions.firestore.document('logs/{logId}').onCreate(event => {
     const logId = event.params.logId;
 
@@ -72,6 +116,7 @@ exports.itemsCreateLog = functions.firestore.document('logs/{logId}').onCreate(e
         return mTransaction.get(itemDocRef)
             .then(itemDoc => {
                 var modifiedQuantity = itemDoc.data().itemQuantity + quantity;
+                checkBelowThreshold(modifiedQuantity, itemDoc.data().thresholdValue, itemDoc.data().itemId, itemDoc.data().itemName);
                 mTransaction.update(itemDocRef, {
                     itemQuantity: modifiedQuantity,
                     lastModified: timestamp
@@ -117,6 +162,7 @@ exports.itemsDeleteLog = functions.firestore.document('logs/{logId}').onDelete(e
             return mTransaction.get(itemDocRef)
                 .then(itemDoc => {
                     var modifiedQuantity = itemDoc.data().itemQuantity - quantity;
+                    checkBelowThreshold(modifiedQuantity, itemDoc.data().thresholdValue, itemDoc.data().itemId, itemDoc.data().itemName);
                     mTransaction.update(itemDocRef, {
                         itemQuantity: modifiedQuantity,
                         lastModified: timestamp
@@ -173,6 +219,7 @@ exports.itemsUpdateLog = functions.firestore.document('logs/{logId}').onUpdate(e
         return mTransaction.get(itemDocRef)
             .then(itemDoc => {
                 var modifiedQuantity = itemDoc.data().itemQuantity - previousQuantity + quantity;
+                checkBelowThreshold(modifiedQuantity, itemDoc.data().thresholdValue, itemDoc.data().itemId, itemDoc.data().itemName);
                 mTransaction.update(itemDocRef, {
                     itemQuantity: modifiedQuantity,
                     lastModified: timestamp
