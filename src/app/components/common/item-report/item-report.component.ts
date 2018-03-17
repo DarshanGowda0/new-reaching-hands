@@ -211,7 +211,7 @@ export class ItemReportComponent implements OnInit {
       console.log('show graph');
       this.isDone = true;
       this.fetchDataAndAddChart();
-    }
+    } 
   }
 
   switchCharts() {
