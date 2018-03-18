@@ -104,6 +104,10 @@ export class DataService {
     return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
   }
 
+  getSummaryCat(cat: string) {
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('category', '==', cat).orderBy('date', 'desc')).valueChanges();
+  }
+
   getAllItems() {
     return this.firestore.collection<Item>('items').valueChanges();
   }

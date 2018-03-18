@@ -17,7 +17,9 @@ export class AppComponent implements OnDestroy, OnInit {
 
 
   mobileQuery: MediaQueryList;
-  fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance', 'SummaryReport', 'AccessControl'];
+  misc = ['AccessControl'];
+  category = ['Inventory', 'Services', 'Education', 'Maintenance'];
+  reports = ['Summary-level', 'Category-level', 'SubCategory-level'];
   private _mobileQueryListener: () => void;
   email: string;
   roles: string;
