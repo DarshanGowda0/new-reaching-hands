@@ -19,7 +19,7 @@ export class CategoryLevelReportComponent implements OnInit {
   totalCost: number = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
   subCategoryList: string[] = null;
-  costComp: number[] = [0, 0, 0, 0, 0, 0, 0];
+  costComp: number[] = [];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   display = ['ItemName', 'Cost', 'Category', 'SubCategory'];
   dataSource: MatTableDataSource<any>;
@@ -41,7 +41,7 @@ export class CategoryLevelReportComponent implements OnInit {
       )
       .subscribe(logs => {
         this.dataService.getAllItems().subscribe(items => {
-          
+
 
           this.dataSource = new MatTableDataSource(logs);
           this.dataSource.sort = this.sort;
@@ -55,7 +55,7 @@ export class CategoryLevelReportComponent implements OnInit {
 
 
   chosen(cat: string) {
-
+      this.subCategoryList = null;
     if (cat == 'Inventory') {
       this.subCategoryList = ['Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous', 'Genericmeds'];
     }
@@ -79,13 +79,19 @@ export class CategoryLevelReportComponent implements OnInit {
   computeCost(val) {
     this.costData = [];
     const row = [];
+    for (let i = 0; i < this.subCategoryList.length; i++) {
+      this.costComp[i] = 0;
+    }
+
+
+
     val.forEach(element => {
       for (let i = 0; i < this.subCategoryList.length; i++) {
         if (element.subCategory === this.subCategoryList[i]) {
           this.costComp[i] += element.cost;
         }
       }
-      
+
     });
 
     console.log('val2', this.costComp);
@@ -94,6 +100,7 @@ export class CategoryLevelReportComponent implements OnInit {
       this.costData.push([this.subCategoryList[i], this.costComp[i]]);
     }
     this.drawChart();
+
 
   }
   drawChart() {
