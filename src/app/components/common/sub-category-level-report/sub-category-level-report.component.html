@@ -1,0 +1,39 @@
+<button mat-button [matMenuTriggerFor]="category">CATEGORY</button>
+
+<mat-menu #category="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="inventory">Inventory</button>
+  <button mat-menu-item [matMenuTriggerFor]="services">Services</button>
+  <button mat-menu-item [matMenuTriggerFor]="education">Education</button>
+  <button mat-menu-item [matMenuTriggerFor]="maintenance">Maintenance</button>
+</mat-menu>
+
+<mat-menu #inventory="matMenu">
+  <button mat-menu-item (click)="chosen(1)">Assets</button>
+  <button mat-menu-item (click)="chosen(2)">Groceries</button>
+  <button mat-menu-item (click)="chosen(3)">Tolietries</button>
+  <button mat-menu-item (click)="chosen(4)">Stationary</button>
+  <button mat-menu-item (click)="chosen(5)">Perishable Goods</button>
+  <button mat-menu-item (click)="chosen(6)">Miscellaneous</button>
+  <button mat-menu-item (click)="chosen(7)">Generic Meds</button>
+</mat-menu>
+
+<mat-menu #services="matMenu">
+  <button mat-menu-item (click)="chosen(8)">Student Personal Care</button>
+  <button mat-menu-item (click)="chosen(9)">Medical Care</button>
+  <button mat-menu-item (click)="chosen(10)">Transportation</button>
+</mat-menu>
+
+<mat-menu #education="matMenu">
+    <button mat-menu-item (click)="chosen(11)">School</button>
+    <button mat-menu-item (click)="chosen(12)">Home-School</button>
+    <button mat-menu-item (click)="chosen(13)">Extra-Curricular</button>
+    <button mat-menu-item (click)="chosen(14)">Tutorials</button>
+  </mat-menu>
+
+<mat-menu #maintenance="matMenu">
+  <button mat-menu-item (click)="chosen(15)">Vehicle</button>
+  <button mat-menu-item (click)="chosen(16)">Campus</button>
+  <button mat-menu-item (click)="chosen(17)">Monthly Bills</button>
+</mat-menu>
+
+<div id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;"></div>

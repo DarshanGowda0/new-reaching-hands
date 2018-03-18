@@ -1,0 +1,12 @@
+<button mat-button [matMenuTriggerFor]="category">CATEGORY</button>
+
+<mat-menu #category="matMenu">
+  <button mat-menu-item (click)="chosen('Inventory')">Inventory</button>
+  <button mat-menu-item (click)="chosen('Services')">Services</button>
+  <button mat-menu-item (click)="chosen('Education')">Education</button>
+  <button mat-menu-item (click)="chosen('Maintenance')">Maintenance</button>
+</mat-menu>
+
+
+
+<div id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;"></div>

@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
 import { tap,map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
+import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 
 export interface CostModel {
   purchased: number;
@@ -25,9 +26,12 @@ export class SummaryReportComponent implements OnInit {
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
   costComp: number[] = [0, 0, 0, 0];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
+  display = ['ItemName', 'Cost', 'Category', 'SubCategory'];
+  dataSource: MatTableDataSource<any>;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-
-  constructor(private route: ActivatedRoute, private dataService: DataService) { }
+  constructor(private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
 
@@ -45,9 +49,13 @@ export class SummaryReportComponent implements OnInit {
           this.computeCost(logs);
           this.computeCost1(logs, items);
           this.computeCost2(logs);
+          this.dataSource = new MatTableDataSource(logs);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
         });
       });
 
+    
 
   }
 

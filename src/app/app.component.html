@@ -30,7 +30,18 @@
           <div class="detail" style="color:blue;">{{email}}</div>
           <div style="position:absolute;left:70px;right:50px;color:red;">{{roles}}</div>
           <br>
-          <mat-list-item *ngFor="let item of fillerNav">
+          <h3>Categories:</h3>
+          <mat-list-item *ngFor="let item of category">
+            <mat-icon mat-list-icon>folder</mat-icon>
+            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+          </mat-list-item>
+          <h3>Reports:</h3>
+          <mat-list-item *ngFor="let item of reports">
+              <mat-icon mat-list-icon>note</mat-icon>
+              <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+            </mat-list-item>
+          <h3>Admin Control:</h3>
+          <mat-list-item *ngFor="let item of misc">
             <mat-icon mat-list-icon>folder</mat-icon>
             <a mat-list-item routerLink="./{{item}}">{{item}}</a>
           </mat-list-item>
