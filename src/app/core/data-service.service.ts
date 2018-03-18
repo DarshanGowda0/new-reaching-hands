@@ -108,6 +108,14 @@ export class DataService {
     return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('category', '==', cat).orderBy('date', 'desc')).valueChanges();
   }
 
+  getSummarysubCat(subCat: string) {
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('subCategory', '==', subCat).orderBy('date', 'desc')).valueChanges();
+  }
+
+  // getAllItems1(subCat: string) {
+  //   return this.firestore.collection<Item>('items', ref => ref.where('subCategory', '==', subCat).orderBy('date', 'desc')).valueChanges();
+  // }
+
   getAllItems() {
     return this.firestore.collection<Item>('items').valueChanges();
   }
