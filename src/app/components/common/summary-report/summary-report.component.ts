@@ -149,7 +149,7 @@ export class SummaryReportComponent implements OnInit {
     //console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
-    if (arrayTen.length > 10) {
+    if (dataArray.length > 10) {
       for (let i = 0; i < 10; i++) {
         arrayTen[i] = dataArray[i];
       }
