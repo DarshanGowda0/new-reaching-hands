@@ -161,6 +161,12 @@ export class ItemReportComponent implements OnInit {
 
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
     chart_lines.draw(data, options_lines);
+    this.google.visualization.events.addListener(chart_lines, 'select', function () {
+      const selectedItem = chart_lines.getSelection()[0];
+      if (selectedItem) {
+        console.log(selectedItem.row, ' ', selectedItem.column);
+      }
+    });
   }
 
   drawQuantityChart() {
@@ -211,7 +217,7 @@ export class ItemReportComponent implements OnInit {
       console.log('show graph');
       this.isDone = true;
       this.fetchDataAndAddChart();
-    }
+    } 
   }
 
   switchCharts() {

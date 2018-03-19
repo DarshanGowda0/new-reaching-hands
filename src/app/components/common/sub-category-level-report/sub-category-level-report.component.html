@@ -1,0 +1,40 @@
+<button mat-button [matMenuTriggerFor]="category">SUB-CATEGORY</button>
+
+<mat-menu #category="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="inventory">Inventory</button>
+  <button mat-menu-item [matMenuTriggerFor]="services">Services</button>
+  <button mat-menu-item [matMenuTriggerFor]="education">Education</button>
+  <button mat-menu-item [matMenuTriggerFor]="maintenance">Maintenance</button>
+</mat-menu>
+
+<mat-menu #inventory="matMenu">
+  <button mat-menu-item (click)="chosen('Assets')">Assets</button>
+  <button mat-menu-item (click)="chosen('Groceries')">Groceries</button>
+  <button mat-menu-item (click)="chosen('Toiletries')">Tolietries</button>
+  <button mat-menu-item (click)="chosen('Stationary')">Stationary</button>
+  <button mat-menu-item (click)="chosen('Perishablegoods')">Perishable Goods</button>
+  <button mat-menu-item (click)="chosen('Miscellaneous')">Miscellaneous</button>
+  <button mat-menu-item (click)="chosen('Genericmeds')">Generic Meds</button>
+</mat-menu>
+
+<mat-menu #services="matMenu">
+  <button mat-menu-item (click)="chosen('Studentpersonelcare')">Student Personal Care</button>
+  <button mat-menu-item (click)="chosen('Medicalcare')">Medical Care</button>
+  <button mat-menu-item (click)="chosen('Transportation')">Transportation</button>
+</mat-menu>
+
+<mat-menu #education="matMenu">
+    <button mat-menu-item (click)="chosen('School')">School</button>
+    <button mat-menu-item (click)="chosen('Homeschool')">Home-School</button>
+    <button mat-menu-item (click)="chosen('Extracurricular')">Extra-Curricular</button>
+    <button mat-menu-item (click)="chosen('Tutorials')">Tutorials</button>
+  </mat-menu>
+
+<mat-menu #maintenance="matMenu">
+  <button mat-menu-item (click)="chosen('Vehicle')">Vehicle</button>
+  <button mat-menu-item (click)="chosen('Campus')">Campus</button>
+  <button mat-menu-item (click)="chosen('Monthlybills')">Monthly Bills</button>
+</mat-menu>
+
+
+<div id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;"></div>

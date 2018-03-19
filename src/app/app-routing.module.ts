@@ -18,6 +18,8 @@ import { GoogleChartResolver } from './core/google-chart-resolver';
 import { ItemReportComponent } from './components/common/item-report/item-report.component';
 import { CanAccessGuard } from './core/can-access.guard';
 import { PageunresponsiveComponent } from './components/common/pageunresponsive/pageunresponsive.component';
+import { SubCategoryLevelReportComponent } from './components/common/sub-category-level-report/sub-category-level-report.component';
+import { CategoryLevelReportComponent } from './components/common/category-level-report/category-level-report.component';
 
 const routes: Routes = [
   {
@@ -81,8 +83,20 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: 'SummaryReport',
+    path: 'Summary-level',
     component: SummaryReportComponent,
+    resolve: { google: GoogleChartResolver },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'Category-level',
+    component: CategoryLevelReportComponent,
+    resolve: { google: GoogleChartResolver },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'SubCategory-level',
+    component: SubCategoryLevelReportComponent,
     resolve: { google: GoogleChartResolver },
     canActivate: [AuthGuard]
   },
