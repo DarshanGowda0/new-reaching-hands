@@ -8,19 +8,12 @@
         <span>New Home - Reaching Hands</span>
       </a>
       <span class="toolbar-spacer"></span>
-      <!-- <mat-icon class="toolbar-icon">favorite</mat-icon>
-      <mat-icon class="toolbar-icon">delete</mat-icon> -->
-    <button mat-icon-button color="basic" (click)="signOut()" style="position:absolute;right:10px;">
-      <mat-icon aria-label="Example icon-button with a heart icon">
-        <i class="material-icons">settings_power</i>
-      </mat-icon>
-    </button>
-    <span class="toolbar-spacer"></span>
-    <!-- <button mat-icon-button color="basic" (click)="sendNotification()" style="position:absolute;right:40px;">
-      <mat-icon aria-label="Example icon-button with a heart icon">
-        <i class="material-icons">settings_power</i>
-      </mat-icon>
-    </button> -->
+      <button mat-icon-button color="basic" (click)="signOut()" style="position:absolute;right:10px;">
+        <mat-icon aria-label="Example icon-button with a heart icon">
+          <i class="material-icons">settings_power</i>
+        </mat-icon>
+      </button>
+      <span class="toolbar-spacer"></span>
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
@@ -28,18 +21,38 @@
       fixedTopGap="56">
       <mat-list>
         <mat-nav-list>
-            <div><img src="{{image}}" alt="NO IMAGE AVAILABLE" style="border-radius: 50%;position:absolute;height:60px;width:60px;top:8%;left:50%;transform:translate(-50%,-50%);"></div>
-            <br><br><br><div class="detail" style="color:blue;">{{email}}</div>
-            <div style="position:absolute;left:70px;right:50px;color:red;">{{roles}}</div>
-            <br>
-        <mat-list-item *ngFor="let item of fillerNav">
-          <mat-icon mat-list-icon>folder</mat-icon>
-          <a mat-list-item routerLink="./{{item}}">{{item}}</a>
-        </mat-list-item>
-      </mat-nav-list>
+          <div>
+            <img src="{{image}}" alt="NO IMAGE AVAILABLE" style="border-radius: 50%;position:absolute;height:60px;width:60px;top:8%;left:50%;transform:translate(-50%,-50%);">
+          </div>
+          <br>
+          <br>
+          <br>
+          <div class="detail" style="color:blue;">{{email}}</div>
+          <div style="position:absolute;left:70px;right:50px;color:red;">{{roles}}</div>
+          <br>
+          <h3>Categories:</h3>
+          <mat-list-item *ngFor="let item of category">
+            <mat-icon mat-list-icon>folder</mat-icon>
+            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+          </mat-list-item>
+          <h3>Reports:</h3>
+          <mat-list-item *ngFor="let item of reports">
+              <mat-icon mat-list-icon>note</mat-icon>
+              <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+            </mat-list-item>
+          <h3>Admin Control:</h3>
+          <mat-list-item *ngFor="let item of misc">
+            <mat-icon mat-list-icon>folder</mat-icon>
+            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+          </mat-list-item>
+        </mat-nav-list>
       </mat-list>
     </mat-sidenav>
     <mat-sidenav-content class="router-content">
+      <div class="ui floating message" style="position:fixed;top:5%; right:5%; z-index:10" *ngIf="msg.currentMessage | async as message ">
+        <h3>{{message.notification.title}}</h3>
+        <p>{{message.notification.body}}</p>
+      </div>
       <router-outlet>
       </router-outlet>
     </mat-sidenav-content>

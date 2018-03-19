@@ -104,8 +104,32 @@ export class DataService {
     return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
   }
 
+  getSummaryCat(cat: string) {
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('category', '==', cat).orderBy('date', 'desc')).valueChanges();
+  }
+
+  getSummarysubCat(subCat: string) {
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('subCategory', '==', subCat).orderBy('date', 'desc')).valueChanges();
+  }
+
+  // getAllItems1(subCat: string) {
+  //   return this.firestore.collection<Item>('items', ref => ref.where('subCategory', '==', subCat).orderBy('date', 'desc')).valueChanges();
+  // }
+
   getAllItems() {
     return this.firestore.collection<Item>('items').valueChanges();
+  }
+
+  // save the permission token in firestore
+  saveToken(user, token): void {
+
+    const currentTokens = user.fcmTokens || {};
+    // If token does not exist in firestore, update db
+    if (!currentTokens[token]) {
+      const userRef = this.firestore.collection('users').doc(user.uid);
+      const tokens = { ...currentTokens, [token]: true };
+      userRef.update({ fcmTokens: tokens });
+    }
   }
 
 }
