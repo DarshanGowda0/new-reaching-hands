@@ -2,35 +2,20 @@
 
   <!-- <div class="header"> -->
   <mat-accordion>
-    <div class="ui inverted segment">
-      <div class="ui three statistics">
-        <div class="ui inverted statistic">
-            {{item.itemName}}
-        </div>
-        <div class="ui inverted statistic" >
-            Quantity : {{currentQuantity}} {{item.unit}}
-        </div>
-        <div class="ui inverted statistic">
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" style="background:#d3d3d3">
-        </div>
-      </div>
-    </div>
-    <!--<mat-expansion-panel>
+    <mat-expansion-panel>
       <mat-expansion-panel-header style="background:#d3d3d3">
-        <mat-panel-title>
-          <h3>{{item.itemName}}</h3>
-        </mat-panel-title>
-        <div class="ui statistic" >
-          Quantity : {{currentQuantity}} {{item.unit}}
-        </div>
+       <mat-panel-title>
+          {{item.itemName}}
+       </mat-panel-title>
+       <div>
+        Quantity : {{currentQuantity}} {{item.unit}}
+       </div>
       </mat-expansion-panel-header>
       <mat-form-field style="width:100%">
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
-    </mat-expansion-panel>-->
+    </mat-expansion-panel>
   </mat-accordion>
-  <!-- </div> -->
-
   <div class="mat-elevation-z2">
     <mat-table #table [dataSource]="dataSource" matSort>
 
@@ -93,7 +78,11 @@
   </div>
 
   <div class="mat-elevation-z2" style="margin-top:1%;padding:2%">
-    <h3 color="primary"><b><u>Reports</u></b></h3>
+    <div class="ui inverted segment">
+      <div class="ui statistic">
+        <label style="font-weight:bold;text-align:center">Reports</label>
+      </div>
+    </div>
     <app-item-report [google]="google" [itemId]="item.itemId">
     </app-item-report>
   </div>
