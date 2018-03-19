@@ -14,19 +14,19 @@
           <div class="header">
             {{item.itemName}}
             <span class="right floated">
+              <div class="ui blue label">
+                {{item.itemQuantity}} {{item.unit}}
+              </div>
               <button class="circular ui icon button" (click)="onDelete(item.itemId)">
                 <i class="trash icon"></i>
               </button>
-              <div class="ui blue label">
-                  {{item.thresholdValue}}
-              </div>
             </span>
           </div>
         </div>
         <div class="extra content">
           <span>
             <i class="history icon"></i>
-            {{item.lastModified|date: "h:mma  'on' MM/dd/yyyy"}}
+            {{item.lastModified|date: "h:mma 'on' MM/dd/yyyy"}}
           </span>
         </div>
       </div>

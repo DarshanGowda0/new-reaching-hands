@@ -79,8 +79,8 @@ export class DataService {
     return this.firestore.collection<ItemLog3>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
   }
 
-  addAuth(uid: string){
-    
+  addAuth(uid: string) {
+
   }
 
   // getLogsOfSubCat
@@ -103,4 +103,21 @@ export class DataService {
   getSummary() {
     return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
   }
+
+  getAllItems() {
+    return this.firestore.collection<Item>('items').valueChanges();
+  }
+
+  // save the permission token in firestore
+  saveToken(user, token): void {
+
+    const currentTokens = user.fcmTokens || {};
+    // If token does not exist in firestore, update db
+    if (!currentTokens[token]) {
+      const userRef = this.firestore.collection('users').doc(user.uid);
+      const tokens = { ...currentTokens, [token]: true };
+      userRef.update({ fcmTokens: tokens });
+    }
+  }
+
 }
