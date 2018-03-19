@@ -1,12 +1,12 @@
 <div style="display: flex">
-  <div id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;"></div>
-  <div id="barchart_values" style="flex: 1;width:50%;height:600px;padding:2%;"></div>
+  <mat-card id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;margin-left:2%;margin-right:1%;margin-top:2%;"></mat-card>
+  <mat-card id="barchart_values" style="flex: 1;width:50%;height:600px;padding:2%;margin-left:1%;margin-right:2%;margin-top:2%;"></mat-card>
 </div>
 <div style="width:100%;">
-  <div id="costChart"></div>
+  <mat-card id="costChart" style="padding:2%;margin:2%;"></mat-card>
 </div>
 
-<mat-card style="padding:2%;">
+<div style="padding:2%;">
   <div class="mat-elevation-z2">
     <mat-table #table [dataSource]="dataSource" matSort>
 
@@ -44,4 +44,4 @@
     <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
     </mat-paginator>
   </div>
-</mat-card>
+</div>
