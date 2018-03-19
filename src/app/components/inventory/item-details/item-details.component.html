@@ -3,14 +3,22 @@
   <!-- <div class="header"> -->
   <mat-accordion>
     <mat-expansion-panel>
-      <mat-expansion-panel-header style="background:#d3d3d3">
+      <mat-expansion-panel-header style="background:#2ABB9B">
        <mat-panel-title>
-          {{item.itemName}}
+        <div class="ui mini statistic">
+          <div class="value">
+            {{item.itemName}}
+          </div>          
+        </div>
        </mat-panel-title>
-       <div>
-        Quantity : {{currentQuantity}} {{item.unit}}
-       </div>
-      </mat-expansion-panel-header>
+       <mat-panel-title>
+        <div class="ui mini statistic">    
+          <div class="label">
+            Current Quantity : {{currentQuantity}} {{item.unit}}
+          </div>
+        </div>
+       </mat-panel-title>
+      </mat-expansion-panel-header>      
       <mat-form-field style="width:100%">
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
@@ -78,9 +86,9 @@
   </div>
 
   <div class="mat-elevation-z2" style="margin-top:1%;padding:2%">
-    <div class="ui inverted segment">
-      <div class="ui statistic">
-        <label style="font-weight:bold;text-align:center">Reports</label>
+    <div class="ui segment" style="background:#2ABB9B">
+      <div class="ui center aligned mini statistic">
+        <label style="font-weight:bold;text-align:center;color:white">Reports</label>
       </div>
     </div>
     <app-item-report [google]="google" [itemId]="item.itemId">
