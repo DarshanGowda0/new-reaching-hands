@@ -15,10 +15,12 @@ export class SubCategoryLevelReportComponent implements OnInit {
   @Input() itemId: string;
   @Input() google: any;
   costData = [];
-  temp: string = '';
-  totalCost: number = 0;
+  temp = '';
+  totalCost = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
-  subCategoryList: string[] = ['Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous', 'Genericmeds', 'Studentpersonelcare', 'Medicalcare', 'Transportation', 'Vehicle', 'Campus', 'Monthlybills', 'School', 'Homeschool', 'Extracurricular', 'Tutorials'];
+  subCategoryList: string[] = ['Assets', 'Groceries', 'Stationary', 'Toiletries',
+    'Perishablegoods', 'Miscellaneous', 'Genericmeds', 'Studentpersonelcare', 'Medicalcare',
+    'Transportation', 'Vehicle', 'Campus', 'Monthlybills', 'School', 'Homeschool', 'Extracurricular', 'Tutorials'];
   costComp: number[] = [];
   items: string[][] = [];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
@@ -36,7 +38,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
         map(logs => {
           logs.forEach(item => {
             item.date = this.dateFormat(item.date);
-          })
+          });
           return logs;
         })
       )
@@ -65,14 +67,13 @@ export class SubCategoryLevelReportComponent implements OnInit {
     const row = [];
     const myhash = new Map();
     const itemhash = new Map();
-    let cost: number = 0;
+    let cost = 0;
 
     val.forEach(element => {
       if (myhash.has(element.itemId)) {
         cost = myhash.get(element.itemId) + element.cost;
         myhash.set(element.itemId, cost);
-      }
-      else {
+      } else {
         myhash.set(element.itemId, element.cost);
       }
 
@@ -81,7 +82,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
     items.forEach(element => {
       itemhash.set(element.itemId, element.itemName);
     });
-    
+
     console.log('itemhash', itemhash);
 
     const dataArray = new Array();
@@ -95,7 +96,8 @@ export class SubCategoryLevelReportComponent implements OnInit {
     console.log('new', dataArray);
 
     for (let i = 0; i < dataArray.length; i++) {
-      this.costData.push([dataArray[i].id, dataArray[i].cost]);
+      const id = dataArray[i].id;
+      this.costData.push([itemhash.get(id), dataArray[i].cost]);
     }
     this.drawChart();
 
