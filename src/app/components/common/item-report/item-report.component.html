@@ -16,12 +16,61 @@
   </button>
 
   <div>
-
     <div *ngIf="isDone">
       <div class="ui segment">
         <h4 class="ui left floated header">Total</h4>
         <div class="ui clearing hidden divider"></div>
-        <a class="ui orange large label">Purchased Quantity
+        <div class="ui six statistics">
+          <div class="statistic">
+            <div class="label">
+              Purchased Quantity
+            </div>
+            <div class="value">
+              {{reportDetails.addedQuantity}}
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="label">
+              Issued Quantity
+            </div>
+            <div class="value">
+              {{reportDetails.issuedQuantity}}
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="label">
+              Donated Quantity
+            </div>
+            <div class="value">
+              {{reportDetails.donatedQuantity}}
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="label">
+              Purchased Amount
+            </div>
+            <div class="value">
+              {{reportDetails.addedCost}}
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="label">
+              Issued Amount
+            </div>
+            <div class="value">
+              {{reportDetails.issuedCost}}
+            </div>
+          </div>
+          <div class="statistic">
+            <div class="label">
+              Donated Amount
+            </div>
+            <div class="value">
+              {{reportDetails.donatedCost}}
+            </div>
+          </div>
+        </div>
+        <!--<a class="ui orange large label">Purchased Quantity
           <div class="detail">{{reportDetails.addedQuantity}}</div>
         </a>
         <a class="ui blue large label">Issued Quantity 
@@ -39,7 +88,7 @@
         </a>
         <a class="ui black large label">Donated Amount
           <div class="detail">{{reportDetails.donatedCost}}</div>
-        </a>
+        </a>-->
       </div>
     </div>
 
