@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
-import { tap,map } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 
@@ -22,7 +22,7 @@ export class SummaryReportComponent implements OnInit {
   @Input() google: any;
   costData = [];
   temp: string = null;
-  totalCost: number = 0;
+  totalCost = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
   costComp: number[] = [0, 0, 0, 0];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
@@ -38,10 +38,10 @@ export class SummaryReportComponent implements OnInit {
     this.dataService.getSummary()
       .pipe(
         map(logs => {
-            logs.forEach(item=>{
-              item.date = this.dateFormat(item.date);
-            })
-            return logs;
+          logs.forEach(item => {
+            item.date = this.dateFormat(item.date);
+          });
+          return logs;
         })
       )
       .subscribe(logs => {
@@ -55,7 +55,7 @@ export class SummaryReportComponent implements OnInit {
         });
       });
 
-    
+
 
   }
 
@@ -169,13 +169,13 @@ export class SummaryReportComponent implements OnInit {
 
   computeCost2(val) {
     this.costData = [];
-    
+
     const myhash = new Map();
 
     val.forEach(element => {
       if (myhash.has(element.date)) {
         if (element.logType !== this.logTypeOptions[1]) {
-         
+
           this.totalCost += element.cost;
           myhash.set(element.date, this.totalCost);
         }
@@ -187,7 +187,7 @@ export class SummaryReportComponent implements OnInit {
       }
     });
 
-    console.log('booooooooooootrre',myhash);
+    console.log('booooooooooootrre', myhash);
 
     const dataArray1 = new Array();
     myhash.forEach((value, key) => {
@@ -200,13 +200,13 @@ export class SummaryReportComponent implements OnInit {
 
     dataArray1.forEach(element => {
       const row = [];
-  
-        row.push(this.dateFormat(element.date));
-        row.push(element.cost);
-        row.push(element.cost - 300);
-        row.push(element.cost + 300);
-        this.costData.push(row);
-      
+
+      row.push(this.dateFormat(element.date));
+      row.push(element.cost);
+      row.push(element.cost - 300);
+      row.push(element.cost + 300);
+      this.costData.push(row);
+
     });
     this.drawCostChart2();
   }
@@ -308,7 +308,7 @@ export class SummaryReportComponent implements OnInit {
 
   dateFormat(date) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return String(date.toLocaleString('en-US')).substr(0,9);
+    return String(date.toLocaleString('en-US')).substr(0, 9);
   }
 
 
