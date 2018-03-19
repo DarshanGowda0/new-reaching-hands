@@ -109,12 +109,16 @@ export class DataService {
   }
 
   getSummarysubCat(subCat: string) {
-    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('subCategory', '==', subCat).orderBy('date', 'desc')).valueChanges();
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('subCategory', '==', subCat)
+      .orderBy('date', 'desc')).valueChanges();
   }
 
-  // getAllItems1(subCat: string) {
-  //   return this.firestore.collection<Item>('items', ref => ref.where('subCategory', '==', subCat).orderBy('date', 'desc')).valueChanges();
-  // }
+  getLogsByDate(date) {
+    const yesterday = date.setDate(date.getDate() - 1);
+    const tomorrow = date.setDate(date.getDate() + 1);
+    return this.firestore.
+      collection<ItemAbstract>(`logs`, ref => ref.where('date', '>', yesterday).where('date', '<', tomorrow)).valueChanges();
+  }
 
   getAllItems() {
     return this.firestore.collection<Item>('items').valueChanges();

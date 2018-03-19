@@ -146,7 +146,7 @@ export class SummaryReportComponent implements OnInit {
       return b.costObject.total - a.costObject.total;
     });
 
-    //console.log('array',dataArray[1]);
+    // console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
     if (dataArray.length > 10) {
@@ -154,8 +154,7 @@ export class SummaryReportComponent implements OnInit {
         arrayTen[i] = dataArray[i];
       }
       this.drawChart1(arrayTen, nameHash);
-    }
-    else {
+    } else {
       this.drawChart1(dataArray, nameHash);
     }
     console.log('array', arrayTen[1]);
@@ -304,6 +303,16 @@ export class SummaryReportComponent implements OnInit {
 
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
     chart_lines.draw(data, options_lines);
+    this.google.visualization.events.addListener(chart_lines, 'select', () => {
+      const selectedItem = chart_lines.getSelection()[0];
+      if (selectedItem) {
+        const selectedDate = this.getFullDate(this.costData[selectedItem.row][0]);
+
+        // this.dataService.getLogsByDate(selectedDate).subscribe(logs => {
+        //   console.log('logs ', logs);
+        // });
+      }
+    });
   }
 
   dateFormat(date) {
@@ -311,5 +320,8 @@ export class SummaryReportComponent implements OnInit {
     return String(date.toLocaleString('en-US')).substr(0, 9);
   }
 
+  getFullDate(date) {
+    return String(date.toLocaleString('en-US'));
+  }
 
 }
