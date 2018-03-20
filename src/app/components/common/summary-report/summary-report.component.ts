@@ -22,11 +22,11 @@ export class SummaryReportComponent implements OnInit {
   @Input() itemId: string;
   @Input() google: any;
   temp: string = null;
-  totalCost = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
   costComp: number[] = [0, 0, 0, 0];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
-  display = ['ItemName', 'Cost', 'Category', 'SubCategory'];
+  display = ['name', 'cost', 'type', 'category', 'subCategory'];
+  nameHash = new Map();
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -46,17 +46,23 @@ export class SummaryReportComponent implements OnInit {
       )
       .subscribe(logs => {
         this.dataService.getAllItems().subscribe(items => {
+          this.getAllNames(items);
           this.computeDataForPieChart(logs);
-          this.computeDataForTopTenItems(logs, items);
+          this.computeDataForTopTenItems(logs);
           this.comupteDataForLineChart(logs);
-          this.dataSource = new MatTableDataSource(logs);
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
         });
       });
 
 
 
+  }
+
+  getAllNames(items) {
+    items.forEach(element => {
+      if (!this.nameHash.get(element.itemId)) {
+        this.nameHash.set(element.itemId, element.itemName);
+      }
+    });
   }
 
 
@@ -83,10 +89,9 @@ export class SummaryReportComponent implements OnInit {
 
 
 
-  computeDataForTopTenItems(logs, items) {
+  computeDataForTopTenItems(logs) {
     const row = [];
     const myhash = new Map();
-    const nameHash = new Map();
     logs.forEach(element => {
       if (myhash.has(element.itemId)) {
         const mCost = myhash.get(element.itemId);
@@ -117,11 +122,7 @@ export class SummaryReportComponent implements OnInit {
       }
     });
 
-    items.forEach(element => {
-      if (!nameHash.get(element.itemId)) {
-        nameHash.set(element.itemId, element.itemName);
-      }
-    });
+
 
     const dataArray = new Array();
     myhash.forEach((value, key) => {
@@ -140,9 +141,9 @@ export class SummaryReportComponent implements OnInit {
       for (let i = 0; i < 10; i++) {
         arrayTen[i] = dataArray[i];
       }
-      this.topTenItemsChart(arrayTen, nameHash);
+      this.topTenItemsChart(arrayTen);
     } else {
-      this.topTenItemsChart(dataArray, nameHash);
+      this.topTenItemsChart(dataArray);
     }
     console.log('array', arrayTen[1]);
 
@@ -150,23 +151,33 @@ export class SummaryReportComponent implements OnInit {
 
   comupteDataForLineChart(val) {
     const costData = [];
-
+    let totalCost = 0;
     const myhash = new Map();
+    const dateToData = new Map();
 
     val.forEach(element => {
       if (myhash.has(element.date)) {
         if (element.logType !== this.logTypeOptions[1]) {
+          totalCost += element.cost;
+          myhash.set(element.date, totalCost);
 
-          this.totalCost += element.cost;
-          myhash.set(element.date, this.totalCost);
+          const tempArray = dateToData.get(element.date);
+          tempArray.push(element);
+          dateToData.set(element.date, tempArray);
         }
       } else {
         if (element.logType !== this.logTypeOptions[1]) {
-          this.totalCost = element.cost;
-          myhash.set(element.date, this.totalCost);
+          totalCost = element.cost;
+          myhash.set(element.date, totalCost);
+
+          const elementDataArray = new Array();
+          elementDataArray.push(element);
+          dateToData.set(element.date, elementDataArray);
         }
       }
     });
+
+    console.log('date to data ', dateToData);
 
     const dataArray1 = new Array();
     myhash.forEach((value, key) => {
@@ -187,7 +198,7 @@ export class SummaryReportComponent implements OnInit {
       costData.push(row);
 
     });
-    this.drawLineChart(costData);
+    this.drawLineChart(costData, dateToData);
   }
 
   compare(a, b) {
@@ -219,14 +230,14 @@ export class SummaryReportComponent implements OnInit {
 
   }
 
-  topTenItemsChart(dataArray, nameHash) {
+  topTenItemsChart(dataArray) {
 
     console.log('name ', dataArray);
 
     const myData = [];
     myData.push(['Item', 'Total', 'Purchased', 'Donated']);
     dataArray.forEach((item) => {
-      myData.push([nameHash.get(item.id), item.costObject.total, item.costObject.purchased, item.costObject.donated]);
+      myData.push([this.nameHash.get(item.id), item.costObject.total, item.costObject.purchased, item.costObject.donated]);
     });
 
     const data = new this.google.visualization.arrayToDataTable(myData);
@@ -252,7 +263,7 @@ export class SummaryReportComponent implements OnInit {
   }
 
 
-  drawLineChart(costData) {
+  drawLineChart(costData, dateToData) {
     const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'x');
     data.addColumn('number', 'cost');
@@ -284,12 +295,14 @@ export class SummaryReportComponent implements OnInit {
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
     chart_lines.draw(data, options_lines);
     this.google.visualization.events.addListener(chart_lines, 'select', () => {
-      const selectedItem = chart_lines.getSelection()[0];
+      const selectedItem = chart_lines.getSelection()[0]['row'];
       if (selectedItem) {
-        const selectedDate = moment(this.getFullDate(costData[selectedItem.row][0]));
-        this.dataService.getLogsByDate(selectedDate).subscribe(logs => {
-          console.log('logs ', logs);
-        });
+        const sDate = costData[selectedItem][0];
+        const tableData = dateToData.get(sDate);
+        console.log(tableData);
+        this.dataSource = new MatTableDataSource(tableData);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
       }
     });
   }

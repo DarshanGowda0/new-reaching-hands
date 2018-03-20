@@ -114,14 +114,6 @@ export class DataService {
       .orderBy('date', 'desc')).valueChanges();
   }
 
-  getLogsByDate(date) {
-    const yesterday = date.subtract(1, 'days').format('DD-MM-YYYY');
-    const tomorrow = date.add(2, 'days').format('DD-MM-YYYY');
-    console.log('date ', date, ' yes ', yesterday, ' tom ', tomorrow);
-    return this.firestore.
-      collection<ItemAbstract>(`logs`, ref => ref.where('date', '>=', yesterday).where('date', '<', tomorrow)).valueChanges();
-  }
-
   getAllItems() {
     return this.firestore.collection<Item>('items').valueChanges();
   }
