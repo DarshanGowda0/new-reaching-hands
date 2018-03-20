@@ -4,6 +4,7 @@ import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
+import * as moment from 'moment';
 
 export interface CostModel {
   purchased: number;
@@ -20,7 +21,6 @@ export interface CostModel {
 export class SummaryReportComponent implements OnInit {
   @Input() itemId: string;
   @Input() google: any;
-  costData = [];
   temp: string = null;
   totalCost = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
@@ -46,9 +46,9 @@ export class SummaryReportComponent implements OnInit {
       )
       .subscribe(logs => {
         this.dataService.getAllItems().subscribe(items => {
-          this.computeCost(logs);
-          this.computeCost1(logs, items);
-          this.computeCost2(logs);
+          this.computeDataForPieChart(logs);
+          this.computeDataForTopTenItems(logs, items);
+          this.comupteDataForLineChart(logs);
           this.dataSource = new MatTableDataSource(logs);
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
@@ -60,11 +60,10 @@ export class SummaryReportComponent implements OnInit {
   }
 
 
-  computeCost(val) {
-    this.costData = [];
+  computeDataForPieChart(val) {
+    const costData = [];
     const row = [];
     val.forEach(element => {
-
       if (element.category === this.categoryList[0] && (element.logType !== 'Issued')) {
         this.costComp[0] += element.cost;
       } else if (element.category === this.categoryList[1] && (element.logType !== 'Issued')) {
@@ -75,27 +74,19 @@ export class SummaryReportComponent implements OnInit {
         this.costComp[3] += element.cost;
       }
     });
-
-
-
     for (let i = 0; i < this.categoryList.length; i++) {
-      this.costData.push([this.categoryList[i], this.costComp[i]]);
+      costData.push([this.categoryList[i], this.costComp[i]]);
     }
-    this.drawChart();
+    this.drawPieChart(costData);
 
   }
 
 
 
-  computeCost1(logs, items) {
-    this.costData = [];
+  computeDataForTopTenItems(logs, items) {
     const row = [];
     const myhash = new Map();
     const nameHash = new Map();
-
-
-    // ('purchased','donated','full')
-
     logs.forEach(element => {
       if (myhash.has(element.itemId)) {
         const mCost = myhash.get(element.itemId);
@@ -140,34 +131,25 @@ export class SummaryReportComponent implements OnInit {
       });
     });
 
-
-
     dataArray.sort(function (a, b) {
       return b.costObject.total - a.costObject.total;
     });
-
-    // console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
     if (dataArray.length > 10) {
       for (let i = 0; i < 10; i++) {
         arrayTen[i] = dataArray[i];
       }
-      this.drawChart1(arrayTen, nameHash);
+      this.topTenItemsChart(arrayTen, nameHash);
     } else {
-      this.drawChart1(dataArray, nameHash);
+      this.topTenItemsChart(dataArray, nameHash);
     }
     console.log('array', arrayTen[1]);
 
-    // for (let i = 0; i < this.categoryList.length; i++) {
-    //   this.costData.push([this.categoryList[i], this.costComp[i]]);
-    // }
-
-
   }
 
-  computeCost2(val) {
-    this.costData = [];
+  comupteDataForLineChart(val) {
+    const costData = [];
 
     const myhash = new Map();
 
@@ -186,8 +168,6 @@ export class SummaryReportComponent implements OnInit {
       }
     });
 
-    console.log('booooooooooootrre', myhash);
-
     const dataArray1 = new Array();
     myhash.forEach((value, key) => {
       dataArray1.push({
@@ -204,10 +184,10 @@ export class SummaryReportComponent implements OnInit {
       row.push(element.cost);
       row.push(element.cost - 300);
       row.push(element.cost + 300);
-      this.costData.push(row);
+      costData.push(row);
 
     });
-    this.drawCostChart2();
+    this.drawLineChart(costData);
   }
 
   compare(a, b) {
@@ -223,11 +203,11 @@ export class SummaryReportComponent implements OnInit {
 
 
 
-  drawChart() {
-    const data = new this.google.visualization.DataTable()
+  drawPieChart(costData) {
+    const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'category');
     data.addColumn('number', 'cost');
-    data.addRows(this.costData);
+    data.addRows(costData);
 
     const options = {
       title: 'Cost Summary',
@@ -239,7 +219,7 @@ export class SummaryReportComponent implements OnInit {
 
   }
 
-  drawChart1(dataArray, nameHash) {
+  topTenItemsChart(dataArray, nameHash) {
 
     console.log('name ', dataArray);
 
@@ -272,14 +252,14 @@ export class SummaryReportComponent implements OnInit {
   }
 
 
-  drawCostChart2() {
+  drawLineChart(costData) {
     const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'x');
     data.addColumn('number', 'cost');
     data.addColumn({ id: 'i0', type: 'number', role: 'interval' });
     data.addColumn({ id: 'i1', type: 'number', role: 'interval' });
 
-    data.addRows(this.costData);
+    data.addRows(costData);
 
     // The intervals data as narrow lines (useful for showing raw source data)
     const options_lines = {
@@ -306,11 +286,10 @@ export class SummaryReportComponent implements OnInit {
     this.google.visualization.events.addListener(chart_lines, 'select', () => {
       const selectedItem = chart_lines.getSelection()[0];
       if (selectedItem) {
-        const selectedDate = this.getFullDate(this.costData[selectedItem.row][0]);
-
-        // this.dataService.getLogsByDate(selectedDate).subscribe(logs => {
-        //   console.log('logs ', logs);
-        // });
+        const selectedDate = moment(this.getFullDate(costData[selectedItem.row][0]));
+        this.dataService.getLogsByDate(selectedDate).subscribe(logs => {
+          console.log('logs ', logs);
+        });
       }
     });
   }

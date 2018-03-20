@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
+import * as moment from 'moment';
 
 @Injectable()
 export class DataService {
@@ -114,10 +115,11 @@ export class DataService {
   }
 
   getLogsByDate(date) {
-    const yesterday = date.setDate(date.getDate() - 1);
-    const tomorrow = date.setDate(date.getDate() + 1);
+    const yesterday = date.subtract(1, 'days').format('DD-MM-YYYY');
+    const tomorrow = date.add(2, 'days').format('DD-MM-YYYY');
+    console.log('date ', date, ' yes ', yesterday, ' tom ', tomorrow);
     return this.firestore.
-      collection<ItemAbstract>(`logs`, ref => ref.where('date', '>', yesterday).where('date', '<', tomorrow)).valueChanges();
+      collection<ItemAbstract>(`logs`, ref => ref.where('date', '>=', yesterday).where('date', '<', tomorrow)).valueChanges();
   }
 
   getAllItems() {
