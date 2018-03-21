@@ -120,6 +120,10 @@ export class DataService {
     return this.firestore.collection<Item>('items').valueChanges();
   }
 
+  getAllItemsCat(cat: string) {
+    return this.firestore.collection<Item>('items', ref => ref.where('category', '==', cat)).valueChanges();
+  }
+
   // save the permission token in firestore
   saveToken(user, token): void {
 

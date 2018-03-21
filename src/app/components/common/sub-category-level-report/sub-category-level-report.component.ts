@@ -70,13 +70,14 @@ export class SubCategoryLevelReportComponent implements OnInit {
     let cost = 0;
 
     val.forEach(element => {
+      if(element.logType !== 'Issued'){
       if (myhash.has(element.itemId)) {
         cost = myhash.get(element.itemId) + element.cost;
         myhash.set(element.itemId, cost);
       } else {
         myhash.set(element.itemId, element.cost);
       }
-
+    }
     });
 
     items.forEach(element => {
