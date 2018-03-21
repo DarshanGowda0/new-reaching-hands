@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
+import * as moment from 'moment';
 
 @Injectable()
 export class DataService {
@@ -109,12 +110,9 @@ export class DataService {
   }
 
   getSummarysubCat(subCat: string) {
-    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('subCategory', '==', subCat).orderBy('date', 'desc')).valueChanges();
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('subCategory', '==', subCat)
+      .orderBy('date', 'desc')).valueChanges();
   }
-
-  // getAllItems1(subCat: string) {
-  //   return this.firestore.collection<Item>('items', ref => ref.where('subCategory', '==', subCat).orderBy('date', 'desc')).valueChanges();
-  // }
 
   getAllItems() {
     return this.firestore.collection<Item>('items').valueChanges();
