@@ -25,7 +25,7 @@ export class SummaryReportComponent implements OnInit {
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
   costComp: number[] = [0, 0, 0, 0];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
-  display = ['name', 'cost', 'type', 'category', 'subCategory'];
+  displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
   nameHash = new Map();
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
@@ -145,7 +145,6 @@ export class SummaryReportComponent implements OnInit {
     } else {
       this.topTenItemsChart(dataArray);
     }
-    console.log('array', arrayTen[1]);
 
   }
 
@@ -176,8 +175,6 @@ export class SummaryReportComponent implements OnInit {
         }
       }
     });
-
-    console.log('date to data ', dateToData);
 
     const dataArray1 = new Array();
     myhash.forEach((value, key) => {
@@ -231,8 +228,6 @@ export class SummaryReportComponent implements OnInit {
   }
 
   topTenItemsChart(dataArray) {
-
-    console.log('name ', dataArray);
 
     const myData = [];
     myData.push(['Item', 'Total', 'Purchased', 'Donated']);
@@ -299,7 +294,6 @@ export class SummaryReportComponent implements OnInit {
       if (selectedItem) {
         const sDate = costData[selectedItem][0];
         const tableData = dateToData.get(sDate);
-        console.log(tableData);
         this.dataSource = new MatTableDataSource(tableData);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -314,6 +308,10 @@ export class SummaryReportComponent implements OnInit {
 
   getFullDate(date) {
     return String(date.toLocaleString('en-US'));
+  }
+
+  getName(itemId) {
+    return this.nameHash.get(itemId);
   }
 
 }
