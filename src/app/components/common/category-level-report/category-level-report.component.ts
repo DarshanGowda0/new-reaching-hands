@@ -22,14 +22,13 @@ export class CategoryLevelReportComponent implements OnInit {
 
   @Input() itemId: string;
   @Input() google: any;
-  costData = [];
+  nameHash = new Map();
   temp: string = null;
   totalCost: number = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
   subCategoryList: string[] = null;
-  costComp: number[] = [];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
-  display = ['ItemName', 'Cost', 'Category', 'SubCategory'];
+  displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -60,15 +59,23 @@ export class CategoryLevelReportComponent implements OnInit {
 
 
   }
+  getAllNames(items) {
+    items.forEach(element => {
+      if (!this.nameHash.get(element.itemId)) {
+        this.nameHash.set(element.itemId, element.itemName);
+      }
+    });
+  }
 
 
   chosen(cat: string) {
-    this.subCategoryList = null;
+    const subCategoryList: string[] = null;
+   // this.subCategoryList = null;
     if (cat == 'Inventory') {
       this.subCategoryList = ['Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous', 'Genericmeds'];
     }
     else if (cat == 'Services') {
-      this.subCategoryList = ['Studentpersonelcare', 'Medicalcare', 'Transportation'];
+      this.subCategoryList = ['Studentpersonalcare', 'Medicalcare', 'Transportation'];
     }
     else if (cat == 'Maintenance') {
       this.subCategoryList = ['Vehicle', 'Campus', 'Monthlybills'];
@@ -78,41 +85,46 @@ export class CategoryLevelReportComponent implements OnInit {
     }
 
 
-    this.dataService.getSummaryCat(cat).subscribe(val => {
+    this.dataService.getSummaryCat(cat).subscribe(logs => {
       this.dataService.getAllItemsCat(cat).subscribe(items => {
-        this.computeCost(val);
-        this.computeCost1(val, items);
+        this.getAllNames(items);
+        this.computeDataForPieChart(logs);
+        this.computeDataForTopTenItems(logs);
+        this.comupteDataForLineChart(logs);
       });
     });
   }
 
-  computeCost(val) {
-    this.costData = [];
+  computeDataForPieChart(val) {
+    const costData = [];
     const row = [];
+    const costComp: number[] = [];
     for (let i = 0; i < this.subCategoryList.length; i++) {
-      this.costComp[i] = 0;
+      costComp[i] = 0;
     }
 
-
-
+    console.log('val1112', val);
     val.forEach(element => {
       for (let i = 0; i < this.subCategoryList.length; i++) {
-        if (element.subCategory === this.subCategoryList[i] && (element.logType !== 'Issued')) {
-          this.costComp[i] += element.cost;
+        console.log(i,':',element.subCategory,'then',this.subCategoryList[i]);
+        if (element.subCategory === this.subCategoryList[i] && element.logType !== 'Issued') {
+          console.log(i,'enter:',element.subCategory,'then',this.subCategoryList[i]);
+          costComp[i] += element.cost;
+          console.log('val11123', costComp[i]);
         }
       }
 
     });
 
-    console.log('val2', this.costComp);
+    console.log('val2', costComp);
     for (let i = 0; i < this.subCategoryList.length; i++) {
-      this.costData.push([this.subCategoryList[i], this.costComp[i]]);
+      costData.push([this.subCategoryList[i], costComp[i]]);
     }
-    this.drawChart();
+    this.drawChart(costData);
   }
 
-  computeCost1(logs, items) {
-    this.costData = [];
+  computeDataForTopTenItems(logs) {
+    const costData = [];
     const row = [];
     const myhash = new Map();
     const nameHash = new Map();
@@ -150,12 +162,6 @@ export class CategoryLevelReportComponent implements OnInit {
       }
     });
 
-    items.forEach(element => {
-      if (!nameHash.get(element.itemId)) {
-        nameHash.set(element.itemId, element.itemName);
-      }
-    });
-
     const dataArray = new Array();
     myhash.forEach((value, key) => {
       dataArray.push({
@@ -177,10 +183,10 @@ export class CategoryLevelReportComponent implements OnInit {
       for (let i = 0; i < 10; i++) {
         arrayTen[i] = dataArray[i];
       }
-      this.drawChart1(arrayTen, nameHash);
+      this.drawChart1(arrayTen);
     }
     else {
-      this.drawChart1(dataArray, nameHash);
+      this.drawChart1(dataArray);
     }
     console.log('array', arrayTen[1]);
 
@@ -192,12 +198,73 @@ export class CategoryLevelReportComponent implements OnInit {
   }
 
 
+  comupteDataForLineChart(val) {
+    const costData = [];
+    let totalCost = 0;
+    const myhash = new Map();
+    const dateToData = new Map();
 
-  drawChart() {
+    val.forEach(element => {
+      if (element.logType !== this.logTypeOptions[1]) {
+        if (myhash.has(element.date)) {
+          const previousCost = myhash.get(element.date);
+          myhash.set(element.date, previousCost + element.cost);
+
+          const tempArray = dateToData.get(element.date);
+          tempArray.push(element);
+          dateToData.set(element.date, tempArray);
+        } else {
+          myhash.set(element.date, element.cost);
+
+          const elementDataArray = new Array();
+          elementDataArray.push(element);
+          dateToData.set(element.date, elementDataArray);
+        }
+      }
+    });
+
+    const dataArray1 = new Array();
+    myhash.forEach((value, key) => {
+      dataArray1.push({
+        'date': key,
+        'cost': value
+      });
+    });
+
+
+    dataArray1.forEach(element => {
+      const row = [];
+
+      row.push(this.dateFormat(element.date));
+      row.push(element.cost);
+      row.push(element.cost - 300);
+      row.push(element.cost + 300);
+      costData.push(row);
+
+    });
+    this.drawLineChart(costData, dateToData);
+  }
+
+  compare(a, b) {
+    if (a.last_nom < b.last_nom) {
+      return -1;
+    }
+    if (a.last_nom > b.last_nom) {
+      return 1;
+    }
+    return 0;
+  }
+
+
+
+
+
+  drawChart(costData) {
+
     const data = new this.google.visualization.DataTable()
     data.addColumn('string', 'subCategory');
     data.addColumn('number', 'cost');
-    data.addRows(this.costData);
+    data.addRows(costData);
 
     const options = {
       title: 'Cost Summary',
@@ -210,14 +277,14 @@ export class CategoryLevelReportComponent implements OnInit {
   }
 
 
-  drawChart1(dataArray, nameHash) {
+  drawChart1(dataArray) {
 
     console.log('name ', dataArray);
 
     const myData = [];
     myData.push(['Item', 'Total', 'Purchased', 'Donated']);
     dataArray.forEach((item) => {
-      myData.push([nameHash.get(item.id), item.costObject.total, item.costObject.purchased, item.costObject.donated]);
+      myData.push([this.nameHash.get(item.id), item.costObject.total, item.costObject.purchased, item.costObject.donated]);
     });
 
     const data = new this.google.visualization.arrayToDataTable(myData);
@@ -241,6 +308,59 @@ export class CategoryLevelReportComponent implements OnInit {
     const chart = new this.google.charts.Bar(document.getElementById('barchart_values'));
     chart.draw(data, options);
   }
+
+
+  drawLineChart(costData, dateToData) {
+    const data = new this.google.visualization.DataTable();
+    data.addColumn('string', 'x');
+    data.addColumn('number', 'cost');
+    data.addColumn({ id: 'i0', type: 'number', role: 'interval' });
+    data.addColumn({ id: 'i1', type: 'number', role: 'interval' });
+
+    data.addRows(costData);
+
+    // The intervals data as narrow lines (useful for showing raw source data)
+    const options_lines = {
+      title: 'Consumption rate',
+      curveType: 'function',
+      lineWidth: 4,
+      intervals: { 'style': 'area' },
+      animation: {
+        duration: 1000,
+        easing: 'in',
+        startup: true
+      },
+      pointSize: 7,
+      dataOpacity: 0.3,
+      height: 360,
+      series: {
+        1: { lineDashStyle: [4, 1] }
+      },
+      colors: ['#e2431e', '#4374e0'],
+    };
+
+    const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
+    chart_lines.draw(data, options_lines);
+    this.google.visualization.events.addListener(chart_lines, 'select', () => {
+      const selectedItem = chart_lines.getSelection()[0]['row'];
+      if (selectedItem) {
+        const sDate = costData[selectedItem][0];
+        const tableData = dateToData.get(sDate);
+        this.dataSource = new MatTableDataSource(tableData);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      }
+    });
+  }
+
+  getFullDate(date) {
+    return String(date.toLocaleString('en-US'));
+  }
+
+  getName(itemId) {
+    return this.nameHash.get(itemId);
+  }
+
 
 
 
