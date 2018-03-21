@@ -17,7 +17,7 @@
 *.launch
 .settings/
 *.sublime-workspace
-package-lock.json
+/package-lock.json
 
 # IDE - VSCode
 .vscode/*
@@ -49,3 +49,4 @@ Thumbs.db
 /cloud-functions/prod/functions/node_modules
 /cloud-functions/dev/functions/package-lock.json
 /cloud-functions/prod/functions/package-lock.json
+package-lock.json

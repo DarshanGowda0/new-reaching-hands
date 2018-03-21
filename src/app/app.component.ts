@@ -26,7 +26,7 @@ export class AppComponent implements OnDestroy, OnInit {
   image: string;
 
   constructor(public auth: AuthService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-    private router: Router, private afs: AngularFirestore, private msg: MessagingService) {
+    private router: Router, private afs: AngularFirestore, public msg: MessagingService) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
