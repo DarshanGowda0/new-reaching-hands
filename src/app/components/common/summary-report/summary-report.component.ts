@@ -203,8 +203,8 @@ export class SummaryReportComponent implements OnInit {
 
       row.push(this.dateFormat(element.date));
       row.push(element.cost);
-      row.push(element.cost - 300);
-      row.push(element.cost + 300);
+      row.push(element.cost - 3000);
+      row.push(element.cost + 3000);
       this.costData.push(row);
 
     });
