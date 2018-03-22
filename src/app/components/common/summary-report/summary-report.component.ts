@@ -4,7 +4,6 @@ import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
-import * as moment from 'moment';
 
 export interface CostModel {
   purchased: number;
@@ -172,7 +171,6 @@ export class SummaryReportComponent implements OnInit {
       //   if (element.logType !== this.logTypeOptions[1]) {
       //     totalCost += element.cost;
       //     myhash.set(element.date, totalCost);
-
       //     const tempArray = dateToData.get(element.date);
       //     tempArray.push(element);
       //     dateToData.set(element.date, tempArray);
@@ -181,7 +179,6 @@ export class SummaryReportComponent implements OnInit {
       //   if (element.logType !== this.logTypeOptions[1]) {
       //     totalCost = element.cost;
       //     myhash.set(element.date, totalCost);
-
       //     const elementDataArray = new Array();
       //     elementDataArray.push(element);
       //     dateToData.set(element.date, elementDataArray);
