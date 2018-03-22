@@ -60,7 +60,7 @@ export class AddNewComponent implements OnInit {
     const dateCreated = this.dataService.getTimeStamp();
     const item: Item = {
       'itemId': '',
-      'itemName': this.itemName,
+      'itemName': this.itemName.toLowerCase(),
       'itemQuantity': 0,
       'lastModified': dateCreated,
       'unit': this.selectedUnit,

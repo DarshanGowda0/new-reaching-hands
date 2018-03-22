@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   signInWithGoogle(): void {
-    this.auth.googleLogin().then(() => this.router.navigate(['']));
+    this.auth.googleLogin();
   }
 
   ngOnDestroy() {

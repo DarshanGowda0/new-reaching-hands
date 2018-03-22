@@ -22,9 +22,7 @@ export class AuthService {
     });
     this.afAuth.auth.getRedirectResult()
       .then((credential) => {
-        console.log('something ', credential);
         this.updateUserData(credential.user);
-        console.log('here');
         this.router.navigate(['']);
       }).catch(err => {
         console.error(err);
@@ -37,14 +35,7 @@ export class AuthService {
   }
 
   private oAuthLogin(provider) {
-
-
-    return this.afAuth.auth.signInWithPopup(provider)
-      .then((credential) => {
-        this.updateUserData(credential.user);
-        this.router.navigate(['']);
-      });
-
+    return this.afAuth.auth.signInWithRedirect(provider);
   }
 
   signOut() {
