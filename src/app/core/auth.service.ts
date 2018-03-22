@@ -20,6 +20,15 @@ export class AuthService {
         return Observable.of(null);
       }
     });
+    this.afAuth.auth.getRedirectResult()
+      .then((credential) => {
+        console.log('something ', credential);
+        this.updateUserData(credential.user);
+        console.log('here');
+        this.router.navigate(['']);
+      }).catch(err => {
+        console.error(err);
+      });
   }
 
   googleLogin() {
@@ -29,11 +38,13 @@ export class AuthService {
 
   private oAuthLogin(provider) {
 
+
     return this.afAuth.auth.signInWithPopup(provider)
       .then((credential) => {
         this.updateUserData(credential.user);
         this.router.navigate(['']);
       });
+
   }
 
   signOut() {
@@ -47,7 +58,7 @@ export class AuthService {
     const data: User = {
       uid: user.uid,
       email: user.email,
-     // checkAdmin: user.checkAdmin,
+      // checkAdmin: user.checkAdmin,
       //checkEditor: user.checkEditor
     };
     return userRef.set(data, { merge: true });
