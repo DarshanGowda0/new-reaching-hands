@@ -37,7 +37,14 @@ export class AuthService {
   }
 
   private oAuthLogin(provider) {
-    this.afAuth.auth.signInWithRedirect(provider);
+
+
+    return this.afAuth.auth.signInWithPopup(provider)
+      .then((credential) => {
+        this.updateUserData(credential.user);
+        this.router.navigate(['']);
+      });
+
   }
 
   signOut() {
