@@ -3,21 +3,27 @@
   <!-- <div class="header"> -->
   <mat-accordion>
     <mat-expansion-panel>
-      <mat-expansion-panel-header style="background:#d3d3d3">
-        <mat-panel-title>
-          <h3>{{item.itemName}}</h3>
-        </mat-panel-title>
-        <mat-panel-description>
-          Quantity : {{currentQuantity}} {{item.unit}}
-        </mat-panel-description>
-      </mat-expansion-panel-header>
+      <mat-expansion-panel-header style="background:#4dc0cc">
+       <mat-panel-title>
+        <div class="ui mini statistic">
+          <div class="value" style="color:white">
+            {{item.itemName}}
+          </div>          
+        </div>
+       </mat-panel-title>
+       <mat-panel-title>
+        <div class="ui mini statistic">    
+          <div class="label" style="color:white">
+            Current Quantity : {{currentQuantity}} {{item.unit}}
+          </div>
+        </div>
+       </mat-panel-title>
+      </mat-expansion-panel-header>      
       <mat-form-field style="width:100%">
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
     </mat-expansion-panel>
   </mat-accordion>
-  <!-- </div> -->
-
   <div class="mat-elevation-z2">
     <mat-table #table [dataSource]="dataSource" matSort>
 
@@ -80,7 +86,11 @@
   </div>
 
   <div class="mat-elevation-z2" style="margin-top:1%;padding:2%">
-    <h3 color="primary"><b><u>Reports</u></b></h3>
+    <div class="ui segment" style="background:#4dc0cc">
+      <div class="ui center aligned mini statistic">
+        <label style="font-weight:bold;text-align:center;color:white">Reports</label>
+      </div>
+    </div>
     <app-item-report [google]="google" [itemId]="item.itemId">
     </app-item-report>
   </div>
