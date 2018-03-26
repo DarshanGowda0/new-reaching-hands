@@ -1,0 +1,87 @@
+<button mat-button [matMenuTriggerFor]="category">SUB-CATEGORY</button>
+
+<mat-menu #category="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="inventory">Inventory</button>
+  <button mat-menu-item [matMenuTriggerFor]="services">Services</button>
+  <button mat-menu-item [matMenuTriggerFor]="education">Education</button>
+  <button mat-menu-item [matMenuTriggerFor]="maintenance">Maintenance</button>
+</mat-menu>
+
+<mat-menu #inventory="matMenu">
+  <button mat-menu-item (click)="chosen('Assets')">Assets</button>
+  <button mat-menu-item (click)="chosen('Groceries')">Groceries</button>
+  <button mat-menu-item (click)="chosen('Toiletries')">Tolietries</button>
+  <button mat-menu-item (click)="chosen('Stationary')">Stationary</button>
+  <button mat-menu-item (click)="chosen('Perishablegoods')">Perishable Goods</button>
+  <button mat-menu-item (click)="chosen('Miscellaneous')">Miscellaneous</button>
+  <button mat-menu-item (click)="chosen('Genericmeds')">Generic Meds</button>
+</mat-menu>
+
+<mat-menu #services="matMenu">
+  <button mat-menu-item (click)="chosen('Studentpersonalcare')">Student Personal Care</button>
+  <button mat-menu-item (click)="chosen('Medicalcare')">Medical Care</button>
+  <button mat-menu-item (click)="chosen('Transportation')">Transportation</button>
+</mat-menu>
+
+<mat-menu #education="matMenu">
+  <button mat-menu-item (click)="chosen('School')">School</button>
+  <button mat-menu-item (click)="chosen('Homeschool')">Home-School</button>
+  <button mat-menu-item (click)="chosen('Extracurricular')">Extra-Curricular</button>
+  <button mat-menu-item (click)="chosen('Tutorials')">Tutorials</button>
+</mat-menu>
+
+<mat-menu #maintenance="matMenu">
+  <button mat-menu-item (click)="chosen('Vehicle')">Vehicle</button>
+  <button mat-menu-item (click)="chosen('Campus')">Campus</button>
+  <button mat-menu-item (click)="chosen('Monthlybills')">Monthly Bills</button>
+</mat-menu>
+
+
+<div style="display: flex">
+  <mat-card id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;margin-left:2%;margin-right:1%;margin-top:2%;"></mat-card>
+  <mat-card id="barchart_values" style="flex: 1;width:50%;height:600px;padding:2%;margin-left:1%;margin-right:2%;margin-top:2%;"></mat-card>
+</div>
+
+
+<div style="width:100%;">
+  <mat-card id="costChart" style="padding:2%;margin:2%;"></mat-card>
+</div>
+
+<div style="padding:2%;">
+  <div class="mat-elevation-z2">
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+      <!-- quantity Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Item Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ getName(element.itemId) }} </mat-cell>
+      </ng-container>
+
+      <!-- cost Column -->
+      <ng-container matColumnDef="cost">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Cost </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.cost}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.logType}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Category </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.category}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="subCategory">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Sub-Category </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.subCategory}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+    </mat-paginator>
+  </div>
+</div>

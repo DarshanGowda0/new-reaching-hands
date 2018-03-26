@@ -5,6 +5,7 @@ import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 
+
 export interface CostModel {
   purchased: number;
   donated: number;
@@ -12,19 +13,22 @@ export interface CostModel {
 }
 
 @Component({
-  selector: 'app-summary-report',
-  templateUrl: './summary-report.component.html',
-  styleUrls: ['./summary-report.component.css']
+  selector: 'app-category-level-report',
+  templateUrl: './category-level-report.component.html',
+  styleUrls: ['./category-level-report.component.css']
 })
 
-export class SummaryReportComponent implements OnInit {
+export class CategoryLevelReportComponent implements OnInit {
+
   @Input() itemId: string;
   @Input() google: any;
+  nameHash = new Map();
   temp: string = null;
+  totalCost: number = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
+  subCategoryList: string[] = null;
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
-  nameHash = new Map();
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -32,26 +36,29 @@ export class SummaryReportComponent implements OnInit {
   constructor(private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
-
+    this.chosen('Inventory');
     this.dataService.getSummary()
       .pipe(
         map(logs => {
           logs.forEach(item => {
             item.date = this.dateFormat(item.date);
-          });
+          })
           return logs;
         })
       )
       .subscribe(logs => {
         this.dataService.getAllItems().subscribe(items => {
-          this.getAllNames(items);
-          this.computeDataForPieChart(logs);
-          this.computeDataForTopTenItems(logs);
-          this.comupteDataForLineChart(logs);
+
+
+          this.dataSource = new MatTableDataSource(logs);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
         });
       });
-  }
 
+
+
+  }
   getAllNames(items) {
     items.forEach(element => {
       if (!this.nameHash.get(element.itemId)) {
@@ -61,33 +68,70 @@ export class SummaryReportComponent implements OnInit {
   }
 
 
+  chosen(cat: string) {
+    const subCategoryList: string[] = null;
+   // this.subCategoryList = null;
+    if (cat == 'Inventory') {
+      this.subCategoryList = ['Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous', 'Genericmeds'];
+    }
+    else if (cat == 'Services') {
+      this.subCategoryList = ['Studentpersonalcare', 'Medicalcare', 'Transportation'];
+    }
+    else if (cat == 'Maintenance') {
+      this.subCategoryList = ['Vehicle', 'Campus', 'Monthlybills'];
+    }
+    else {
+      this.subCategoryList = ['School', 'Homeschool', 'Extracurricular', 'Tutorials'];
+    }
+
+
+    this.dataService.getSummaryCat(cat).subscribe(logs => {
+      this.dataService.getAllItemsCat(cat).subscribe(items => {
+        this.getAllNames(items);
+        this.computeDataForPieChart(logs);
+        this.computeDataForTopTenItems(logs);
+        this.comupteDataForLineChart(logs);
+      });
+    });
+  }
+
   computeDataForPieChart(val) {
     const costData = [];
     const row = [];
-    const costComp: number[] = [0, 0, 0, 0];
-    val.forEach(element => {
-      if (element.category === this.categoryList[0] && (element.logType !== 'Issued')) {
-        costComp[0] += element.cost;
-      } else if (element.category === this.categoryList[1] && (element.logType !== 'Issued')) {
-        costComp[1] += element.cost;
-      } else if (element.category === this.categoryList[2] && (element.logType !== 'Issued')) {
-        costComp[2] += element.cost;
-      } else if (element.category === this.categoryList[3] && (element.logType !== 'Issued')) {
-        costComp[3] += element.cost;
-      }
-    });
-    for (let i = 0; i < this.categoryList.length; i++) {
-      costData.push([this.categoryList[i], costComp[i]]);
+    const costComp: number[] = [];
+    for (let i = 0; i < this.subCategoryList.length; i++) {
+      costComp[i] = 0;
     }
-    this.drawPieChart(costData);
 
+    console.log('val1112', val);
+    val.forEach(element => {
+      for (let i = 0; i < this.subCategoryList.length; i++) {
+        console.log(i,':',element.subCategory,'then',this.subCategoryList[i]);
+        if (element.subCategory === this.subCategoryList[i] && element.logType !== 'Issued') {
+          console.log(i,'enter:',element.subCategory,'then',this.subCategoryList[i]);
+          costComp[i] += element.cost;
+          console.log('val11123', costComp[i]);
+        }
+      }
+
+    });
+
+    console.log('val2', costComp);
+    for (let i = 0; i < this.subCategoryList.length; i++) {
+      costData.push([this.subCategoryList[i], costComp[i]]);
+    }
+    this.drawChart(costData);
   }
 
-
-
   computeDataForTopTenItems(logs) {
+    const costData = [];
     const row = [];
     const myhash = new Map();
+    const nameHash = new Map();
+
+
+    // ('purchased','donated','full')
+
     logs.forEach(element => {
       if (myhash.has(element.itemId)) {
         const mCost = myhash.get(element.itemId);
@@ -118,8 +162,6 @@ export class SummaryReportComponent implements OnInit {
       }
     });
 
-
-
     const dataArray = new Array();
     myhash.forEach((value, key) => {
       dataArray.push({
@@ -128,29 +170,41 @@ export class SummaryReportComponent implements OnInit {
       });
     });
 
+
+
     dataArray.sort(function (a, b) {
       return b.costObject.total - a.costObject.total;
     });
+
+    //console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
     if (dataArray.length > 10) {
       for (let i = 0; i < 10; i++) {
         arrayTen[i] = dataArray[i];
       }
-      this.topTenItemsChart(arrayTen);
-    } else {
-      this.topTenItemsChart(dataArray);
+      this.drawChart1(arrayTen);
     }
+    else {
+      this.drawChart1(dataArray);
+    }
+    console.log('array', arrayTen[1]);
+
+    // for (let i = 0; i < this.categoryList.length; i++) {
+    //   this.costData.push([this.categoryList[i], this.costComp[i]]);
+    // }
+
 
   }
 
+
   comupteDataForLineChart(val) {
     const costData = [];
+    let totalCost = 0;
     const myhash = new Map();
     const dateToData = new Map();
 
     val.forEach(element => {
-
       if (element.logType !== this.logTypeOptions[1]) {
         if (myhash.has(element.date)) {
           const previousCost = myhash.get(element.date);
@@ -167,34 +221,18 @@ export class SummaryReportComponent implements OnInit {
           dateToData.set(element.date, elementDataArray);
         }
       }
-      // if (myhash.has(element.date)) {
-      //   if (element.logType !== this.logTypeOptions[1]) {
-      //     totalCost += element.cost;
-      //     myhash.set(element.date, totalCost);
-      //     const tempArray = dateToData.get(element.date);
-      //     tempArray.push(element);
-      //     dateToData.set(element.date, tempArray);
-      //   }
-      // } else {
-      //   if (element.logType !== this.logTypeOptions[1]) {
-      //     totalCost = element.cost;
-      //     myhash.set(element.date, totalCost);
-      //     const elementDataArray = new Array();
-      //     elementDataArray.push(element);
-      //     dateToData.set(element.date, elementDataArray);
-      //   }
-      // }
     });
 
-    const dataArray = new Array();
+    const dataArray1 = new Array();
     myhash.forEach((value, key) => {
-      dataArray.push({
+      dataArray1.push({
         'date': key,
         'cost': value
       });
     });
 
-    dataArray.forEach(element => {
+
+    dataArray1.forEach(element => {
       const row = [];
 
       row.push(this.dateFormat(element.date));
@@ -220,9 +258,11 @@ export class SummaryReportComponent implements OnInit {
 
 
 
-  drawPieChart(costData) {
-    const data = new this.google.visualization.DataTable();
-    data.addColumn('string', 'category');
+
+  drawChart(costData) {
+
+    const data = new this.google.visualization.DataTable()
+    data.addColumn('string', 'subCategory');
     data.addColumn('number', 'cost');
     data.addRows(costData);
 
@@ -236,7 +276,10 @@ export class SummaryReportComponent implements OnInit {
 
   }
 
-  topTenItemsChart(dataArray) {
+
+  drawChart1(dataArray) {
+
+    console.log('name ', dataArray);
 
     const myData = [];
     myData.push(['Item', 'Total', 'Purchased', 'Donated']);
@@ -299,22 +342,15 @@ export class SummaryReportComponent implements OnInit {
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
     chart_lines.draw(data, options_lines);
     this.google.visualization.events.addListener(chart_lines, 'select', () => {
-
-      const selectedItem = chart_lines.getSelection()[0];
+      const selectedItem = chart_lines.getSelection()[0]['row'];
       if (selectedItem) {
-        const sDate = costData[selectedItem.row][0];
+        const sDate = costData[selectedItem][0];
         const tableData = dateToData.get(sDate);
         this.dataSource = new MatTableDataSource(tableData);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       }
-
     });
-  }
-
-  dateFormat(date) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return String(date.toLocaleString('en-US')).substr(0, 9);
   }
 
   getFullDate(date) {
@@ -324,5 +360,14 @@ export class SummaryReportComponent implements OnInit {
   getName(itemId) {
     return this.nameHash.get(itemId);
   }
+
+
+
+
+  dateFormat(date) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return String(date.toLocaleString('en-US')).substr(0, 9);
+  }
+
 
 }

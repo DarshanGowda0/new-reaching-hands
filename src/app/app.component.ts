@@ -17,14 +17,16 @@ export class AppComponent implements OnDestroy, OnInit {
 
 
   mobileQuery: MediaQueryList;
-  fillerNav = ['Inventory', 'Services', 'Education', 'Maintenance', 'SummaryReport', 'AccessControl'];
+  misc = ['AccessControl'];
+  category = ['Inventory', 'Services', 'Education', 'Maintenance'];
+  reports = ['Summary-level', 'Category-level', 'SubCategory-level'];
   private _mobileQueryListener: () => void;
   email: string;
   roles: string;
   image: string;
 
   constructor(public auth: AuthService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-    private router: Router, private afs: AngularFirestore, private msg: MessagingService) {
+    private router: Router, private afs: AngularFirestore, public msg: MessagingService) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
