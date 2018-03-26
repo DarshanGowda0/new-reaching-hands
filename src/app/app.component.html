@@ -1,11 +1,11 @@
 <div class="main-container">
-  <mat-toolbar id="mToolbar" style="background:#0097a7" >
+  <mat-toolbar id="mToolbar" class="myToolBar" style="background:#0097a7">
     <mat-toolbar-row>
       <button mat-icon-button (click)="snav.toggle()" style="color:white">
         <mat-icon>menu</mat-icon>
       </button>
       <a (tap)="onHome()" style="color:white;">
-        <span>New Home - Reaching Hands</span>
+        <span>Reaching Hands</span>
       </a>
       <span class="toolbar-spacer"></span>
       <button mat-icon-button (click)="signOut()" style="position:absolute;right:10px;color:white">
@@ -21,16 +21,32 @@
       fixedTopGap="56">
       <mat-list>
         <mat-nav-list>
-          <div>
-            <img src="{{image}}" alt="NO IMAGE AVAILABLE" style="border-radius: 50%;position:absolute;height:60px;width:60px;top:8%;left:50%;transform:translate(-50%,-50%);">
+          <!-- <div>
+            <img src="{{image}}" alt="NO IMAGE AVAILABLE" style="border-radius:50%;position:absolute;height:60px;width:60px;top:8%;left:50%;transform:translate(-50%,-50%);">
           </div>
-          <br>
-          <br>
-          <br>
+
           <div class="detail" style="color:blue;">{{email}}</div>
-          <div style="position:absolute;left:70px;right:50px;color:red;">{{roles}}</div>
+          <div style="color:red;">{{roles}}</div> -->
+
+
+          <img class="ui centered tiny circular image" src="{{image}}">
+          <h3 class="ui orange center aligned header">
+            {{roles}}
+            <div class="violet center sub header">{{email}}</div>
+          </h3>
           <br>
-          <mat-list-item *ngFor="let item of fillerNav">
+          <h3>Categories:</h3>
+          <mat-list-item *ngFor="let item of category">
+            <mat-icon mat-list-icon>folder</mat-icon>
+            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+          </mat-list-item>
+          <h3>Reports:</h3>
+          <mat-list-item *ngFor="let item of reports">
+            <mat-icon mat-list-icon>note</mat-icon>
+            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+          </mat-list-item>
+          <h3>Admin Control:</h3>
+          <mat-list-item *ngFor="let item of misc">
             <mat-icon mat-list-icon>folder</mat-icon>
             <a mat-list-item routerLink="./{{item}}">{{item}}</a>
           </mat-list-item>
