@@ -11,7 +11,7 @@
     <mat-datepicker touchUi="true" #picker></mat-datepicker>
   </mat-form-field>
 
-  <button mat-raised-button color="primary" (click)="switchCharts()" style="margin:1.5%" style="background:#2ABB9B">
+  <button mat-raised-button (click)="switchCharts()" style="margin:1.5%" style="background:#0097a7;color:white">
     {{chartType ? 'Quantity' : 'Cost'}}
   </button>
 
@@ -21,53 +21,53 @@
         <!-->h4 class="ui center aligned header">Total</h4>
         <div class="ui clearing hidden divider"></div>-->
         <div class="ui six statistics" >
-          <div class="statistic" style="background:#044F67">
-            <div class="label" style="color:white">
-              Purchased Quantity
-            </div>
+          <div class="statistic" style="background:#855f84">
             <div class="value" style="color:white">
               {{reportDetails.addedQuantity}}
             </div>
-          </div>
-          <div class="statistic" style="background:#C91F37">
             <div class="label" style="color:white">
-              Issued Quantity
+              Purchased Quantity
             </div>
+          </div>
+          <div class="statistic" style="background:#de506a">
             <div class="value" style="color:white">
               {{reportDetails.issuedQuantity}}
             </div>
-          </div>
-          <div class="statistic" style="background:#E08A1E">
             <div class="label" style="color:white">
-              Donated Quantity
+              Issued Quantity
             </div>
+          </div>
+          <div class="statistic" style="background:#edaa4f">
             <div class="value" style="color:white">
               {{reportDetails.donatedQuantity}}
             </div>
-          </div>
-          <div class="statistic" style="background:#044F67">
             <div class="label" style="color:white">
-              Purchased Amount
+              Donated Quantity
             </div>
+          </div>
+          <div class="statistic" style="background:#855f84">
             <div class="value" style="color:white">
               {{reportDetails.addedCost}}
             </div>
-          </div>
-          <div class="statistic" style="background:#C91F37">
             <div class="label" style="color:white">
-              Issued Amount
+              Purchased Amount
             </div>
+          </div>
+          <div class="statistic" style="background:#de506a">
             <div class="value" style="color:white">
               {{reportDetails.issuedCost}}
             </div>
-          </div>
-          <div class="statistic" style="background:#E08A1E">
             <div class="label" style="color:white">
-              Donated Amount
+              Issued Amount
             </div>
+          </div>
+          <div class="statistic" style="background:#edaa4f">
             <div class="value" style="color:white">
               {{reportDetails.donatedCost}}
             </div>
+            <div class="label" style="color:white">
+              Donated Amount
+            </div> 
           </div>
         </div>
         <!--<a class="ui orange large label">Purchased Quantity

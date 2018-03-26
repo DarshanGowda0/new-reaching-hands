@@ -1,14 +1,14 @@
 <div class="main-container">
-  <mat-toolbar color="primary" id="mToolbar" style="background:#2ABB9B">
+  <mat-toolbar id="mToolbar" style="background:#0097a7" >
     <mat-toolbar-row>
-      <button mat-icon-button (click)="snav.toggle()">
+      <button mat-icon-button (click)="snav.toggle()" style="color:white">
         <mat-icon>menu</mat-icon>
       </button>
-      <a (tap)="onHome()" style="color: inherit;">
+      <a (tap)="onHome()" style="color:white;">
         <span>New Home - Reaching Hands</span>
       </a>
       <span class="toolbar-spacer"></span>
-      <button mat-icon-button color="basic" (click)="signOut()" style="position:absolute;right:10px;">
+      <button mat-icon-button (click)="signOut()" style="position:absolute;right:10px;color:white">
         <mat-icon aria-label="Example icon-button with a heart icon">
           <i class="material-icons">settings_power</i>
         </mat-icon>

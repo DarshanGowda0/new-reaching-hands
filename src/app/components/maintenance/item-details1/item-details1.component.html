@@ -1,19 +1,23 @@
 <mat-card style="padding:2%;">
 
-  <div class="header">
+  <!--<div class="header"> -->
     <mat-accordion>
-        <div class="ui inverted segment">
-            <div class="ui two statistics">
-              <div class="ui inverted statistic">
-                  {{item.itemName}}
-              </div>
-              <div class="ui inverted statistic">
-                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter" style="background:#d3d3d3">
-              </div>
-            </div>
-        </div>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header style="background:#4dc0cc">
+         <mat-panel-title>
+          <div class="ui mini statistic">
+            <div class="value" style="color:white">
+              {{item.itemName}}
+            </div>          
+          </div>
+        </mat-panel-title>
+        </mat-expansion-panel-header>      
+        <mat-form-field style="width:100%">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+      </mat-expansion-panel>
     </mat-accordion>
-  </div>
+  <!-- </div> -->
 
   <div class="mat-elevation-z8">
 
