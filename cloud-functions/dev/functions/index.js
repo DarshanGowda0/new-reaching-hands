@@ -234,3 +234,54 @@ exports.itemsUpdateLog = functions.firestore.document('logs/{logId}').onUpdate(e
     return "OK";
 
 });
+
+exports.notifyNewUser = functions.auth.user().onCreate((event) => {
+
+    const user = event.data;
+
+    const email = user.email;
+    const displayName = user.displayName;
+    console.log('user ', displayName, ' logged in');
+
+    sendUserAddedAlert(displayName);
+
+    return "OK";
+
+});
+
+function sendUserAddedAlert(displayName) {
+    const payload = {
+        notification: {
+            title: displayName + ' just logged',
+            body: 'grant user previlages for ' + displayName,
+            icon: 'https://goo.gl/Fz9nrQ',
+            click_action: 'http://localhost:4200/AccessControl'
+        }
+    }
+
+    const db = admin.firestore();
+    const userRef = db.collection('users');
+
+    userRef.get()
+        .then(querySnapshot => {
+            let tokens = [];
+            querySnapshot.forEach(userDoc => {
+                if (userDoc.data().fcmTokens && userDoc.data().checkAdmin) {
+                    tokens = tokens.concat(Object.keys(userDoc.data().fcmTokens));
+                }
+            });
+            if (!tokens.length) {
+                throw new Error('User does not have any tokens!');
+            }
+            console.log('tokens ', tokens)
+            return admin.messaging().sendToDevice(tokens, payload)
+                .then((response) => {
+                    // Response is a message ID string.
+                    console.log('Successfully sent message:', response);
+                })
+                .catch((error) => {
+                    console.log('Error sending message:', error);
+                });
+        })
+        .catch(err => console.log(err))
+}
