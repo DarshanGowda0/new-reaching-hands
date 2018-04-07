@@ -151,6 +151,8 @@ export class SummaryReportComponent implements OnInit {
 
     val.forEach(element => {
 
+      const tempDate = new Date(element.date);
+
       if (element.logType !== this.logTypeOptions[1]) {
         if (myhash.has(element.date)) {
           const previousCost = myhash.get(element.date);
@@ -197,23 +199,19 @@ export class SummaryReportComponent implements OnInit {
     dataArray.sort((a, b) => {
       const aDate = new Date(b.date);
       const bDate = new Date(a.date);
-      return (bDate - aDate);
+      return (bDate > aDate ? 1 : -1);
     });
 
     dataArray.forEach(element => {
       const row = [];
 
-      row.push(element.date);
+      row.push(new Date(element.date));
       row.push(element.cost);
       row.push(element.cost - 300);
       row.push(element.cost + 300);
       costData.push(row);
 
     });
-
-
-
-
     this.drawLineChart(costData, dateToData);
   }
 
@@ -266,7 +264,7 @@ export class SummaryReportComponent implements OnInit {
 
   drawLineChart(costData, dateToData) {
     const data = new this.google.visualization.DataTable();
-    data.addColumn('string', 'x');
+    data.addColumn('date', 'x');
     data.addColumn('number', 'cost');
     data.addColumn({ id: 'i0', type: 'number', role: 'interval' });
     data.addColumn({ id: 'i1', type: 'number', role: 'interval' });
@@ -300,7 +298,8 @@ export class SummaryReportComponent implements OnInit {
       const selectedItem = chart_lines.getSelection()[0];
       if (selectedItem) {
         const sDate = costData[selectedItem.row][0];
-        const tableData = dateToData.get(sDate);
+        console.log(this.dateFormat(sDate));
+        const tableData = dateToData.get(this.dateFormat(sDate));
         this.dataSource = new MatTableDataSource(tableData);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
