@@ -128,7 +128,7 @@ export class SummaryReportComponent implements OnInit {
       });
     });
 
-    dataArray.sort(function (a, b) {
+    dataArray.sort((a, b) => {
       return b.costObject.total - a.costObject.total;
     });
 
@@ -194,31 +194,28 @@ export class SummaryReportComponent implements OnInit {
       });
     });
 
+    dataArray.sort((a, b) => {
+      const aDate = new Date(b.date);
+      const bDate = new Date(a.date);
+      return (bDate - aDate);
+    });
+
     dataArray.forEach(element => {
       const row = [];
 
-      row.push(this.dateFormat(element.date));
+      row.push(element.date);
       row.push(element.cost);
       row.push(element.cost - 300);
       row.push(element.cost + 300);
       costData.push(row);
 
     });
+
+
+
+
     this.drawLineChart(costData, dateToData);
   }
-
-  compare(a, b) {
-    if (a.last_nom < b.last_nom) {
-      return -1;
-    }
-    if (a.last_nom > b.last_nom) {
-      return 1;
-    }
-    return 0;
-  }
-
-
-
 
   drawPieChart(costData) {
     const data = new this.google.visualization.DataTable();
