@@ -4,6 +4,7 @@ import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
+import * as tf from '@tensorflow/tfjs';
 
 export interface CostModel {
   purchased: number;
@@ -82,7 +83,6 @@ export class SummaryReportComponent implements OnInit {
     this.drawPieChart(costData);
 
   }
-
 
 
   computeDataForTopTenItems(logs) {
@@ -169,23 +169,6 @@ export class SummaryReportComponent implements OnInit {
           dateToData.set(element.date, elementDataArray);
         }
       }
-      // if (myhash.has(element.date)) {
-      //   if (element.logType !== this.logTypeOptions[1]) {
-      //     totalCost += element.cost;
-      //     myhash.set(element.date, totalCost);
-      //     const tempArray = dateToData.get(element.date);
-      //     tempArray.push(element);
-      //     dateToData.set(element.date, tempArray);
-      //   }
-      // } else {
-      //   if (element.logType !== this.logTypeOptions[1]) {
-      //     totalCost = element.cost;
-      //     myhash.set(element.date, totalCost);
-      //     const elementDataArray = new Array();
-      //     elementDataArray.push(element);
-      //     dateToData.set(element.date, elementDataArray);
-      //   }
-      // }
     });
 
     const dataArray = new Array();
@@ -212,8 +195,55 @@ export class SummaryReportComponent implements OnInit {
       costData.push(row);
 
     });
+    const linearModel = this.train(dataArray);
     this.drawLineChart(costData, dateToData);
   }
+
+  async train(dataArray): Promise<any> {
+
+    let linearModel: tf.Sequential;
+    linearModel = tf.sequential();
+    linearModel.add(tf.layers.dense({
+      units: 1,
+      inputShape: [1],
+      // activation: 'relu'
+    }));
+    // linearModel.add(tf.layers.dense({units: 5, activation: 'relu'}));
+    // linearModel.add(tf.layers.dense({ units: 1, activation: 'linear' }));
+
+
+    linearModel.compile({
+      loss: 'meanSquaredError',
+      optimizer: 'sgd',
+      metrics: ['accuracy']
+    });
+
+    const xArray = [];
+    const yArray = [];
+
+    dataArray.forEach(element => {
+      xArray.push(this.daysIntoYear(element.date));
+      yArray.push(element.cost);
+    });
+
+    console.log('array ', xArray, ' cost ', yArray);
+
+    // const xs = tf.tensor1d(xArray);
+    // const ys = tf.tensor1d(yArray);
+
+    const xs = tf.tensor1d([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    const ys = tf.tensor1d([100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]);
+
+    xs.print();
+    ys.print();
+
+    const history = await linearModel.fit(xs, ys, { epochs: 2000 });
+    console.log('model trained!', history.history);
+    const output = linearModel.predict(tf.tensor2d([12], [1, 1])) as any;
+    const prediction = Array.from(output.dataSync())[0];
+    console.log('pred ', prediction);
+  }
+
 
   drawPieChart(costData) {
     const data = new this.google.visualization.DataTable();
@@ -298,7 +328,6 @@ export class SummaryReportComponent implements OnInit {
       const selectedItem = chart_lines.getSelection()[0];
       if (selectedItem) {
         const sDate = costData[selectedItem.row][0];
-        console.log(this.dateFormat(sDate));
         const tableData = dateToData.get(this.dateFormat(sDate));
         this.dataSource = new MatTableDataSource(tableData);
         this.dataSource.sort = this.sort;
@@ -319,6 +348,11 @@ export class SummaryReportComponent implements OnInit {
 
   getName(itemId) {
     return this.nameHash.get(itemId);
+  }
+
+  daysIntoYear(date) {
+    date = new Date(date);
+    return (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
   }
 
 }
