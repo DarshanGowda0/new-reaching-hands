@@ -15,25 +15,25 @@ export class AddNewComponent implements OnInit {
     {
       name: 'Inventory',
       category: [
-        'Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous', 'Genericmeds'
+        'Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous1', 'Genericmeds', 'Utilities'
       ]
     },
     {
       name: 'Services',
       category: [
-        'Studentpersonalcare', 'Medicalcare', 'Transportation'
+        'Studentpersonalcare', 'Medicalcare', 'Transportation', 'Miscellaneous2'
       ]
     },
     {
       name: 'Education',
       category: [
-        'School', 'Homeschool', 'Extracurricular', 'Tutorials'
+        'School', 'Homeschool', 'Extracurricular', 'Tutorials', 'Miscellaneous3'
       ]
     },
     {
       name: 'Maintenance',
       category: [
-        'Vehicle', 'Campus', 'Monthlybills'
+        'Vehicle', 'Campus', 'Monthlybills', 'Miscellaneous4'
       ]
     }
   ];

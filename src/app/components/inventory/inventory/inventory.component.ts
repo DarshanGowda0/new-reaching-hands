@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class InventoryComponent implements OnInit {
 
   category = [
-    'Assets', 'Groceries', 'Toiletries', 'Stationary', 'Perishablegoods', 'Miscellaneous', 'Genericmeds'
+    'Assets', 'Groceries', 'Toiletries', 'Stationary', 'Perishablegoods', 'Miscellaneous1', 'Genericmeds', 'Utilities'
   ];
 
   constructor(private router: Router) { }

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class EducationComponent implements OnInit {
 
   category = [
-    'School', 'Homeschool', 'Extracurricular', 'Tutorials'
+    'School', 'Homeschool', 'Extracurricular', 'Tutorials', 'Miscellaneous3'
   ];
 
   constructor(private router: Router) { }
