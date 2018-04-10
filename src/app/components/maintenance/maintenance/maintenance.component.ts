@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class MaintenanceComponent implements OnInit {
 
   category = [
-    'Vehicle', 'Campus', 'Monthlybills'
+    'Vehicle', 'Campus', 'Monthlybills', 'Miscellaneous'
   ];
 
   constructor(private router: Router) { }

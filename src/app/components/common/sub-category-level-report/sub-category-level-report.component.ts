@@ -25,7 +25,8 @@ export class SubCategoryLevelReportComponent implements OnInit {
   totalCost = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
   subCategoryList: string[] = ['Assets', 'Groceries', 'Stationary', 'Toiletries',
-    'Perishablegoods', 'Miscellaneous', 'Genericmeds', 'Studentpersonalcare', 'Medicalcare',
+    'Perishablegoods', 'Miscellaneous1', 'Miscellaneous2', 'Miscellaneous3', 'Miscellaneous4',
+     'Genericmeds', 'Utilities', 'Studentpersonalcare', 'Medicalcare',
     'Transportation', 'Vehicle', 'Campus', 'Monthlybills', 'School', 'Homeschool', 'Extracurricular', 'Tutorials'];
   costComp: number[] = [];
   items: string[][] = [];
@@ -61,7 +62,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
     this.dataService.getSummarysubCat(subCat).subscribe(logs => {
       this.dataService.getAllItems().subscribe(items => {
         this.getAllNames(items);
-          this.computeDataForPieChart(logs,items);
+          this.computeDataForPieChart(logs, items);
           this.computeDataForTopTenItems(logs);
           this.comupteDataForLineChart(logs);
       });
@@ -76,26 +77,25 @@ export class SubCategoryLevelReportComponent implements OnInit {
     });
   }
 
-  computeDataForPieChart(val,items) {
+  computeDataForPieChart(val, items) {
     const costData = [];
     const row = [];
     const myhash = new Map();
     const itemhash = new Map();
     let cost = 0;
-   
+
     val.forEach(element => {
-      if(element.logType !== 'Issued'){
+      if (element.logType !== 'Issued') {
       if (myhash.has(element.itemId)) {
         cost = myhash.get(element.itemId) + element.cost;
         myhash.set(element.itemId, cost);
-      }
-      else{
+      } else {
         myhash.set(element.itemId, element.cost);
       }
-    
+
     }
     });
-    console.log('itemhashval',myhash);
+    console.log('itemhashval', myhash);
 
     items.forEach(element => {
       itemhash.set(element.itemId, element.itemName);
@@ -162,7 +162,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
       }
     });
 
-   
+
 
     const dataArray = new Array();
     myhash.forEach((value, key) => {
@@ -178,7 +178,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
       return b.costObject.total - a.costObject.total;
     });
 
-    //console.log('array',dataArray[1]);
+    // console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
     if (dataArray.length > 10) {
@@ -186,8 +186,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
         arrayTen[i] = dataArray[i];
       }
       this.drawChart1(arrayTen);
-    }
-    else {
+    } else {
       this.drawChart1(dataArray);
     }
     console.log('array', arrayTen[1]);
@@ -199,9 +198,10 @@ export class SubCategoryLevelReportComponent implements OnInit {
 
   }
 
-  
+
   comupteDataForLineChart(val) {
     const costData = [];
+    // tslint:disable-next-line:prefer-const
     let totalCost = 0;
     const myhash = new Map();
     const dateToData = new Map();
@@ -263,7 +263,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
 
 
   drawChart(costData) {
-    const data = new this.google.visualization.DataTable()
+    const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'subCategory');
     data.addColumn('number', 'cost');
     data.addRows(costData);
@@ -278,7 +278,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
 
   }
 
- 
+
 
 
   drawChart1(dataArray) {
@@ -313,7 +313,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
     chart.draw(data, options);
   }
 
-  
+
   drawLineChart(costData, dateToData) {
     const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'x');

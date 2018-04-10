@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class ServicesComponent implements OnInit {
 
   category = [
-    'Studentpersonalcare', 'Medicalcare', 'Transportation'
+    'Studentpersonalcare', 'Medicalcare', 'Transportation', 'Miscellaneous2'
   ];
 
   constructor(private router: Router) { }

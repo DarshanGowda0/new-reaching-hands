@@ -13,7 +13,7 @@ import { ItemDetails3Component } from './components/services/item-details3/item-
 import { ItemDetails2Component } from './components/education/item-details2/item-details2.component';
 import { LoginComponent } from './components/common/login/login.component';
 import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
-import { SummaryReportComponent } from './components/common/summary-report/summary-report.component'
+import { SummaryReportComponent } from './components/common/summary-report/summary-report.component';
 import { GoogleChartResolver } from './core/google-chart-resolver';
 import { ItemReportComponent } from './components/common/item-report/item-report.component';
 import { CanAccessGuard } from './core/can-access.guard';
