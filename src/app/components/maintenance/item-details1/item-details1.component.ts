@@ -21,12 +21,13 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   currentQuantity = 0;
 
   displayedColumns = ['serviceDate', 'servicer', 'billNumber', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
-  logTypeOptions = ['Added', 'Issued', 'Donated'];
+  logTypeOptions = ['Paid', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  // tslint:disable-next-line:max-line-length
   constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
