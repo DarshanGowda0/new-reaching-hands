@@ -195,11 +195,11 @@ export class SummaryReportComponent implements OnInit {
       costData.push(row);
 
     });
-    const linearModel = this.train(dataArray);
-    this.drawLineChart(costData, dateToData);
+    this.train(dataArray, costData, dateToData);
+
   }
 
-  async train(dataArray): Promise<any> {
+  async train(dataArray, costData, dateToData): Promise<any> {
 
     let linearModel: tf.Sequential;
     linearModel = tf.sequential();
@@ -242,6 +242,9 @@ export class SummaryReportComponent implements OnInit {
     const output = linearModel.predict(tf.tensor2d([12], [1, 1])) as any;
     const prediction = Array.from(output.dataSync())[0];
     console.log('pred ', prediction);
+
+    this.drawLineChart(costData, dateToData);
+
   }
 
 
@@ -293,13 +296,28 @@ export class SummaryReportComponent implements OnInit {
 
 
   drawLineChart(costData, dateToData) {
-    const data = new this.google.visualization.DataTable();
-    data.addColumn('date', 'x');
-    data.addColumn('number', 'cost');
-    data.addColumn({ id: 'i0', type: 'number', role: 'interval' });
-    data.addColumn({ id: 'i1', type: 'number', role: 'interval' });
+    const data1 = new this.google.visualization.DataTable();
+    data1.addColumn('date', 'x');
+    data1.addColumn('number', 'cost');
+    data1.addColumn({ id: 'i0', type: 'number', role: 'interval' });
+    data1.addColumn({ id: 'i1', type: 'number', role: 'interval' });
 
-    data.addRows(costData);
+    data1.addRows(costData);
+
+    const data2 = new this.google.visualization.DataTable();
+    data2.addColumn('date', 'x');
+    data2.addColumn('number', 'cost');
+    data2.addColumn({ id: 'i0', type: 'number', role: 'interval' });
+    data2.addColumn({ id: 'i1', type: 'number', role: 'interval' });
+
+    const costData2 = [];
+    costData.forEach(element => {
+      element[1] = element[1] + 10;
+      costData2.push(element);
+    });
+
+    data1.addRows(costData);
+    data2.addRows(costData2);
 
     // The intervals data as narrow lines (useful for showing raw source data)
     const options_lines = {
@@ -322,7 +340,8 @@ export class SummaryReportComponent implements OnInit {
     };
 
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
-    chart_lines.draw(data, options_lines);
+    const joinedData = this.google.visualization.data.join(data1, data2, 'full', [[0, 0]], [1], [1]);
+    chart_lines.draw(joinedData, options_lines);
     this.google.visualization.events.addListener(chart_lines, 'select', () => {
 
       const selectedItem = chart_lines.getSelection()[0];
