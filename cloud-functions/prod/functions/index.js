@@ -271,3 +271,25 @@ function sendUserAddedAlert(displayName) {
         })
         .catch(err => console.log(err))
 }
+
+exports.getItemDetails = functions.https.onRequest((req, res) => {
+
+    console.log("request method", req.method);
+
+    const response = "Booyaaaaaaaaaaaaaaah!";
+
+
+    if (req.method === 'POST') {
+        const body = req.body;
+        console.log('body ', body);
+
+        res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+        res.send(JSON.stringify({
+            "speech": response, "displayText": response
+            //"speech" is the spoken version of the response, "displayText" is the visual version
+        }));
+    } else {
+        res.status(500).send('Not a valid request!');
+    }
+
+});
