@@ -8,13 +8,27 @@ import { Router } from '@angular/router';
 })
 export class InventoryComponent implements OnInit {
 
+
   category = [
     'Assets', 'Groceries', 'Toiletries', 'Stationary', 'Perishablegoods', 'Miscellaneous1', 'Genericmeds', 'Utilities'
   ];
 
+  categoryHS = [
+    // tslint:disable-next-line:max-line-length
+    'Assets-HS', 'Groceries-HS', 'Stationary-HS', 'Toiletries-HS', 'Perishablegoods-HS', 'Miscellaneous-HS', 'Genericmeds-HS', 'Utilities-HS'
+  ];
+
+  mainArray = [this.category, this.categoryHS];
+
+
   constructor(private router: Router) { }
 
   ngOnInit() {
+
+    // if inv => mainArray = category
+    // else mainArray = catHS
+    // and use mainArray in html
+
   }
 
   onAdd() {

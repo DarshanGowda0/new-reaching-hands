@@ -69,3 +69,19 @@ export interface ItemLog3 {
     itemId: string;
     addedBy: string;
 }
+export interface ItemLogP {
+
+    logId: string;
+    serviceDate: string;
+    servicer: string;
+    logType: string; // donation etc
+    selectedCommons: string;
+    billNumber: string;
+    cost: number;
+    remarks: string;
+    date: any;
+    category: string;
+    subCategory: string;
+    itemId: string;
+    addedBy: string;
+}
