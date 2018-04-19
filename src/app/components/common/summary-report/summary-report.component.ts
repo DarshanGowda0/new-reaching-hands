@@ -195,7 +195,8 @@ export class SummaryReportComponent implements OnInit {
       costData.push(row);
 
     });
-    this.train(dataArray, costData, dateToData);
+    // this.train(dataArray, costData, dateToData);
+    this.drawLineChart(costData, dateToData);
 
   }
 
@@ -243,7 +244,6 @@ export class SummaryReportComponent implements OnInit {
     const prediction = Array.from(output.dataSync())[0];
     console.log('pred ', prediction);
 
-    this.drawLineChart(costData, dateToData);
 
   }
 
