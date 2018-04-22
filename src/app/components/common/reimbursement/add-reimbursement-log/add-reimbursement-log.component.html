@@ -1,0 +1,30 @@
+<div>
+  <h2 mat-dialog-title>Add new log</h2>
+
+
+  <mat-form-field hintLabel="Example: xyz" style="display:block;clear: both;">
+    <input matInput #input placeholder="Enter Item Name" required [(ngModel)]="reimbursementLog.itemName" pattern="[a-zA-Z]*">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Choose Date of Purchase" required [(ngModel)]="reimbursementLog.dateOfPurchase">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker touchUi="true" #picker></mat-datepicker>
+  </mat-form-field>
+
+
+  <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
+    <span matPrefix>&#8377; </span>
+    <input matInput #input placeholder="Enter Total amount Spent" required [(ngModel)]="reimbursementLog.totalCost" pattern="[0-9]*">
+  </mat-form-field>
+
+  <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
+    <span matPrefix>&#8377; </span>
+    <input matInput #input placeholder="Bill Number" required [(ngModel)]="reimbursementLog.billNumber" pattern="A-Z[0-9]*">
+  </mat-form-field>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="accent" (click)="onAdd()">ADD</button>
+  </mat-dialog-actions>
+</div>

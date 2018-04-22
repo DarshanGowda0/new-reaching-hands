@@ -20,6 +20,7 @@ import { CanAccessGuard } from './core/can-access.guard';
 import { PageunresponsiveComponent } from './components/common/pageunresponsive/pageunresponsive.component';
 import { SubCategoryLevelReportComponent } from './components/common/sub-category-level-report/sub-category-level-report.component';
 import { CategoryLevelReportComponent } from './components/common/category-level-report/category-level-report.component';
+import { ReimbursementComponent } from './components/common/reimbursement/reimbursement/reimbursement.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,12 @@ const routes: Routes = [
     path: 'AccessControl',
     component: AccesscontrolComponent,
     canActivate: [CanAccessGuard]
+  },
+  {
+    path: 'Reimbursement',
+    component: ReimbursementComponent,
+    canActivate: [AuthGuard]
+
   },
   {
     path: 'add',
