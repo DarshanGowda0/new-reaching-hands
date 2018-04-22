@@ -41,6 +41,9 @@ import { PageunresponsiveComponent } from './components/common/pageunresponsive/
 import { SummaryReportComponent} from './components/common/summary-report/summary-report.component';
 import { CategoryLevelReportComponent } from './components/common/category-level-report/category-level-report.component';
 import { SubCategoryLevelReportComponent } from './components/common/sub-category-level-report/sub-category-level-report.component';
+import { ReimbursementComponent } from './components/common/reimbursement/reimbursement/reimbursement.component';
+import { AddReimbursementLogComponent } from './components/common/reimbursement/add-reimbursement-log/add-reimbursement-log.component';
+
 
 
 @NgModule({
@@ -69,7 +72,9 @@ import { SubCategoryLevelReportComponent } from './components/common/sub-categor
     PageunresponsiveComponent,
     SummaryReportComponent,
     CategoryLevelReportComponent,
-    SubCategoryLevelReportComponent
+    SubCategoryLevelReportComponent,
+    ReimbursementComponent,
+    AddReimbursementLogComponent,
   ],
   imports: [
     BrowserModule,
@@ -92,7 +97,8 @@ import { SubCategoryLevelReportComponent } from './components/common/sub-categor
     AddLog1Component,
     AddLog2Component,
     AddLog3Component,
-    AccesscontrolComponent
+    AccesscontrolComponent,
+    AddReimbursementLogComponent
   ]
 })
 export class AppModule { }

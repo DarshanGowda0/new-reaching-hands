@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
+import { ReimbursementLog, ReimbursementLog2 } from '../models/reimbursement-log';
 //import * as moment from 'moment';
 
 @Injectable()
@@ -37,6 +38,10 @@ export class DataService {
     return this.firestore.doc<Item>(`items/${itemId}`).valueChanges();
   }
 
+  getReimbursementLogById(uid: string) {
+    return this.firestore.doc<ReimbursementLog2>(`reimbursementLogs/${uid}`).valueChanges();
+  }
+
   getItems(subCategory: string, queryString: string) {
     return this.firestore.collection<Item>(`items`, ref => ref.where('subCategory', '==', subCategory)
       .where('itemName', '>', `${queryString}`).where('itemName', '<', `${queryString}z`)
@@ -60,6 +65,9 @@ export class DataService {
   addLog3(log: ItemLog3) {
     return this.firestore.collection<ItemLog3>(`logs`).doc(log.logId).set(log);
   }
+  addReimbursementLog(log: ReimbursementLog) {
+    return this.firestore.collection<ItemLog2>(`reimbursementLogs`).doc(log.reimburesmentId).set(log);
+  }
 
   getLogsOfItem(itemId: string) {
     return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
@@ -78,6 +86,10 @@ export class DataService {
   }
   getLogsOfItem3(itemId: string) {
     return this.firestore.collection<ItemLog3>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
+  }
+  getLogsofReimbursement(uid: string) {
+    return this.firestore.collection<ReimbursementLog2>(`reimbursementLogs`, ref => ref.where('uid', '==', uid).
+    orderBy('date', 'desc')).valueChanges();
   }
 
   addAuth(uid: string) {
