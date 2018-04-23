@@ -274,22 +274,37 @@ function sendUserAddedAlert(displayName) {
 
 exports.getItemDetails = functions.https.onRequest((req, res) => {
 
-    console.log("request method", req.method);
-
-    const response = "Booyaaaaaaaaaaaaaaah!";
-
-
+    console.log("request method", req.method);    
+    var reqArray = req.body.result.parameters;
+    var item = reqArray['itemName'];
+    var itemVal,unitVal;
+    const db = admin.firestore();
+    db.collection("items").where("itemName", "==", item).get()
+    .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+        itemVal = doc.data().itemQuantity;
+        unitVal = doc.data().unit;
     if (req.method === 'POST') {
         const body = req.body;
         console.log('body ', body);
-
+        var reply = "Quantity of " + item + "s left :" + itemVal + unitVal ;
         res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
         res.send(JSON.stringify({
-            "speech": response, "displayText": response
+            "speech": reply, "displayText": reply
             //"speech" is the spoken version of the response, "displayText" is the visual version
         }));
     } else {
         res.status(500).send('Not a valid request!');
     }
 
+        });
+    })
+    .catch((error)=> {
+        console.log("Error getting documents: ", error);
+    });
+
+   
+
 });
+        
