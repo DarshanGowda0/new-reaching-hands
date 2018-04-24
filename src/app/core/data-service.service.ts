@@ -88,8 +88,8 @@ export class DataService {
     return this.firestore.collection<ItemLog3>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
   }
   getLogsofReimbursement(uid: string) {
-    return this.firestore.collection<ReimbursementLog2>(`reimbursementLogs`, ref => ref.where('uid', '==', uid).
-    orderBy('date', 'desc')).valueChanges();
+    return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid)
+    .orderBy('dateOfPurchase', 'desc')).valueChanges();
   }
 
   addAuth(uid: string) {

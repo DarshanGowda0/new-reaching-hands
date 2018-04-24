@@ -43,13 +43,14 @@ export class ReimbursementComponent implements OnInit, AfterViewInit {
       width: '450px',
       data: {
         'reimbursementlog': undefined,
-        // 'item': this.item
+        'reimbursementLog2': this.reimbursementLog2
       },
       disableClose: true
     });
   }
     ngAfterViewInit() {
       this.auth.user.subscribe(params => {
+        console.log(params.uid);
         this.dataService.getLogsofReimbursement(params.uid).subscribe(val => {
           this.dataSource = new MatTableDataSource(val);
           this.dataSource.sort = this.sort;

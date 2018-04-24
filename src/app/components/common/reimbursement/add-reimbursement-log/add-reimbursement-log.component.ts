@@ -5,6 +5,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DataService } from '../../../../core/data-service.service';
 import { ReimbursementLog2 } from '../../../../models/reimbursement-log';
 import { ReimbursementComponent } from '../reimbursement/reimbursement.component';
+import { AuthService } from '../../../../core/auth.service';
 
 @Component({
   selector: 'app-add-reimbursement-log',
@@ -16,8 +17,7 @@ export class AddReimbursementLogComponent implements OnInit {
   reimbursementLog: ReimbursementLog = {} as ReimbursementLog;
   reimbursementLog2: ReimbursementLog2;
   logFormControl = new FormControl();
-
-  constructor(public dialogRef: MatDialogRef<AddReimbursementLogComponent>,
+    constructor(public dialogRef: MatDialogRef<AddReimbursementLogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
     this.reimbursementLog2 = data.item;
     if (data.reimbursementLog) {
