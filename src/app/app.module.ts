@@ -43,6 +43,8 @@ import { CategoryLevelReportComponent } from './components/common/category-level
 import { SubCategoryLevelReportComponent } from './components/common/sub-category-level-report/sub-category-level-report.component';
 import { ReimbursementComponent } from './components/common/reimbursement/reimbursement/reimbursement.component';
 import { AddReimbursementLogComponent } from './components/common/reimbursement/add-reimbursement-log/add-reimbursement-log.component';
+import { StudentDetailsComponent } from './components/common/student-details/student-details/student-details.component';
+import { AddStudentLogComponent } from './components/common/student-details/add-student-log/add-student-log.component';
 
 
 
@@ -75,6 +77,8 @@ import { AddReimbursementLogComponent } from './components/common/reimbursement/
     SubCategoryLevelReportComponent,
     ReimbursementComponent,
     AddReimbursementLogComponent,
+    StudentDetailsComponent,
+    AddStudentLogComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,7 +102,8 @@ import { AddReimbursementLogComponent } from './components/common/reimbursement/
     AddLog2Component,
     AddLog3Component,
     AccesscontrolComponent,
-    AddReimbursementLogComponent
+    AddReimbursementLogComponent,
+    AddStudentLogComponent
   ]
 })
 export class AppModule { }

@@ -21,6 +21,7 @@ import { PageunresponsiveComponent } from './components/common/pageunresponsive/
 import { SubCategoryLevelReportComponent } from './components/common/sub-category-level-report/sub-category-level-report.component';
 import { CategoryLevelReportComponent } from './components/common/category-level-report/category-level-report.component';
 import { ReimbursementComponent } from './components/common/reimbursement/reimbursement/reimbursement.component';
+import { StudentDetailsComponent } from './components/common/student-details/student-details/student-details.component';
 
 const routes: Routes = [
   {
@@ -56,6 +57,12 @@ const routes: Routes = [
   {
     path: 'Reimbursement',
     component: ReimbursementComponent,
+    canActivate: [AuthGuard]
+
+  },
+  {
+    path: 'Student Details',
+    component: StudentDetailsComponent,
     canActivate: [AuthGuard]
 
   },
