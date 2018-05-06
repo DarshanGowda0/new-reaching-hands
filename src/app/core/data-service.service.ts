@@ -3,10 +3,11 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import * as firebase from 'firebase';
 import { Item } from '../models/item';
 import { AuthService } from './auth.service';
-import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
+import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract} from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
 import { ReimbursementLog, ReimbursementLog2 } from '../models/reimbursement-log';
+import {StudentLog, StudentLog2 } from '../models/student-logs';
 //import * as moment from 'moment';
 
 @Injectable()
@@ -42,6 +43,10 @@ export class DataService {
     return this.firestore.doc<ReimbursementLog2>(`reimbursementLogs/${uid}`).valueChanges();
   }
 
+  getStudentLogById(uid: string) {
+    return this.firestore.doc<StudentLog2>(`studentLogs`).valueChanges();
+  }
+
   getItems(subCategory: string, queryString: string) {
     return this.firestore.collection<Item>(`items`, ref => ref.where('subCategory', '==', subCategory)
       .where('itemName', '>', `${queryString}`).where('itemName', '<', `${queryString}z`)
@@ -66,7 +71,10 @@ export class DataService {
     return this.firestore.collection<ItemLog3>(`logs`).doc(log.logId).set(log);
   }
   addReimbursementLog(log: ReimbursementLog) {
-    return this.firestore.collection<ItemLog2>(`reimbursementLogs`).doc(log.reimburesmentId).set(log);
+    return this.firestore.collection<ReimbursementLog2>(`reimbursementLogs`).doc(log.reimburesmentId).set(log);
+  }
+  addStudentLog(log: StudentLog) {
+    return this.firestore.collection<StudentLog2>('studentLogs').doc(log.logId).set(log);
   }
 
   getLogsOfItem(itemId: string) {
@@ -90,6 +98,9 @@ export class DataService {
   getLogsofReimbursement(uid: string) {
     return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid)
     .orderBy('dateOfPurchase', 'desc')).valueChanges();
+  }
+  getLogsofStudents() {
+    return this.firestore.collection('studentLogs', ref => ref).valueChanges();
   }
 
   addAuth(uid: string) {

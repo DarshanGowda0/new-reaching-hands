@@ -1,0 +1,30 @@
+<div>
+  <h2 mat-dialog-title>Add new student log</h2>
+
+
+  <mat-form-field hintLabel="Example: Darshan, Vachana" style="display:block;clear: both;">
+    <input matInput #input placeholder="Enter Student Name" required [(ngModel)]="studentLog.studentName" pattern="[a-zA-Z]*">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Choose Date of Birth" required [(ngModel)]="studentLog.dateOfBirth">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker touchUi="true" #picker></mat-datepicker>
+  </mat-form-field>
+
+
+  <mat-form-field hintLabel="Example: Darshan" style="display:block;clear: both;">
+    <span matPrefix>&#8377; </span>
+    <input matInput #input placeholder="Enter Father's Name" required [(ngModel)]="studentLog.fathersName" pattern="[a-zA-Z]*">
+  </mat-form-field>
+
+  <mat-form-field hintLabel="Example:emailId" style="display:block;clear: both;">
+    <span matPrefix>&#8377; </span>
+    <input matInput #input placeholder="Email Id" required [(ngModel)]="studentLog.emailId" pattern="[a-zA-Z][0-9]@">
+  </mat-form-field>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="accent" (click)="onAdd()">ADD</button>
+  </mat-dialog-actions>
+</div>
