@@ -20,9 +20,9 @@
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field hintLabel="Example: 5">
-            <input matInput #input placeholder="Enter Threshold value" [formControl]="addFormControl" [(ngModel)]="thresholdValue">
-          </mat-form-field>
+        <mat-form-field hintLabel="Example: 5" *ngIf="getCategory(selectedCategory)=== 'Inventory' || getCategory(selectedCategory) === 'HomeSchoolInventory'">
+            <input matInput #input placeholder="Enter Threshold value" [formControl]="addFormControl" [(ngModel)]="thresholdValue" >
+        </mat-form-field>
 
         <mat-form-field hintLabel="kgs, lts..." style="margin-top:1%;">
           <mat-select placeholder="Unit" [formControl]="addFormControl" required [(value)]="selectedUnit">
