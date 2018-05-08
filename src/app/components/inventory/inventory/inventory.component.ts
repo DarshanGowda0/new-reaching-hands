@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AddNewComponent } from '../../common/add-new/add-new.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-inventory',
@@ -21,7 +23,7 @@ export class InventoryComponent implements OnInit {
   mainArray = [this.category, this.categoryHS];
 
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private dialog: MatDialog) { }
 
   ngOnInit() {
 
@@ -32,7 +34,16 @@ export class InventoryComponent implements OnInit {
   }
 
   onAdd() {
-    this.router.navigate(['add']);
+    // this.router.navigate(['add']);
+
+    const dialogRef = this.dialog.open(AddNewComponent, {
+      width: '450px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed =>', result);
+    });
   }
 
 }
