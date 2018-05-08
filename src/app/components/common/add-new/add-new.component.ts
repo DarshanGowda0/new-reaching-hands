@@ -4,6 +4,7 @@ import { Item } from '../../../models/item';
 import { DataService } from '../../../core/data-service.service';
 import { Router } from '@angular/router';
 import { isDefined } from '@angular/compiler/src/util';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-add-new',
@@ -60,7 +61,7 @@ export class AddNewComponent implements OnInit {
   addFormControl = new FormControl();
   thresholdValue: number;
 
-  constructor(private dataService: DataService, private router: Router) { }
+  constructor(private dataService: DataService, private router: Router, public dialogRef: MatDialogRef<AddNewComponent>) { }
 
   ngOnInit() {
   }
@@ -104,7 +105,7 @@ export class AddNewComponent implements OnInit {
         console.error('error adding item', err);
       });
     }
-
+    this.dialogRef.close();
 
   }
 
