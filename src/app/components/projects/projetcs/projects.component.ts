@@ -29,9 +29,12 @@ export class ProjectsComponent implements OnInit {
     // this.router.navigate(['add']);
     const dialogRef = this.dialog.open(AddNewComponent, {
       width: '450px',
+      data: {
+        'category': 'Projects'
+      },
       disableClose: true
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed =>', result);
     });

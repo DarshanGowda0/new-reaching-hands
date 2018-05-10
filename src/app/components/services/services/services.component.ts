@@ -23,6 +23,9 @@ export class ServicesComponent implements OnInit {
     // this.router.navigate(['add']);
     const dialogRef = this.dialog.open(AddNewComponent, {
       width: '450px',
+      data: {
+        'category': 'Services'
+      },
       disableClose: true
     });
 

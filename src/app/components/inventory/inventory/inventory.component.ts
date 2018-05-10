@@ -38,6 +38,9 @@ export class InventoryComponent implements OnInit {
 
     const dialogRef = this.dialog.open(AddNewComponent, {
       width: '450px',
+      data: {
+        'category': 'Inventory'
+      },
       disableClose: true
     });
 
