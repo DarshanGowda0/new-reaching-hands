@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Item } from '../../../models/item';
 import { DataService } from '../../../core/data-service.service';
 import { Router } from '@angular/router';
 import { isDefined } from '@angular/compiler/src/util';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-add-new',
@@ -12,6 +12,7 @@ import { MatDialogRef } from '@angular/material';
   styleUrls: ['./add-new.component.css']
 })
 export class AddNewComponent implements OnInit {
+
 
   categoryGroups = [
     {
@@ -60,11 +61,31 @@ export class AddNewComponent implements OnInit {
   selectedUnit: string;
   addFormControl = new FormControl();
   thresholdValue: number;
+  mainCategory: string;
+  subcategory: string[];
 
-  constructor(private dataService: DataService, private router: Router, public dialogRef: MatDialogRef<AddNewComponent>) { }
+  constructor(private dataService: DataService, private router: Router, public dialogRef: MatDialogRef<AddNewComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+                this.mainCategory = data.category;
+                this.getSubCategories();
+              }
+
 
   ngOnInit() {
   }
+
+  getSubCategories() {
+    this.categoryGroups.forEach(element => {
+      if ( element.name === this.mainCategory) {
+        this.subcategory = element.category;
+      }
+    });
+  }
+
+  getmainCategory() {
+    return this.mainCategory;
+  }
+
 
   onReset() {
     this.addFormControl.reset();
