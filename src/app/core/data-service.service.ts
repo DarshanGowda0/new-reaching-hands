@@ -104,6 +104,10 @@ export class DataService {
   getSummary() {
     return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
   }
+  getSummaryDatePicker(startDate: any, endDate: any) {
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
+  }
+
 
   getSummaryCat(cat: string) {
     return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('category', '==', cat).orderBy('date', 'desc')).valueChanges();
