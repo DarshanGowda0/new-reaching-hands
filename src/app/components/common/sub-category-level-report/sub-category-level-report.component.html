@@ -5,6 +5,7 @@
   <button mat-menu-item [matMenuTriggerFor]="services">Services</button>
   <button mat-menu-item [matMenuTriggerFor]="education">Education</button>
   <button mat-menu-item [matMenuTriggerFor]="maintenance">Maintenance</button>
+  <button mat-menu-item [matMenuTriggerFor]="projects">Projects</button>
 </mat-menu>
 
 <mat-menu #inventory="matMenu">
@@ -39,6 +40,14 @@
   <button mat-menu-item (click)="chosen('Monthlybills')">Monthly Bills</button>
   <button mat-menu-item (click)="chosen('Miscellaneous4')">Miscellaneous</button>
 </mat-menu>
+
+<mat-menu #projects="matMenu">
+  <button mat-menu-item (click)="chosen('Construction')">Construction</button>
+  <button mat-menu-item (click)="chosen('Installation')">Installation</button>
+  <button mat-menu-item (click)="chosen('Painting')">Painting</button>
+  <button mat-menu-item (click)="chosen('General')">General</button>
+</mat-menu>
+
 
 
 <div style="display: flex">
