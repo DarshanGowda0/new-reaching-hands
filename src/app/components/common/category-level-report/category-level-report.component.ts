@@ -26,7 +26,7 @@ export class CategoryLevelReportComponent implements OnInit {
   temp: string = null;
   // tslint:disable-next-line:no-inferrable-types
   totalCost: number = 0;
-  categoryList = ['HomeSchoolInventory', 'Inventory', 'Services', 'Maintenance', 'Education'];
+  categoryList = ['HomeSchoolInventory', 'Inventory', 'Services', 'Maintenance', 'Education', 'Projects'];
   subCategoryList: string[] = null;
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
@@ -82,8 +82,10 @@ export class CategoryLevelReportComponent implements OnInit {
       this.subCategoryList = ['Studentpersonalcare', 'Medicalcare', 'Transportation', 'Miscellaneous2'];
     } else if (cat === 'Maintenance') {
       this.subCategoryList = ['Vehicle', 'Campus', 'Monthlybills', 'Miscellaneous3'];
-    } else {
+    } else if (cat === 'Education') {
       this.subCategoryList = ['School', 'Homeschool', 'Extracurricular', 'Tutorials', 'Miscellaneous4'];
+    } else if (cat === 'Projects') {
+      this.subCategoryList = ['Construction', 'Installation', 'Painting', 'General'];
     }
 
 
