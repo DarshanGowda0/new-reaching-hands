@@ -52,10 +52,13 @@ export class AccesscontrolComponent implements OnInit, AfterViewInit {
 
   onCheckAdmin($event, uid) {
     this.auth.user.take(1).subscribe(val => {
-      if (this.auth.canAccess(val)) {
+      if (this.auth.canAccess(val)) {if(uid != val.uid){
     this.afs.collection<User>(`users`).doc(uid).set({
       checkAdmin: $event.checked
     }, { merge: true });
+  }else{
+    this.popUp('Hey Admin, ', 'Action denied');
+  }
   } else {
     console.log('No Access to Modify');
     this.popUp('Not Admin : ', 'No Access');
