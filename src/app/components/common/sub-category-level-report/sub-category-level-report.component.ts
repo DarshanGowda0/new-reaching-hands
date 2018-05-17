@@ -23,12 +23,13 @@ export class SubCategoryLevelReportComponent implements OnInit {
   nameHash = new Map();
   temp = '';
   totalCost = 0;
-  categoryList = ['Inventory', 'Services', 'Maintenance', 'Education', 'Projects'];
+  categoryList = ['Inventory', 'Services', 'Maintenance', 'Education', 'Projects', 'HomeSchoolInventory'];
   subCategoryList: string[] = ['Assets', 'Groceries', 'Stationary', 'Toiletries',
     'Perishablegoods', 'Miscellaneous1', 'Miscellaneous2', 'Miscellaneous3', 'Miscellaneous4',
      'Genericmeds', 'Utilities', 'Studentpersonalcare', 'Medicalcare',
     'Transportation', 'Vehicle', 'Campus', 'Monthlybills', 'School', 'Homeschool', 'Extracurricular', 'Tutorials',
-    'Construction', 'Installation', 'Painting', 'General'];
+    'Construction', 'Installation', 'Painting', 'General', 'Assets-HS', 'Groceries-HS', 'Toiletries-HS',
+    'Stationary-HS', 'Perishablegoods-HS', 'Miscellaneous-HS', 'Genericmeds-HS', 'Utilities-HS'];
   costComp: number[] = [];
   items: string[][] = [];
   logTypeOptions = ['Added', 'Issued', 'Donated'];

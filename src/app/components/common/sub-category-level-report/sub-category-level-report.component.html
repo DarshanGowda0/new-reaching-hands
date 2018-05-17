@@ -2,6 +2,7 @@
 
 <mat-menu #category="matMenu">
   <button mat-menu-item [matMenuTriggerFor]="inventory">Inventory</button>
+  <button mat-menu-item [matMenuTriggerFor]="homeschoolinventory">HomeSchoolInventory</button>
   <button mat-menu-item [matMenuTriggerFor]="services">Services</button>
   <button mat-menu-item [matMenuTriggerFor]="education">Education</button>
   <button mat-menu-item [matMenuTriggerFor]="maintenance">Maintenance</button>
@@ -17,6 +18,17 @@
   <button mat-menu-item (click)="chosen('Miscellaneous1')">Miscellaneous</button>
   <button mat-menu-item (click)="chosen('Genericmeds')">Generic Meds</button>
   <button mat-menu-item (click)="chosen('Utilities')">Utilities</button>
+</mat-menu>
+
+<mat-menu #homeschoolinventory="matMenu">
+  <button mat-menu-item (click)="chosen('Assets-HS')">Assets</button>
+  <button mat-menu-item (click)="chosen('Groceries-HS')">Groceries</button>
+  <button mat-menu-item (click)="chosen('Toiletries-HS')">Tolietries</button>
+  <button mat-menu-item (click)="chosen('Stationary-HS')">Stationary</button>
+  <button mat-menu-item (click)="chosen('Perishablegoods-HS')">Perishable Goods</button>
+  <button mat-menu-item (click)="chosen('Miscellaneous1-HS')">Miscellaneous</button>
+  <button mat-menu-item (click)="chosen('Genericmeds-HS')">Generic Meds</button>
+  <button mat-menu-item (click)="chosen('Utilities-HS')">Utilities</button>
 </mat-menu>
 
 <mat-menu #services="matMenu">
