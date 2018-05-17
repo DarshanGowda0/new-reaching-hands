@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AddNewComponent } from '../../common/add-new/add-new.component';
 import { MatDialog } from '@angular/material';
+import { AppComponent } from '../../../app.component';
 
 @Component({
   selector: 'app-inventory',
@@ -17,20 +18,29 @@ export class InventoryComponent implements OnInit {
 
   categoryHS = [
     // tslint:disable-next-line:max-line-length
-    'Assets-HS', 'Groceries-HS', 'Stationary-HS', 'Toiletries-HS', 'Perishablegoods-HS', 'Miscellaneous-HS', 'Genericmeds-HS', 'Utilities-HS'
+    'Assets-HS', 'Groceries-HS', 'Toiletries-HS', 'Stationary-HS', 'Perishablegoods-HS', 'Miscellaneous-HS', 'Genericmeds-HS', 'Utilities-HS'
   ];
 
-  mainArray = [this.category, this.categoryHS];
+  cat: string;
 
-
-  constructor(private router: Router, private dialog: MatDialog) { }
+  constructor(private router: Router, private dialog: MatDialog) {
+    }
 
   ngOnInit() {
-
     // if inv => mainArray = category
     // else mainArray = catHS
     // and use mainArray in html
 
+  }
+
+  getCat(index) {
+    if (this.router.url === '/Inventory') {
+      this.cat = 'Inventory';
+      return this.category[index];
+    } else {
+      this.cat = 'HomeSchoolInventory';
+      return this.categoryHS[index];
+    }
   }
 
   onAdd() {
@@ -39,7 +49,7 @@ export class InventoryComponent implements OnInit {
     const dialogRef = this.dialog.open(AddNewComponent, {
       width: '450px',
       data: {
-        'category': 'Inventory'
+        'category': this.cat
       },
       disableClose: true
     });

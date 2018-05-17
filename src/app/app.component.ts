@@ -24,6 +24,7 @@ export class AppComponent implements OnDestroy, OnInit {
   email: string;
   roles: string;
   image: string;
+  cat: string;
 
   constructor(public auth: AuthService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     private router: Router, private afs: AngularFirestore, public msg: MessagingService) {
@@ -44,6 +45,10 @@ export class AppComponent implements OnDestroy, OnInit {
           this.msg.receiveMessages();
         }
       });
+  }
+
+  setCat(value) {
+    this.cat = value;
   }
 
 
