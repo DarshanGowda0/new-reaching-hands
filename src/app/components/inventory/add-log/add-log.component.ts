@@ -46,7 +46,7 @@ export class AddLogComponent implements OnInit {
       'itemId': this.item.itemId,
       'addedBy': this.dataService.uid
     };
-    
+
     this.dataService.addLog(tempItemLog).then(() => {
       console.log('added log succesfully ', tempItemLog);
     }).catch(err => {

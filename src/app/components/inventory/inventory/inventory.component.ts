@@ -34,12 +34,12 @@ export class InventoryComponent implements OnInit {
   }
 
   getCat(index) {
-    if (this.router.url === '/Inventory') {
-      this.cat = 'Inventory';
-      return this.category[index];
-    } else {
+    if (this.router.url === '/HomeSchoolInventory') {
       this.cat = 'HomeSchoolInventory';
       return this.categoryHS[index];
+    } else {
+      this.cat = 'Inventory';
+      return this.category[index];
     }
   }
 

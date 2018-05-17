@@ -100,7 +100,7 @@ export class AddNewComponent implements OnInit {
   }*/
 
   onAdd() {
-    const category = this.getCategory(this.selectedCategory);
+    const category = this.getmainCategory();
     const dateCreated = this.dataService.getTimeStamp();
     const item: Item = {
       'itemId': '',
