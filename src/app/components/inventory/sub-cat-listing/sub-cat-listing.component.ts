@@ -106,13 +106,14 @@ export class SubCatListingComponent implements OnInit {
 
 
   
-  onEdit(id) {
+  onEdit(itm) {
+    console.log('item is',itm);
     this.auth.user.take(1).subscribe(val => {
       if (this.auth.canEdit(val)) {
         const dialogRef = this.dialog.open(AddNewComponent, {
           width: '450px',
           data: {
-            'item': id
+            'item': itm
           },
           disableClose: true
         });
