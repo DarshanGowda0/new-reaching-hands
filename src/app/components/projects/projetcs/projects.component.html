@@ -1,0 +1,17 @@
+<mat-tab-group >
+  <mat-tab label="Construction" class="inner-content">
+    <app-sub-cat-listing [subCategory]="category[0]"></app-sub-cat-listing>
+  </mat-tab>
+  <mat-tab label="Installation" class="inner-content">
+    <app-sub-cat-listing [subCategory]="category[1]"></app-sub-cat-listing>
+  </mat-tab>
+  <mat-tab label="Painting" class="inner-content">
+    <app-sub-cat-listing [subCategory]="category[2]"></app-sub-cat-listing>
+  </mat-tab>
+  <mat-tab label="General" class="inner-content">
+    <app-sub-cat-listing [subCategory]="category[3]"></app-sub-cat-listing>
+  </mat-tab>
+</mat-tab-group>
+<button mat-fab class="fab-button" (click)="onAdd()">
+  <mat-icon>add</mat-icon>
+</button>

@@ -21,7 +21,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   currentQuantity = 0;
 
   displayedColumns = ['serviceDate', 'servicer', 'billNumber', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
-  logTypeOptions = ['Added', 'Issued', 'Donated'];
+  logTypeOptions = ['Paid', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;

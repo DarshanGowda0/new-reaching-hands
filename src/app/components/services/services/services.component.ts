@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+import { AddNewComponent } from '../../common/add-new/add-new.component';
 
 @Component({
   selector: 'app-services',
@@ -9,16 +11,27 @@ import { Router } from '@angular/router';
 export class ServicesComponent implements OnInit {
 
   category = [
-    'Studentpersonalcare', 'Medicalcare', 'Transportation'
+    'Studentpersonalcare', 'Medicalcare', 'Transportation', 'Miscellaneous2'
   ];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private dialog: MatDialog) { }
 
   ngOnInit() {
   }
 
   onAdd() {
-    this.router.navigate(['add']);
+    // this.router.navigate(['add']);
+    const dialogRef = this.dialog.open(AddNewComponent, {
+      width: '450px',
+      data: {
+        'category': 'Services'
+      },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed =>', result);
+    });
   }
 
 
