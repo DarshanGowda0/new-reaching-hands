@@ -1,0 +1,33 @@
+<div>
+  <h2 mat-dialog-title>Add new log</h2>
+
+  <mat-form-field name="qform" hintLabel="Example: 12" style="display:block;clear: both;">
+    <span matSuffix>{{item.unit}}</span>
+    <input matInput #input name="itemLog.quantity" placeholder="Enter item quantity" required [(ngModel)]="itemLog.quantity" pattern="[0-9]*">
+  </mat-form-field>
+
+
+  <mat-radio-group required [(ngModel)]="itemLog.selectedCommons" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
+    <mat-radio-button *ngFor="let option of commonsOptions" [value]="option" style="margin:2px">
+      {{option}}
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <mat-radio-group required [(ngModel)]="itemLog.logType" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
+    <mat-radio-button *ngFor="let option of logTypeOptions" [value]="option" style="margin:2px">
+      {{option}}
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
+    <span matPrefix>&#8377; </span>
+    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog.cost" pattern="[0-9]*">
+  </mat-form-field>
+  <mat-form-field style="display:block;clear: both;">
+    <textarea matInput placeholder="Remarks" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10" [(ngModel)]="itemLog.remarks"></textarea>
+  </mat-form-field>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="accent" (click)="onAdd()">ADD</button>
+  </mat-dialog-actions>
+</div>

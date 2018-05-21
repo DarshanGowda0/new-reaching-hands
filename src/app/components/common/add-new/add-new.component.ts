@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Item } from '../../../models/item';
 import { DataService } from '../../../core/data-service.service';
 import { Router } from '@angular/router';
+import { isDefined } from '@angular/compiler/src/util';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-add-new',
@@ -11,29 +13,43 @@ import { Router } from '@angular/router';
 })
 export class AddNewComponent implements OnInit {
 
+
   categoryGroups = [
+    {
+      name: 'HomeSchoolInventory',
+      category: [
+        // tslint:disable-next-line:max-line-length
+        'Assets-HS', 'Groceries-HS', 'Stationary-HS', 'Toiletries-HS', 'Perishablegoods-HS', 'Miscellaneous-HS', 'Genericmeds-HS', 'Utilities-HS'
+      ]
+    },
+    {
+      name: 'Projects',
+      category: [
+        'Construction', 'Installation', 'Painting', 'General'
+      ]
+    },
     {
       name: 'Inventory',
       category: [
-        'Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous', 'Genericmeds'
+        'Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous1', 'Genericmeds', 'Utilities'
       ]
     },
     {
       name: 'Services',
       category: [
-        'Studentpersonalcare', 'Medicalcare', 'Transportation'
+        'Studentpersonalcare', 'Medicalcare', 'Transportation', 'Miscellaneous2'
       ]
     },
     {
       name: 'Education',
       category: [
-        'School', 'Homeschool', 'Extracurricular', 'Tutorials'
+        'School', 'Homeschool', 'Extracurricular', 'Tutorials', 'Miscellaneous3'
       ]
     },
     {
       name: 'Maintenance',
       category: [
-        'Vehicle', 'Campus', 'Monthlybills'
+        'Vehicle', 'Campus', 'Monthlybills', 'Miscellaneous4'
       ]
     }
   ];
@@ -45,18 +61,46 @@ export class AddNewComponent implements OnInit {
   selectedUnit: string;
   addFormControl = new FormControl();
   thresholdValue: number;
+  mainCategory: string;
+  subcategory: string[];
 
-  constructor(private dataService: DataService, private router: Router) { }
+  constructor(private dataService: DataService, private router: Router, public dialogRef: MatDialogRef<AddNewComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+                this.mainCategory = data.category;
+                this.getSubCategories();
+              }
+
 
   ngOnInit() {
   }
+
+  getSubCategories() {
+    this.categoryGroups.forEach(element => {
+      if ( element.name === this.mainCategory) {
+        this.subcategory = element.category;
+      }
+    });
+  }
+
+  getmainCategory() {
+    return this.mainCategory;
+  }
+
 
   onReset() {
     this.addFormControl.reset();
   }
 
+  /* onCatInput(){
+    if (isDefined(this.selectedCategory) && this.selectedCategory !== 'Groceries') {
+      return true;
+    } else {
+      return false;
+    }
+  }*/
+
   onAdd() {
-    const category = this.getCategory(this.selectedCategory);
+    const category = this.getmainCategory();
     const dateCreated = this.dataService.getTimeStamp();
     const item: Item = {
       'itemId': '',
@@ -82,7 +126,7 @@ export class AddNewComponent implements OnInit {
         console.error('error adding item', err);
       });
     }
-
+    this.dialogRef.close();
 
   }
 
