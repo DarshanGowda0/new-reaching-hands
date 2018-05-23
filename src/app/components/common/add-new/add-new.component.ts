@@ -1,9 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Item } from '../../../models/item';
 import { DataService } from '../../../core/data-service.service';
 import { Router } from '@angular/router';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-add-new',
@@ -12,7 +11,6 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 })
 export class AddNewComponent implements OnInit {
 
-  item: Item = {} as Item;
   categoryGroups = [
     {
       name: 'Inventory',
@@ -48,15 +46,7 @@ export class AddNewComponent implements OnInit {
   addFormControl = new FormControl();
   thresholdValue: number;
 
-  // constructor(private dataService: DataService, private router: Router) { }
-
-  constructor( private router: Router,public dialogRef: MatDialogRef<AddNewComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
-   // this.item = data.item;
-    if (data.item) {
-      this.item = data.item;
-    }
-  }
+  constructor(private dataService: DataService, private router: Router) { }
 
   ngOnInit() {
   }

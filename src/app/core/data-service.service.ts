@@ -66,6 +66,7 @@ export class DataService {
   }
 
   getLogsOfItemAsce(itemId: string, startDate: any, endDate: any) {
+    console.log('date issssss',startDate);
     return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId)
       .where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
   }
