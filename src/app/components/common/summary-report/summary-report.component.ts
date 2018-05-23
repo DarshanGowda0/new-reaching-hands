@@ -385,7 +385,9 @@ export class SummaryReportComponent implements OnInit {
   }
 
   getFullDate(date) {
+
     return String(date.toLocaleString('en-US'));
+
   }
 
   getName(itemId) {
