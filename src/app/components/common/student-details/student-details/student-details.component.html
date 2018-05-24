@@ -1,69 +1,75 @@
-<!-- <mat-tab-group>
-  <!-- <mat-tab label="Current Claims" class="inner-content">
-    <app-sub-cat-listing2 [subCategory]="category[0]"></app-sub-cat-listing2>
-  </mat-tab> -->
-  <!-- <mat-tab label="All your Claims" class="inner-content">
-    <app-sub-cat-listing2 [subCategory]="category[0]"></app-sub-cat-listing2>
-  </mat-tab> -->  
-<!-- </mat-tab-group> -->
 <mat-card style="padding:2%;">
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header style="background:#3F51B5">
+       <mat-panel-title>
+        <div style="font-size: 1em;">
+          <div class="value" style="color:white">
+            Student Details
+          </div>          
+        </div>
+      </mat-panel-title>
+      </mat-expansion-panel-header>      
+      <mat-form-field style="width:100%">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+    </mat-expansion-panel>
+  </mat-accordion>
 
-  <!-- <div class="header"> -->
-     <mat-accordion>
-       <mat-expansion-panel>
-         <mat-expansion-panel-header style="background:#3F51B5">
-          <mat-panel-title>
-           <div style="font-size: 1em;">
-             <div class="value" style="color:white">
-               Student Details
-             </div>          
-           </div>
-         </mat-panel-title>
-         </mat-expansion-panel-header>      
-         <mat-form-field style="width:100%">
-           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-         </mat-form-field>
-       </mat-expansion-panel>
-     </mat-accordion>
-   <!-- </div> -->
- 
-   <div class="mat-elevation-z8">
-     <mat-table #table [dataSource]="dataSource" matSort>
- 
-       <!--- Note that these columns can be defined in any order.
-                   The actual rendered columns are set as a property on the row definition" -->
- 
-       <ng-container matColumnDef="studentName">
-         <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
-         <mat-cell *matCellDef="let element"> {{element.studentName}} </mat-cell>
-       </ng-container>
- 
-       <ng-container matColumnDef="dateOfBirth">
-         <mat-header-cell *matHeaderCellDef mat-sort-header>Date of Birth</mat-header-cell>
-         <mat-cell *matCellDef="let element">
-           <span matTooltip="{{element.date}}"> {{element.dateOfBirth|date: 'MM/dd/yyyy'}} </span>
-         </mat-cell>
-       </ng-container>
-       
- 
-       <ng-container matColumnDef="fathersName">
-         <mat-header-cell *matHeaderCellDef mat-sort-header> Father's Name </mat-header-cell>
-         <mat-cell *matCellDef="let element"> {{element.fathersName}} </mat-cell>
-       </ng-container>    
- 
-       <!-- cost Column -->
-       <ng-container matColumnDef="emailId">
-         <mat-header-cell *matHeaderCellDef mat-sort-header> Email Id </mat-header-cell>
-         <mat-cell *matCellDef="let element"> {{element.emailId}} </mat-cell>
-       </ng-container>
- 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-     </mat-table>
-     <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
-     </mat-paginator>
-   </div>
-   <button mat-fab class="fab-button" (click)="addNewLog()">
-     <mat-icon>add</mat-icon>
-   </button>
- </mat-card>
+  <div class="mat-elevation-z8">
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="studentName">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.studentName}} </mat-cell>
+          </ng-container>
+    
+          <ng-container matColumnDef="dateOfBirth">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Date of Birth</mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span matTooltip="{{element.date}}"> {{element.dateOfBirth|date: 'MM/dd/yyyy'}} </span>
+              </mat-cell>
+            </ng-container>
+            
+      
+            <ng-container matColumnDef="fathersName">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Father's Name </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.fathersName}} </mat-cell>
+            </ng-container>
+      
+          
+      
+            <!-- cost Column -->
+            <ng-container matColumnDef="emailId">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> EmailId </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.emailId}} </mat-cell>
+            </ng-container>
+     
+            <ng-container matColumnDef="edit">
+             <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
+             <mat-cell *matCellDef="let element">
+               <button mat-icon-button (click)="onEdit(element)">
+                 <mat-icon color="warn">edit</mat-icon>
+               </button>
+             </mat-cell>
+           </ng-container>
+     
+           <ng-container matColumnDef="delete">
+             <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
+             <mat-cell *matCellDef="let element">
+               <button mat-icon-button (click)="onDelete(element.logId)">
+                 <mat-icon color="warn">delete</mat-icon>
+               </button>
+             </mat-cell>
+           </ng-container>
+      
+           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+          <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
+          </mat-paginator>
+        </div>
+        <button mat-fab class="fab-button" (click)="addNewLog()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card>

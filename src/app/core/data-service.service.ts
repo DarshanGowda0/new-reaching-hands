@@ -100,7 +100,7 @@ export class DataService {
     .orderBy('dateOfPurchase', 'desc')).valueChanges();
   }
   getLogsofStudents() {
-    return this.firestore.collection('studentLogs', ref => ref).valueChanges();
+    return this.firestore.collection('studentLogs', ref => ref.orderBy('studentName', 'asc')).valueChanges();
   }
 
   addAuth(uid: string) {
@@ -123,6 +123,15 @@ export class DataService {
   deleteLogById3(logId: string) {
     return this.firestore.collection<ItemLog3>(`logs`).doc(logId).delete();
   }
+  deleteReimbursementLogById(logId: string) {
+    return this.firestore.collection<ReimbursementLog>('reimbursementLogs').doc(logId).delete();
+  }
+  deleteStudentLogById(logId: string) {
+    return this.firestore.collection<StudentLog>('studentLogs').doc(logId).delete();
+  }
+  onApprovalByAdmin(logId: string) {
+    return this.firestore.collection<ReimbursementLog>('reimbursementLogs').doc(logId).delete();
+  }
 
   getSummary() {
     return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
@@ -143,6 +152,10 @@ export class DataService {
 
   getAllItemsCat(cat: string) {
     return this.firestore.collection<Item>('items', ref => ref.where('category', '==', cat)).valueChanges();
+  }
+
+  deleteRemibusrementLogById(logId: string) {
+    return this.firestore.collection<ReimbursementLog2>(`reimbursementLogs`).doc(logId).delete();
   }
 
   // save the permission token in firestore

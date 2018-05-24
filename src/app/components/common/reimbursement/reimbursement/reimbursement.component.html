@@ -58,6 +58,24 @@
          <mat-header-cell *matHeaderCellDef mat-sort-header> TotalCost </mat-header-cell>
          <mat-cell *matCellDef="let element"> {{element.totalCost}} </mat-cell>
        </ng-container>
+
+       <ng-container matColumnDef="edit">
+        <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="onEdit(element)">
+            <mat-icon color="warn">edit</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="delete">
+        <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="onDelete(element.reimburesmentId)">
+            <mat-icon color="warn">delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
  
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

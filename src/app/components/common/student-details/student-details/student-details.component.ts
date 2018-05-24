@@ -22,7 +22,7 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
      'Student Details'
   ];
 
-  displayedColumns = ['studentName', 'dateOfBirth', 'fathersName', 'emailId'];
+  displayedColumns = ['studentName', 'dateOfBirth', 'fathersName', 'emailId', 'edit', 'delete'];
   user: User;
   studentLog2: StudentLog2 = {} as StudentLog2;
   constructor(public snackBar: MatSnackBar, private auth: AuthService,
@@ -58,4 +58,44 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  popUp(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2500,
+    });
+  }
+  onDelete(logId) {
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canDelete(val)) {
+        this.dataService.deleteStudentLogById(logId).then(() => {
+          console.log('deleted succesfully');
+        }).catch(err => {
+          console.error('error in deleting', err);
+          alert('error while deleting!');
+        });
+      } else {
+        console.log('No Access to Delete');
+        this.popUp('Not Admin : ', 'No Access to Delete');
+      }
+    });
+  }
+  onEdit(studentLog) {
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canEdit(val)) {
+        const dialogRef = this.dialog.open(AddStudentLogComponent, {
+          width: '450px',
+          data: {
+            'studentLog': studentLog,
+            'studentLog2': this.studentLog2
+          },
+          disableClose: true
+        });
+        dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed =>', result);
+        });
+      } else {
+        console.log('No Access to Edit');
+        this.popUp('Not Admin : ', 'No Access to Edit');
+      }
+    });
+  }
 }
