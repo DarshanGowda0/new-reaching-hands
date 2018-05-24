@@ -26,8 +26,8 @@
           <input matInput #input placeholder="Enter item name" [formControl]="addFormControl" required [(ngModel)]="itemName">
         </mat-form-field>
 
-        <mat-form-field hintLabel="Example: 5" *ngIf="getmainCategory()=== 'Inventory' || getmainCategory() === 'HomeSchoolInventory'">
-            <input matInput #input placeholder="Enter Threshold value" [formControl]="addFormControl" [(ngModel)]="thresholdValue" >
+        <mat-form-field matTooltip="Enter Numbers only" hintLabel="Example: 5" *ngIf="getmainCategory()=== 'Inventory' || getmainCategory() === 'HomeSchoolInventory'">
+            <input matInput #input placeholder="Enter Threshold value" [formControl]="addFormControl" [(ngModel)]="thresholdValue" type="number" >
         </mat-form-field>
 
         <mat-form-field hintLabel="kgs, lts..." style="margin-top:1%;">
