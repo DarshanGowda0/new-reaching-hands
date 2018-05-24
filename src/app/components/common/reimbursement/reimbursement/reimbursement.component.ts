@@ -21,10 +21,10 @@ export class ReimbursementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   category = [
-     'All Your Claims'
+    'Current Claims', 'All Your Claims'
   ];
 
-  displayedColumns = ['itemName', 'dateOfPurchase', 'billNumber', 'totalCost'];
+  displayedColumns = ['itemName', 'dateOfPurchase', 'billNumber', 'totalCost', 'edit', 'delete'];
   user: User;
   reimbursementLog2: ReimbursementLog2 = {} as ReimbursementLog2;
 
@@ -48,6 +48,11 @@ export class ReimbursementComponent implements OnInit, AfterViewInit {
       disableClose: true
     });
   }
+  popUp(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2500,
+    });
+  }
     ngAfterViewInit() {
       this.auth.user.subscribe(params => {
         console.log(params.uid);
@@ -56,6 +61,41 @@ export class ReimbursementComponent implements OnInit, AfterViewInit {
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
         });
+      });
+    }
+    onDelete(logId) {
+      this.auth.user.take(1).subscribe(val => {
+        if (this.auth.canDelete(val)) {
+          this.dataService.deleteReimbursementLogById(logId).then(() => {
+            console.log('deleted succesfully');
+          }).catch(err => {
+            console.error('error in deleting', err);
+            alert('error while deleting!');
+          });
+        } else {
+          console.log('No Access to Delete');
+          this.popUp('Not Admin : ', 'No Access to Delete');
+        }
+      });
+    }
+    onEdit(reimbursementLog) {
+      this.auth.user.take(1).subscribe(val => {
+        if (this.auth.canEdit(val)) {
+          const dialogRef = this.dialog.open(AddReimbursementLogComponent, {
+            width: '450px',
+            data: {
+              'reimbursementLog': reimbursementLog,
+              'reimbursementLog2': this.reimbursementLog2
+            },
+            disableClose: true
+          });
+          dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed =>', result);
+          });
+        } else {
+          console.log('No Access to Edit');
+          this.popUp('Not Admin : ', 'No Access to Edit');
+        }
       });
     }
   }
