@@ -51,10 +51,10 @@
          <mat-cell *matCellDef="let element"> {{element.totalCost}} </mat-cell>
        </ng-container>
 
-       <ng-container matColumnDef="edit">
+       <ng-container matColumnDef="edit" >
         <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <button mat-icon-button (click)="onEdit(element)">
+          <button mat-icon-button (click)="onEdit(element)" *ngIf = "this.stat === 'open'">
             <mat-icon color="warn">edit</mat-icon>
           </button>
         </mat-cell>
@@ -63,7 +63,7 @@
       <ng-container matColumnDef="delete">
         <mat-header-cell *matHeaderCellDef> Delete </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <button mat-icon-button (click)="onDelete(element.reimburesmentId)">
+          <button mat-icon-button (click)="onDelete(element.reimburesmentId)" *ngIf = "this.stat === 'open'">
             <mat-icon color="warn">delete</mat-icon>
           </button>
         </mat-cell>
@@ -72,8 +72,8 @@
       <ng-container matColumnDef="approve">
         <mat-header-cell *matHeaderCellDef> Approve </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <button mat-icon-button (click)="approvalByAdmin(element)">
-            <mat-icon color="warn">delete</mat-icon>
+          <button mat-icon-button (click)="approvalByAdmin(element)" *ngIf = "this.stat === 'open'">
+            <mat-icon color="warn">thumb_up</mat-icon>
           </button>
         </mat-cell>
       </ng-container>	  
