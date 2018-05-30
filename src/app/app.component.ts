@@ -8,7 +8,6 @@ import { tap, map, take } from 'rxjs/operators';
 import { MessagingService } from './core/messaging-service.service';
 import 'rxjs/add/operator/take';
 import { DataService } from './core/data-service.service';
-import * as tf from '@tensorflow/tfjs';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +35,6 @@ export class AppComponent implements OnDestroy, OnInit {
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
     this.loadUserDetails();
-    this.trainSummaryModel();
   }
 
   ngOnInit() {
@@ -141,88 +139,6 @@ export class AppComponent implements OnDestroy, OnInit {
   //   this.train(dataArray, costData, dateToData);
 
   // }
-
-  async trainSummaryModel() {
-    this.dataService.getSummary()
-      .pipe(
-        map(logs => {
-          logs.forEach(item => {
-            item.date = this.dateFormat(item.date);
-          });
-          return logs;
-        })
-      )
-      .subscribe(logs => {
-        const dataHash = this.processData(logs);
-        this.trainModel(dataHash);
-      });
-  }
-
-  async trainModel(dataHash) {
-    let linearModel: tf.Sequential;
-    linearModel = tf.sequential();
-    linearModel.add(tf.layers.dense({
-      units: 1,
-      inputShape: [1],
-      // activation: 'relu'
-    }));
-    // linearModel.add(tf.layers.dense({units: 5, activation: 'relu'}));
-    // linearModel.add(tf.layers.dense({ units: 1, activation: 'linear' }));
-
-
-    linearModel.compile({
-      loss: 'meanSquaredError',
-      optimizer: 'sgd',
-      metrics: ['accuracy']
-    });
-
-    const xArray = [];
-    const yArray = [];
-
-    dataHash.forEach((value, key) => {
-      xArray.push(key);
-      yArray.push(value);
-    });
-
-    // const xs = tf.tensor1d(xArray);
-    // const ys = tf.tensor1d(yArray);
-
-    const xs = tf.tensor1d([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-    const ys = tf.tensor1d([100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]);
-
-    xs.print();
-    ys.print();
-
-    const history = await linearModel.fit(xs, ys, { epochs: 2000 });
-
-    // get weights
-    const weight = linearModel.layers[0].getWeights();
-
-    const linearModel2 = tf.sequential();
-    linearModel2.add(tf.layers.dense({
-      units: 1,
-      inputShape: [1],
-    }));
-
-
-    linearModel2.compile({
-      loss: 'meanSquaredError',
-      optimizer: 'sgd',
-      metrics: ['accuracy']
-    });
-
-    linearModel2.layers[0].setWeights(weight);
-
-    console.log('model trained!', history.history);
-    const output = linearModel.predict(tf.tensor2d([12], [1, 1])) as any;
-    const prediction = Array.from(output.dataSync())[0];
-    console.log('pred ', prediction);
-
-    const output2 = linearModel2.predict(tf.tensor2d([12], [1, 1])) as any;
-    const prediction2 = Array.from(output2.dataSync())[0];
-    console.log('pred ', prediction2);
-
-  }
 
   processData(logs) {
     const costData = [];
