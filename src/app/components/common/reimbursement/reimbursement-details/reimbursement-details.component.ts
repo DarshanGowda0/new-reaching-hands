@@ -4,7 +4,7 @@ import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatSnackBar } fro
 import { AuthService } from '../../../../core/auth.service';
 import { DataService } from '../../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ReimbursementLog2 } from '../../../../models/reimbursement-log';
+import { ReimbursementLog2, ReimbursementLog } from '../../../../models/reimbursement-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from '../../../../core/user';
 
@@ -24,7 +24,7 @@ export class ReimbursementDetailsComponent implements OnInit, AfterViewInit {
   displayedColumns = ['itemName', 'dateOfPurchase', 'billNumber', 'totalCost', 'edit', 'delete', 'approve'];
   user: User;
   reimbursementLog2: ReimbursementLog2 = {} as ReimbursementLog2;
-
+  stat = 'closed';
   constructor(public snackBar: MatSnackBar, private auth: AuthService,
     private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) {
     }
@@ -60,6 +60,8 @@ export class ReimbursementDetailsComponent implements OnInit, AfterViewInit {
           this.dataSource.paginator = this.paginator;
         });
       });
+      this.stat = this.currentStatus;
+      console.log('status is', this.stat);
     }
     onDelete(logId) {
       this.auth.user.take(1).subscribe(val => {
@@ -110,5 +112,12 @@ export class ReimbursementDetailsComponent implements OnInit, AfterViewInit {
           this.popUp('Not Admin : ', 'No Access to Approve');
         }
       });
+    }
+
+    isCurrentTab(){
+      if (this.stat === 'open') {
+        return true;
+      }
+      return false;
     }
 }
