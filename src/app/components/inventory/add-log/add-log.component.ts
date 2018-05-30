@@ -6,7 +6,6 @@ import { DataService } from '../../../core/data-service.service';
 import { Item } from '../../../models/item';
 
 
-
 @Component({
   selector: 'app-add-log',
   templateUrl: './add-log.component.html',
@@ -46,7 +45,7 @@ export class AddLogComponent implements OnInit {
       'itemId': this.item.itemId,
       'addedBy': this.dataService.uid
     };
-    
+
     this.dataService.addLog(tempItemLog).then(() => {
       console.log('added log succesfully ', tempItemLog);
     }).catch(err => {

@@ -35,9 +35,9 @@
     </mat-radio-button>
   </mat-radio-group>
 
-  <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
+  <mat-form-field matTooltip="Enter Numbers only" hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
     <span matPrefix>&#8377; </span>
-    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog1.cost" pattern="[0-9]*">
+    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog1.cost" type="number">
   </mat-form-field>
   <mat-form-field style="display:block;clear: both;">
     <textarea matInput placeholder="Remarks" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10" [(ngModel)]="itemLog1.remarks"></textarea>

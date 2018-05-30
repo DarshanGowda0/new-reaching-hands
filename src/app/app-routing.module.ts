@@ -11,9 +11,11 @@ import { EducationComponent } from './components/education/education/education.c
 import { ServicesComponent } from './components/services/services/services.component';
 import { ItemDetails3Component } from './components/services/item-details3/item-details3.component';
 import { ItemDetails2Component } from './components/education/item-details2/item-details2.component';
+import { ProjectsComponent } from './components/projects/projetcs/projects.component';
+import { ItemDetailsPComponent } from './components/projects/item-details-p/item-details-p.component';
 import { LoginComponent } from './components/common/login/login.component';
 import { AccesscontrolComponent } from './components/common/accesscontrol/accesscontrol.component';
-import { SummaryReportComponent } from './components/common/summary-report/summary-report.component'
+import { SummaryReportComponent } from './components/common/summary-report/summary-report.component';
 import { GoogleChartResolver } from './core/google-chart-resolver';
 import { ItemReportComponent } from './components/common/item-report/item-report.component';
 import { CanAccessGuard } from './core/can-access.guard';
@@ -30,6 +32,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'HomeSchoolInventory',
+    component: InventoryComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'Inventory',
     component: InventoryComponent,
     canActivate: [AuthGuard]
@@ -37,6 +44,11 @@ const routes: Routes = [
   {
     path: 'Maintenance',
     component: MaintenanceComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'Projects',
+    component: ProjectsComponent,
     canActivate: [AuthGuard]
   },
   {
@@ -72,6 +84,12 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'item-details-hs/:id',
+    component: ItemDetailsComponent,
+    resolve: { google: GoogleChartResolver },
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'item-details/:id',
     component: ItemDetailsComponent,
     resolve: { google: GoogleChartResolver },
@@ -80,6 +98,11 @@ const routes: Routes = [
   {
     path: 'item-details1/:id',
     component: ItemDetails1Component,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'item-details-p/:id',
+    component: ItemDetailsPComponent,
     canActivate: [AuthGuard]
   },
   {
