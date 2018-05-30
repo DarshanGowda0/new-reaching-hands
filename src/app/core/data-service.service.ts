@@ -3,10 +3,11 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import * as firebase from 'firebase';
 import { Item } from '../models/item';
 import { AuthService } from './auth.service';
-import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
+import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract} from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
-// import * as moment from 'moment';
+import { ReimbursementLog, ReimbursementLog2 } from '../models/reimbursement-log';
+import {StudentLog, StudentLog2 } from '../models/student-logs';
 
 @Injectable()
 export class DataService {
@@ -45,6 +46,14 @@ export class DataService {
     return this.firestore.doc<Item>(`items/${itemId}`).valueChanges();
   }
 
+  getReimbursementLogById(uid: string) {
+    return this.firestore.doc<ReimbursementLog2>(`reimbursementLogs/${uid}`).valueChanges();
+  }
+
+  getStudentLogById(uid: string) {
+    return this.firestore.doc<StudentLog2>(`studentLogs`).valueChanges();
+  }
+
   getItems(subCategory: string, queryString: string) {
     return this.firestore.collection<Item>(`items`, ref => ref.where('subCategory', '==', subCategory)
       .where('itemName', '>', `${queryString}`).where('itemName', '<', `${queryString}z`)
@@ -68,6 +77,12 @@ export class DataService {
   addLog3(log: ItemLog3) {
     return this.firestore.collection<ItemLog3>(`logs`).doc(log.logId).set(log);
   }
+  addReimbursementLog(log: ReimbursementLog) {
+    return this.firestore.collection<ReimbursementLog2>(`reimbursementLogs`).doc(log.reimburesmentId).set(log);
+  }
+  addStudentLog(log: StudentLog) {
+    return this.firestore.collection<StudentLog2>('studentLogs').doc(log.logId).set(log);
+  }
 
   getLogsOfItem(itemId: string) {
     return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
@@ -87,6 +102,18 @@ export class DataService {
   }
   getLogsOfItem3(itemId: string) {
     return this.firestore.collection<ItemLog3>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
+  }
+  getLogsofReimbursement(uid: string, status: string) {
+    if (status === 'open') {
+      return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', status)
+    .orderBy('dateOfPurchase', 'desc')).valueChanges();
+    }
+      return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', 'closed')
+    .orderBy('dateOfPurchase', 'desc')).valueChanges();
+  }
+
+  getLogsofStudents() {
+    return this.firestore.collection('studentLogs', ref => ref.orderBy('studentName', 'asc')).valueChanges();
   }
 
   addAuth(uid: string) {
@@ -108,6 +135,16 @@ export class DataService {
   }
   deleteLogById3(logId: string) {
     return this.firestore.collection<ItemLog3>(`logs`).doc(logId).delete();
+  }
+  deleteReimbursementLogById(logId: string) {
+    return this.firestore.collection<ReimbursementLog>('reimbursementLogs').doc(logId).delete();
+  }
+  deleteStudentLogById(logId: string) {
+    return this.firestore.collection<StudentLog>('studentLogs').doc(logId).delete();
+  }
+  onApprovalByAdmin(element: ReimbursementLog) {
+    element.status = 'closed';
+    return this.firestore.collection<ReimbursementLog>('reimbursementLogs').doc(element.reimburesmentId).update(element);
   }
 
   getSummary() {
@@ -133,6 +170,10 @@ export class DataService {
 
   getAllItemsCat(cat: string) {
     return this.firestore.collection<Item>('items', ref => ref.where('category', '==', cat)).valueChanges();
+  }
+
+  deleteRemibusrementLogById(logId: string) {
+    return this.firestore.collection<ReimbursementLog2>(`reimbursementLogs`).doc(logId).delete();
   }
 
   // save the permission token in firestore
