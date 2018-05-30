@@ -6,7 +6,6 @@ import { DataService } from '../../../core/data-service.service';
 import { Item } from '../../../models/item';
 
 
-
 @Component({
   selector: 'app-add-log',
   templateUrl: './add-log.component.html',
