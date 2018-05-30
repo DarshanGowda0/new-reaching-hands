@@ -113,7 +113,7 @@ import { ReimbursementDetailsComponent } from './components/common/reimbursement
     AddLog3Component,
     AccesscontrolComponent,
     AddReimbursementLogComponent,
-    AddStudentLogComponent
+    AddStudentLogComponent,
     AddLogPComponent,
   ]
 })
