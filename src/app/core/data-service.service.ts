@@ -95,10 +95,15 @@ export class DataService {
   getLogsOfItem3(itemId: string) {
     return this.firestore.collection<ItemLog3>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
   }
-  getLogsofReimbursement(uid: string) {
-    return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid)
+  getLogsofReimbursement(uid: string, status: string) {
+    if (status === 'open') {
+      return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', status)
+    .orderBy('dateOfPurchase', 'desc')).valueChanges();
+    }
+      return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', 'closed')
     .orderBy('dateOfPurchase', 'desc')).valueChanges();
   }
+
   getLogsofStudents() {
     return this.firestore.collection('studentLogs', ref => ref.orderBy('studentName', 'asc')).valueChanges();
   }
@@ -129,8 +134,9 @@ export class DataService {
   deleteStudentLogById(logId: string) {
     return this.firestore.collection<StudentLog>('studentLogs').doc(logId).delete();
   }
-  onApprovalByAdmin(logId: string) {
-    return this.firestore.collection<ReimbursementLog>('reimbursementLogs').doc(logId).delete();
+  onApprovalByAdmin(element: ReimbursementLog) {
+    element.status = 'closed';
+    return this.firestore.collection<ReimbursementLog>('reimbursementLogs').doc(element.reimburesmentId).update(element);
   }
 
   getSummary() {

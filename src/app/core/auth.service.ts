@@ -80,4 +80,9 @@ export class AuthService {
     return user.checkAdmin;
   }
 
+  canApprove(user: User): boolean {
+    const allowed = ['admin'];
+    return user.checkAdmin;
+  }
+
 }
