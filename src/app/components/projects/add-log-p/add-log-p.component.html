@@ -1,11 +1,11 @@
 <div>
   <h2 mat-dialog-title>Add new log</h2>
 
-  <mat-form-field matTooltip="Enter Numbers only" name="qform" hintLabel="Example: 12" style="display:block;clear: both;">
+  <!-- <mat-form-field matTooltip="Enter Numbers only" name="qform" hintLabel="Example: 12" style="display:block;clear: both;">
     <span matSuffix>{{item.unit}}</span>
-    <input matInput #input name="itemLogP.quantity" placeholder="Enter item quantity" required [(ngModel)]="itemLog.quantity" type="number">
+    <input matInput #input name="itemLogP.quantity" placeholder="Enter item quantity" required [(ngModel)]="itemLogP.quantity" type="number">
   </mat-form-field>
-
+ -->
 
   <mat-radio-group required [(ngModel)]="itemLogP.selectedCommons" style="display:block;margin-top:10px;margin-bottom:10px;clear:both;">
     <mat-radio-button *ngFor="let option of commonsOptions" [value]="option" style="margin:2px">
