@@ -2,9 +2,11 @@
 
 <mat-menu #category="matMenu">
   <button mat-menu-item [matMenuTriggerFor]="inventory">Inventory</button>
+  <button mat-menu-item [matMenuTriggerFor]="homeschoolinventory">HomeSchoolInventory</button>
   <button mat-menu-item [matMenuTriggerFor]="services">Services</button>
   <button mat-menu-item [matMenuTriggerFor]="education">Education</button>
   <button mat-menu-item [matMenuTriggerFor]="maintenance">Maintenance</button>
+  <button mat-menu-item [matMenuTriggerFor]="projects">Projects</button>
 </mat-menu>
 
 <mat-menu #inventory="matMenu">
@@ -13,14 +15,27 @@
   <button mat-menu-item (click)="chosen('Toiletries')">Tolietries</button>
   <button mat-menu-item (click)="chosen('Stationary')">Stationary</button>
   <button mat-menu-item (click)="chosen('Perishablegoods')">Perishable Goods</button>
-  <button mat-menu-item (click)="chosen('Miscellaneous')">Miscellaneous</button>
+  <button mat-menu-item (click)="chosen('Miscellaneous1')">Miscellaneous</button>
   <button mat-menu-item (click)="chosen('Genericmeds')">Generic Meds</button>
+  <button mat-menu-item (click)="chosen('Utilities')">Utilities</button>
+</mat-menu>
+
+<mat-menu #homeschoolinventory="matMenu">
+  <button mat-menu-item (click)="chosen('Assets-HS')">Assets</button>
+  <button mat-menu-item (click)="chosen('Groceries-HS')">Groceries</button>
+  <button mat-menu-item (click)="chosen('Toiletries-HS')">Tolietries</button>
+  <button mat-menu-item (click)="chosen('Stationary-HS')">Stationary</button>
+  <button mat-menu-item (click)="chosen('Perishablegoods-HS')">Perishable Goods</button>
+  <button mat-menu-item (click)="chosen('Miscellaneous1-HS')">Miscellaneous</button>
+  <button mat-menu-item (click)="chosen('Genericmeds-HS')">Generic Meds</button>
+  <button mat-menu-item (click)="chosen('Utilities-HS')">Utilities</button>
 </mat-menu>
 
 <mat-menu #services="matMenu">
   <button mat-menu-item (click)="chosen('Studentpersonalcare')">Student Personal Care</button>
   <button mat-menu-item (click)="chosen('Medicalcare')">Medical Care</button>
   <button mat-menu-item (click)="chosen('Transportation')">Transportation</button>
+  <button mat-menu-item (click)="chosen('Miscellaneous2')">Miscellaneous</button>
 </mat-menu>
 
 <mat-menu #education="matMenu">
@@ -28,13 +43,23 @@
   <button mat-menu-item (click)="chosen('Homeschool')">Home-School</button>
   <button mat-menu-item (click)="chosen('Extracurricular')">Extra-Curricular</button>
   <button mat-menu-item (click)="chosen('Tutorials')">Tutorials</button>
+  <button mat-menu-item (click)="chosen('Miscellaneous3')">Miscellaneous</button>
 </mat-menu>
 
 <mat-menu #maintenance="matMenu">
   <button mat-menu-item (click)="chosen('Vehicle')">Vehicle</button>
   <button mat-menu-item (click)="chosen('Campus')">Campus</button>
   <button mat-menu-item (click)="chosen('Monthlybills')">Monthly Bills</button>
+  <button mat-menu-item (click)="chosen('Miscellaneous4')">Miscellaneous</button>
 </mat-menu>
+
+<mat-menu #projects="matMenu">
+  <button mat-menu-item (click)="chosen('Construction')">Construction</button>
+  <button mat-menu-item (click)="chosen('Installation')">Installation</button>
+  <button mat-menu-item (click)="chosen('Painting')">Painting</button>
+  <button mat-menu-item (click)="chosen('General')">General</button>
+</mat-menu>
+
 
 
 <div style="display: flex">

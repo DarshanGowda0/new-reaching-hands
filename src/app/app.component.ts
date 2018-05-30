@@ -20,7 +20,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
   mobileQuery: MediaQueryList;
   misc = ['AccessControl'];
-  category = ['Inventory', 'Services', 'Education', 'Maintenance'];
+  category = ['HomeSchoolInventory', 'Inventory', 'Projects', 'Services', 'Education', 'Maintenance'];
   reports = ['Summary-level', 'Category-level', 'SubCategory-level'];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   private _mobileQueryListener: () => void;
@@ -28,6 +28,7 @@ export class AppComponent implements OnDestroy, OnInit {
   roles: string;
   image: string;
   nameHash = new Map();
+  cat: string;
 
   constructor(public auth: AuthService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     private router: Router, private afs: AngularFirestore, public msg: MessagingService, private dataService: DataService) {
@@ -49,6 +50,10 @@ export class AppComponent implements OnDestroy, OnInit {
           this.msg.receiveMessages();
         }
       });
+  }
+
+  setCat(value) {
+    this.cat = value;
   }
 
 
