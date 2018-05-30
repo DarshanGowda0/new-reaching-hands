@@ -25,7 +25,7 @@ export class SummaryReportComponent implements OnInit {
   startDate: any = null;
   endDate: any = null;
   isDone = false;
-  categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
+  categoryList = ['Inventory', 'Services', 'Maintenance', 'Education', 'Projects', 'HomeSchoolInventory'];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
   nameHash = new Map();
@@ -90,7 +90,7 @@ export class SummaryReportComponent implements OnInit {
   computeDataForPieChart(val) {
     const costData = [];
     const row = [];
-    const costComp: number[] = [0, 0, 0, 0];
+    const costComp: number[] = [0, 0, 0, 0, 0, 0];
     val.forEach(element => {
       if (element.category === this.categoryList[0] && (element.logType !== 'Issued')) {
         costComp[0] += element.cost;
@@ -100,6 +100,10 @@ export class SummaryReportComponent implements OnInit {
         costComp[2] += element.cost;
       } else if (element.category === this.categoryList[3] && (element.logType !== 'Issued')) {
         costComp[3] += element.cost;
+      } else if (element.category === this.categoryList[4] && (element.logType !== 'Issued')) {
+        costComp[4] += element.cost;
+      } else if (element.category === this.categoryList[5] && (element.logType !== 'Issued')) {
+        costComp[5] += element.cost;
       }
     });
     for (let i = 0; i < this.categoryList.length; i++) {

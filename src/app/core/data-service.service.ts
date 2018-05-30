@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
-//import * as moment from 'moment';
+// import * as moment from 'moment';
 
 @Injectable()
 export class DataService {
@@ -31,6 +31,12 @@ export class DataService {
     item.itemId = this.generateId();
     item.addedBy = this.uid;
     return this.firestore.collection(`items`).doc(item.itemId).set(item);
+  }
+
+  getLogExists(item: Item) {
+    return this.firestore.collection<Item>(`items`, ref => ref.where('category', '==' , item.category)
+      .where('subCategory', '==', item.subCategory)
+      .where('itemName', '==', item.itemName)).valueChanges();
   }
 
   getItemById(itemId: string) {

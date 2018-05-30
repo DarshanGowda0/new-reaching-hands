@@ -24,8 +24,9 @@ export class CategoryLevelReportComponent implements OnInit {
   @Input() google: any;
   nameHash = new Map();
   temp: string = null;
+  // tslint:disable-next-line:no-inferrable-types
   totalCost: number = 0;
-  categoryList = ['Inventory', 'Services', 'Maintenance', 'Education'];
+  categoryList = ['HomeSchoolInventory', 'Inventory', 'Services', 'Maintenance', 'Education', 'Projects'];
   subCategoryList: string[] = null;
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
@@ -42,7 +43,7 @@ export class CategoryLevelReportComponent implements OnInit {
         map(logs => {
           logs.forEach(item => {
             item.date = this.dateFormat(item.date);
-          })
+          });
           return logs;
         })
       )
@@ -71,17 +72,20 @@ export class CategoryLevelReportComponent implements OnInit {
   chosen(cat: string) {
     const subCategoryList: string[] = null;
    // this.subCategoryList = null;
-    if (cat == 'Inventory') {
-      this.subCategoryList = ['Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous', 'Genericmeds'];
-    }
-    else if (cat == 'Services') {
-      this.subCategoryList = ['Studentpersonalcare', 'Medicalcare', 'Transportation'];
-    }
-    else if (cat == 'Maintenance') {
-      this.subCategoryList = ['Vehicle', 'Campus', 'Monthlybills'];
-    }
-    else {
-      this.subCategoryList = ['School', 'Homeschool', 'Extracurricular', 'Tutorials'];
+    if (cat === 'HomeSchoolInventory') {
+      // tslint:disable-next-line:max-line-length
+      this.subCategoryList = ['Assets-HS', 'Groceries-HS', 'Stationary-HS', 'Toiletries-HS', 'Perishablegoods-HS', 'Miscellaneous-HS', 'Genericmeds-HS', 'Utilities-HS'];
+    } else if (cat === 'Inventory') {
+      // tslint:disable-next-line:max-line-length
+      this.subCategoryList = ['Assets', 'Groceries', 'Stationary', 'Toiletries', 'Perishablegoods', 'Miscellaneous1', 'Genericmeds', 'Utilities'];
+    } else if (cat === 'Services') {
+      this.subCategoryList = ['Studentpersonalcare', 'Medicalcare', 'Transportation', 'Miscellaneous2'];
+    } else if (cat === 'Maintenance') {
+      this.subCategoryList = ['Vehicle', 'Campus', 'Monthlybills', 'Miscellaneous3'];
+    } else if (cat === 'Education') {
+      this.subCategoryList = ['School', 'Homeschool', 'Extracurricular', 'Tutorials', 'Miscellaneous4'];
+    } else if (cat === 'Projects') {
+      this.subCategoryList = ['Construction', 'Installation', 'Painting', 'General'];
     }
 
 
@@ -106,9 +110,9 @@ export class CategoryLevelReportComponent implements OnInit {
     console.log('val1112', val);
     val.forEach(element => {
       for (let i = 0; i < this.subCategoryList.length; i++) {
-        console.log(i,':',element.subCategory,'then',this.subCategoryList[i]);
+        console.log(i, ':', element.subCategory, 'then', this.subCategoryList[i]);
         if (element.subCategory === this.subCategoryList[i] && element.logType !== 'Issued') {
-          console.log(i,'enter:',element.subCategory,'then',this.subCategoryList[i]);
+          console.log(i, 'enter:', element.subCategory, 'then', this.subCategoryList[i]);
           costComp[i] += element.cost;
           console.log('val11123', costComp[i]);
         }
@@ -176,7 +180,7 @@ export class CategoryLevelReportComponent implements OnInit {
       return b.costObject.total - a.costObject.total;
     });
 
-    //console.log('array',dataArray[1]);
+    // console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
     if (dataArray.length > 10) {
@@ -184,8 +188,7 @@ export class CategoryLevelReportComponent implements OnInit {
         arrayTen[i] = dataArray[i];
       }
       this.drawChart1(arrayTen);
-    }
-    else {
+    } else {
       this.drawChart1(dataArray);
     }
     console.log('array', arrayTen[1]);
@@ -200,7 +203,7 @@ export class CategoryLevelReportComponent implements OnInit {
 
   comupteDataForLineChart(val) {
     const costData = [];
-    let totalCost = 0;
+    const totalCost = 0;
     const myhash = new Map();
     const dateToData = new Map();
 
@@ -261,7 +264,7 @@ export class CategoryLevelReportComponent implements OnInit {
 
   drawChart(costData) {
 
-    const data = new this.google.visualization.DataTable()
+    const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'subCategory');
     data.addColumn('number', 'cost');
     data.addRows(costData);

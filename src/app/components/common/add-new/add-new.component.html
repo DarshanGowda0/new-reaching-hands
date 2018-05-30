@@ -6,23 +6,29 @@
         Add new item
       </h4>
       <div class="add-container">
-        <mat-form-field hintLabel="Example: tomato">
-          <input matInput #input placeholder="Enter item name" [formControl]="addFormControl" required [(ngModel)]="itemName">
-        </mat-form-field>
-
         <mat-form-field style="margin-top:1%;">
-          <mat-select placeholder="Category" [formControl]="addFormControl" required [(value)]="selectedCategory">
-            <mat-optgroup *ngFor="let group of categoryGroups" [label]="group.name">
+          <mat-select placeholder="Category" [formControl]="addFormControl" required [(value)]="selectedCategory" >
+            <!-- <mat-optgroup *ngFor="let group of categoryGroups" [label]="group.name">
               <mat-option *ngFor="let item of group.category" [value]="item">
                 {{ item }}
               </mat-option>
-            </mat-optgroup>
+            </mat-optgroup>-->
+            <!--<mat-optgroup *ngFor="let group of categoryGroups" [label]="group.name">-->
+              <mat-option *ngFor="let item of subcategory" [value]="item">
+                {{ item }}
+              </mat-option>
+            <!--</mat-optgroup>-->
+            
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field hintLabel="Example: 5">
-            <input matInput #input placeholder="Enter Threshold value" [formControl]="addFormControl" required [(ngModel)]="thresholdValue">
-          </mat-form-field>
+         <mat-form-field hintLabel="Example: tomato">
+          <input matInput #input placeholder="Enter item name" [formControl]="addFormControl" required [(ngModel)]="itemName">
+        </mat-form-field>
+
+        <mat-form-field matTooltip="Enter Numbers only" hintLabel="Example: 5" *ngIf="getmainCategory()=== 'Inventory' || getmainCategory() === 'HomeSchoolInventory'">
+            <input matInput #input placeholder="Enter Threshold value" [formControl]="addFormControl" [(ngModel)]="thresholdValue" type="number" >
+        </mat-form-field>
 
         <mat-form-field hintLabel="kgs, lts..." style="margin-top:1%;">
           <mat-select placeholder="Unit" [formControl]="addFormControl" required [(value)]="selectedUnit">
@@ -32,10 +38,16 @@
           </mat-select>
         </mat-form-field>
 
-        <div class="button-row" style="margin-top:1%;margin-bottom:1%">
-          <button mat-raised-button (click)="onAdd()">Add</button>
-          <button mat-button color="warn" (click)="onReset()">Clear</button>
-        </div>
+        <!-- <div class="button-row" style="margin-top:1%;margin-bottom:1%">
+          <button mat-raised-button (click)="onAdd()">Add</button>-->
+          <!-- <button mat-button color="warn" (click)="onReset()">Clear</button>-->
+          <!-- <button mat-button mat-dialog-close>Cancel</button>
+        </div> -->
+
+        <mat-dialog-actions>
+            <button mat-button mat-dialog-close>Cancel</button>
+            <button mat-raised-button color="accent" (click)="onAdd()">ADD</button>
+        </mat-dialog-actions>
 
       </div>
     </mat-card>
