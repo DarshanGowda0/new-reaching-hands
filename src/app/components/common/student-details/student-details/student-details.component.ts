@@ -78,6 +78,14 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    filterValue = filterValue.toLowerCase();
+    this.dataSource.filter = filterValue;
+  }
+  
   onEdit(studentLog) {
     this.auth.user.take(1).subscribe(val => {
       if (this.auth.canEdit(val)) {
