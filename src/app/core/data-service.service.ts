@@ -33,6 +33,12 @@ export class DataService {
     return this.firestore.collection(`items`).doc(item.itemId).set(item);
   }
 
+  getLogExists(item: Item) {
+    return this.firestore.collection<Item>(`items`, ref => ref.where('category', '==' , item.category)
+      .where('subCategory', '==', item.subCategory)
+      .where('itemName', '==', item.itemName)).valueChanges();
+  }
+
   getItemById(itemId: string) {
     return this.firestore.doc<Item>(`items/${itemId}`).valueChanges();
   }
