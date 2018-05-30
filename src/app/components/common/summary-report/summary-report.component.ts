@@ -4,6 +4,7 @@ import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
+import * as tf from '@tensorflow/tfjs';
 
 export interface CostModel {
   purchased: number;
@@ -31,6 +32,7 @@ export class SummaryReportComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
   ngOnInit() {
+    this.trainModel();
     this.google = this.route.snapshot.data.google;
 
     this.dataService.getSummary()
@@ -311,6 +313,24 @@ export class SummaryReportComponent implements OnInit {
   daysIntoYear(date) {
     date = new Date(date);
     return (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
+  }
+
+  async trainModel() {
+    const model = tf.sequential();
+    model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+    model.compile({ optimizer: 'sgd', loss: 'meanSquaredError' });
+
+    // Generate some synthetic data for training.
+    const xs = tf.tensor1d([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    const ys = tf.tensor1d([100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]);
+
+    // Train model with fit().
+    await model.fit(xs, ys, { epochs: 2000 });
+
+    // Run inference with predict().
+    const hist = model.predict(tf.tensor2d([[5]], [1, 1]));
+    console.log('hist', hist);
+    (hist as tf.Tensor).print();
   }
 
 }
