@@ -28,7 +28,9 @@ export class DataService {
   }
 
   addItem(item: Item) {
+    if(item.itemId === ''){
     item.itemId = this.generateId();
+    }
     item.addedBy = this.uid;
     return this.firestore.collection(`items`).doc(item.itemId).set(item);
   }
