@@ -63,6 +63,7 @@ export class AddNewComponent implements OnInit {
   thresholdValue: number;
   mainCategory: string;
   subcategory: string[];
+  addFlag: boolean;
 
   constructor(private dataService: DataService, private router: Router, public dialogRef: MatDialogRef<AddNewComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -116,18 +117,26 @@ export class AddNewComponent implements OnInit {
 
     if (item.itemName === undefined || this.selectedCategory === undefined || this.selectedUnit === undefined) {
       alert('fill all details');
-      // TODO: add toast or alert here
     } else {
-      this.dataService.addItem(item).then(() => {
-        console.log('added item succesfully');
-        // TODO: add toast or alert here
-        this.router.navigate(['']);
-      }).catch(err => {
-        console.error('error adding item', err);
+      const a = this.dataService.getLogExists(item).subscribe( doc => {
+        console.log(doc);
+        if ( doc.length > 0 ) {
+          console.error('item already exists');
+          alert('item already exists');
+          a.unsubscribe();
+        } else {
+          this.dataService.addItem(item).then(() => {
+            console.log('added item succesfully');
+            alert(item.itemName + ' added successfully');
+            this.router.navigate(['']);
+          }).catch(err => {
+            console.error('error adding item', err);
+          });
+          a.unsubscribe();
+        }
       });
     }
     this.dialogRef.close();
-
   }
 
   getCategory(selectedCategory) {
