@@ -13,7 +13,7 @@ import { Item } from '../../../models/item';
 })
 export class AddLogPComponent implements OnInit {
 
-  itemLog1: ItemLogP = {} as ItemLogP;
+  itemLogP: ItemLogP = {} as ItemLogP;
   item: Item;
   logFormControl = new FormControl();
 
@@ -24,7 +24,7 @@ export class AddLogPComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
     this.item = data.item;
     if (data.itemLog1) {
-      this.itemLog1 = data.itemLog1;
+      this.itemLogP = data.itemLog1;
     }
   }
 
@@ -33,19 +33,19 @@ export class AddLogPComponent implements OnInit {
 
   onAdd() {
     const tempItemLog: ItemLogP = {
-      'logId': this.itemLog1.logId ? this.itemLog1.logId : this.dataService.generateId(),
+      'logId': this.itemLogP.logId ? this.itemLogP.logId : this.dataService.generateId(),
       'date': this.dataService.getTimeStamp(),
-      'selectedCommons': this.itemLog1.selectedCommons,
-      'cost': Number(this.itemLog1.cost),
-      'remarks': this.itemLog1.remarks,
-      'logType': this.itemLog1.logType,
+      'selectedCommons': this.itemLogP.selectedCommons,
+      'cost': Number(this.itemLogP.cost),
+      'remarks': this.itemLogP.remarks,
+      'logType': this.itemLogP.logType,
       'category': this.item.category,
       'subCategory': this.item.subCategory,
       'itemId': this.item.itemId,
       'addedBy': this.dataService.uid,
-      'servicer': this.itemLog1.servicer,
-      'billNumber': this.itemLog1.billNumber,
-      'serviceDate': this.itemLog1.serviceDate
+      'servicer': this.itemLogP.servicer,
+      'billNumber': this.itemLogP.billNumber,
+      'serviceDate': this.itemLogP.serviceDate
     };
     console.log('check', tempItemLog);
     this.dataService.addLog1(tempItemLog).then(() => {
