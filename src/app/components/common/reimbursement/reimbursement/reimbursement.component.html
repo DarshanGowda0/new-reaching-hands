@@ -1,0 +1,8 @@
+<mat-tab-group>
+  <mat-tab label="Current Claims"class="inner-content">
+    <app-reimbursement-details [currentStatus] ="status[0]" > </app-reimbursement-details>
+  </mat-tab>
+  <mat-tab label="Historic"  class="inner-content">
+    <app-reimbursement-details [currentStatus] ="status[1]"> </app-reimbursement-details>
+  </mat-tab>
+  </mat-tab-group>
