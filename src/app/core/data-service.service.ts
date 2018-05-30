@@ -8,7 +8,6 @@ import { tap, map } from 'rxjs/operators';
 import { User } from './user';
 import { ReimbursementLog, ReimbursementLog2 } from '../models/reimbursement-log';
 import {StudentLog, StudentLog2 } from '../models/student-logs';
-//import * as moment from 'moment';
 
 @Injectable()
 export class DataService {
@@ -30,9 +29,17 @@ export class DataService {
   }
 
   addItem(item: Item) {
+    if(item.itemId === ''){
     item.itemId = this.generateId();
+    }
     item.addedBy = this.uid;
     return this.firestore.collection(`items`).doc(item.itemId).set(item);
+  }
+
+  getLogExists(item: Item) {
+    return this.firestore.collection<Item>(`items`, ref => ref.where('category', '==' , item.category)
+      .where('subCategory', '==', item.subCategory)
+      .where('itemName', '==', item.itemName)).valueChanges();
   }
 
   getItemById(itemId: string) {
@@ -82,6 +89,7 @@ export class DataService {
   }
 
   getLogsOfItemAsce(itemId: string, startDate: any, endDate: any) {
+    console.log('date issssss',startDate);
     return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId)
       .where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
   }
@@ -142,6 +150,10 @@ export class DataService {
   getSummary() {
     return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
   }
+  getSummaryDatePicker(startDate: any, endDate: any) {
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
+  }
+
 
   getSummaryCat(cat: string) {
     return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('category', '==', cat).orderBy('date', 'desc')).valueChanges();

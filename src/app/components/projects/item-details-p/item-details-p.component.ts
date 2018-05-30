@@ -1,36 +1,39 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatSnackBar } from '@angular/material';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
-import { ItemLog1 } from '../../../models/item-log';
+import { ItemLogP } from '../../../models/item-log';
 import { Observable } from 'rxjs/Observable';
 import { DataService } from '../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../../../models/item';
-import { AddLog1Component } from '../add-log1/add-log1.component';
+import { AddLogPComponent } from '../add-log-p/add-log-p.component';
 import { tap, map } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
-  selector: 'app-item-details1',
-  templateUrl: './item-details1.component.html',
-  styleUrls: ['./item-details1.component.css']
+  selector: 'app-item-details-p',
+  templateUrl: './item-details-p.component.html',
+  styleUrls: ['./item-details-p.component.css']
 })
-export class ItemDetails1Component implements OnInit, AfterViewInit {
+export class ItemDetailsPComponent implements OnInit, AfterViewInit {
+
+  google: any;
 
   item: Item = {} as Item;
   currentQuantity = 0;
 
-  displayedColumns = ['serviceDate', 'servicer', 'billNumber', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
-  logTypeOptions = ['Paid', 'Donated'];
+  displayedColumns = ['date', 'quantity', 'cost', 'type', 'selectedCommons', 'edit', 'delete'];
+  logTypeOptions = ['Added', 'Issued', 'Donated'];
 
   dataSource: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  // tslint:disable-next-line:max-line-length
-  constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
+  constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute,
+    private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.google = this.route.snapshot.data.google;
     this.route.params.subscribe(params => {
       this.item.itemId = params['id'];
       this.dataService.getItemById(this.item.itemId).subscribe(item => {
@@ -40,24 +43,28 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataService.getLogsOfItem1(this.item.itemId).subscribe(val => {
+    this.dataService.getLogsOfItem(this.item.itemId).pipe(
+      tap(val => {
+        this.currentQuantity = this.getCurrentQuantity(val);
+      })
+    ).subscribe(val => {
       this.dataSource = new MatTableDataSource(val);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  // getCurrentQuantity(val) {
-  //   let quantity = 0;
-  //   val.forEach(element => {
-  //     if (element.logType === this.logTypeOptions[1]) {
-  //       quantity = quantity - element.quantity;
-  //     } else {
-  //       quantity = quantity + element.quantity;
-  //     }
-  //   });
-  //   return quantity;
-  // }
+  getCurrentQuantity(val) {
+    let quantity = 0;
+    val.forEach(element => {
+      if (element.logType === this.logTypeOptions[1]) {
+        quantity = quantity - element.quantity;
+      } else {
+        quantity = quantity + element.quantity;
+      }
+    });
+    return quantity;
+  }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();
@@ -66,7 +73,7 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   }
 
   addNewLog() {
-    const dialogRef = this.dialog.open(AddLog1Component, {
+    const dialogRef = this.dialog.open(AddLogPComponent, {
       width: '450px',
       data: {
         'itemLog': undefined,
@@ -105,10 +112,10 @@ export class ItemDetails1Component implements OnInit, AfterViewInit {
   onEdit(itemLog) {
     this.auth.user.take(1).subscribe(val => {
       if (this.auth.canEdit(val)) {
-        const dialogRef = this.dialog.open(AddLog1Component, {
+        const dialogRef = this.dialog.open(AddLogPComponent, {
           width: '450px',
           data: {
-            'itemLog1': itemLog,
+            'itemLog': itemLog,
             'item': this.item
           },
           disableClose: true

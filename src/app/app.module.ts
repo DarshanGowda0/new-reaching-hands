@@ -25,6 +25,10 @@ import { MaintenanceComponent } from './components/maintenance/maintenance/maint
 import { EducationComponent } from './components/education/education/education.component';
 import { AddLog2Component } from './components/education/add-log2/add-log2.component';
 import { ItemDetails2Component } from './components/education/item-details2/item-details2.component';
+import { ProjectsComponent } from './components/projects/projetcs/projects.component';
+import { AddLogPComponent } from './components/projects/add-log-p/add-log-p.component';
+import { ItemDetailsPComponent } from './components/projects/item-details-p/item-details-p.component';
+import { SubCatListingPComponent } from './components/projects/sub-cat-listing-p/sub-cat-listing-p.component';
 import { SubCatListing2Component } from './components/education/sub-cat-listing2/sub-cat-listing2.component';
 import { SubCatListing3Component } from './components/services/sub-cat-listing3/sub-cat-listing3.component';
 import { ServicesComponent } from './components/services/services/services.component';
@@ -69,6 +73,10 @@ import { ReimbursementDetailsComponent } from './components/common/reimbursement
     ServicesComponent,
     AddLog3Component,
     ItemDetails3Component,
+    ProjectsComponent,
+    ItemDetailsPComponent,
+    SubCatListingPComponent,
+    AddLogPComponent,
     LoginComponent,
     AccesscontrolComponent,
     ItemReportComponent,
@@ -106,6 +114,7 @@ import { ReimbursementDetailsComponent } from './components/common/reimbursement
     AccesscontrolComponent,
     AddReimbursementLogComponent,
     AddStudentLogComponent
+    AddLogPComponent,
   ]
 })
 export class AppModule { }

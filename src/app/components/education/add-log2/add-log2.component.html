@@ -18,9 +18,9 @@
     <mat-datepicker touchUi="true" #picker1></mat-datepicker>
   </mat-form-field>
 
-  <mat-form-field hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
+  <mat-form-field matTooltip="Enter Numbers only" hintLabel="Example: &#8377; 100, overall cost" style="display:block;clear: both;">
     <span matPrefix>&#8377; </span>
-    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog2.cost" pattern="[0-9]*">
+    <input matInput #input placeholder="Enter item cost" required [(ngModel)]="itemLog2.cost" type="number">
   </mat-form-field>
 
 
