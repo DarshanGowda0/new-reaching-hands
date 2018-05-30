@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
-import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
+import { MatDialog, MatTableDataSource, MatSort, MatPaginator, MatDatepickerInputEvent } from '@angular/material';
 import * as tf from '@tensorflow/tfjs';
 
 export interface CostModel {
@@ -22,6 +22,9 @@ export class SummaryReportComponent implements OnInit {
   @Input() itemId: string;
   @Input() google: any;
   temp: string = null;
+  startDate: any = null;
+  endDate: any = null;
+  isDone = false;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education', 'Projects', 'HomeSchoolInventory'];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
@@ -33,7 +36,6 @@ export class SummaryReportComponent implements OnInit {
   constructor(private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
-
     this.dataService.getSummary()
       .pipe(
         map(logs => {
@@ -52,6 +54,29 @@ export class SummaryReportComponent implements OnInit {
         });
       });
   }
+
+    
+  fetchDataAndAddChart() {
+    this.dataService.getSummaryDatePicker(this.startDate, this.endDate)
+    .pipe(
+      map(logs => {
+        logs.forEach(item => {
+          item.date = this.dateFormat(item.date);
+        });
+        return logs;
+      })
+    )
+    .subscribe(logs => {
+      this.dataService.getAllItems().subscribe(items => {
+        this.getAllNames(items);
+        this.computeDataForPieChart(logs);
+        this.computeDataForTopTenItems(logs);
+        this.comupteDataForLineChart(logs);
+      });
+    });
+  }
+
+
 
   getAllNames(items) {
     items.forEach(element => {
@@ -215,7 +240,6 @@ export class SummaryReportComponent implements OnInit {
     // linearModel.add(tf.layers.dense({units: 5, activation: 'relu'}));
     // linearModel.add(tf.layers.dense({ units: 1, activation: 'linear' }));
 
-
     linearModel.compile({
       loss: 'meanSquaredError',
       optimizer: 'sgd',
@@ -234,7 +258,6 @@ export class SummaryReportComponent implements OnInit {
 
     // const xs = tf.tensor1d(xArray);
     // const ys = tf.tensor1d(yArray);
-
     const xs = tf.tensor1d([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     const ys = tf.tensor1d([100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]);
 
@@ -246,6 +269,25 @@ export class SummaryReportComponent implements OnInit {
     const output = linearModel.predict(tf.tensor2d([12], [1, 1])) as any;
     const prediction = Array.from(output.dataSync())[0];
     console.log('pred ', prediction);
+  }
+
+  
+  addEventStart(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.startDate = event.value;
+    if (this.endDate !== null) {
+      console.log('show graph');
+      this.isDone = true;
+      this.fetchDataAndAddChart();
+    }
+  }
+
+  addEventEnd(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.endDate = event.value;
+    if (this.startDate !== null) {
+      console.log('show graph');
+      this.isDone = true;
+      this.fetchDataAndAddChart();
+    }
   }
 
 
@@ -347,7 +389,9 @@ export class SummaryReportComponent implements OnInit {
   }
 
   getFullDate(date) {
+
     return String(date.toLocaleString('en-US'));
+
   }
 
   getName(itemId) {
