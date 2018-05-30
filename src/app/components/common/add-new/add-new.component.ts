@@ -64,7 +64,7 @@ export class AddNewComponent implements OnInit {
   subcategory: string[];
   addFlag: boolean;
   itemId = '';
-  itemQuantity;
+  itemQuantity = 0;
 
   constructor(private dataService: DataService, private router: Router, public dialogRef: MatDialogRef<AddNewComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
@@ -87,6 +87,7 @@ export class AddNewComponent implements OnInit {
       this.itemQuantity = tempItem.itemQuantity;
     } else {
       this.mainCategory = data.category;
+      console.log('checkkkit',this.mainCategory);
     }
     this.getSubCategories();
   }
@@ -94,6 +95,7 @@ export class AddNewComponent implements OnInit {
     this.categoryGroups.forEach(element => {
       if (element.name === this.mainCategory) {
         this.subcategory = element.category;
+        console.log('this is ??',this.subcategory);
       }
     }); 
   }
