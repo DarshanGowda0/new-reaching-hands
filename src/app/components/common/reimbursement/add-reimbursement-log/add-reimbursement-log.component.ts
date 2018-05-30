@@ -36,6 +36,7 @@ export class AddReimbursementLogComponent implements OnInit {
       'totalCost': this.reimbursementLog.totalCost,
       'billNumber': this.reimbursementLog.billNumber,
       'addedBy': this.dataService.uid,
+      'status': 'open',
       'logdate': this.dataService.getTimeStamp()
     };
     console.log('check', tempItemLog);

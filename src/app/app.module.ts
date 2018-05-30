@@ -45,6 +45,7 @@ import { ReimbursementComponent } from './components/common/reimbursement/reimbu
 import { AddReimbursementLogComponent } from './components/common/reimbursement/add-reimbursement-log/add-reimbursement-log.component';
 import { StudentDetailsComponent } from './components/common/student-details/student-details/student-details.component';
 import { AddStudentLogComponent } from './components/common/student-details/add-student-log/add-student-log.component';
+import { ReimbursementDetailsComponent } from './components/common/reimbursement/reimbursement-details/reimbursement-details.component';
 
 
 
@@ -79,6 +80,7 @@ import { AddStudentLogComponent } from './components/common/student-details/add-
     AddReimbursementLogComponent,
     StudentDetailsComponent,
     AddStudentLogComponent,
+    ReimbursementDetailsComponent,
   ],
   imports: [
     BrowserModule,

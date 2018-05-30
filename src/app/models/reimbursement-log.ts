@@ -6,6 +6,7 @@ export interface ReimbursementLog {
     totalCost: string;
     addedBy: string;
     dateOfPurchase: any;
+    status: string;
 }
 export interface ReimbursementLog2 {
     reimburesmentId: string;
@@ -15,4 +16,5 @@ export interface ReimbursementLog2 {
     totalCost: string;
     addedBy: string;
     dateOfPurchase: any;
+    status: string;
 }

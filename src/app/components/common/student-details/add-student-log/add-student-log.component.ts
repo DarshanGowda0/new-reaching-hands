@@ -18,7 +18,7 @@ export class AddStudentLogComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<AddStudentLogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
       this.studentLog2 = data.item;
-    if (data.reimbursementLog) {
+    if (data.studentLog) {
       this.studentLog = data.studentLog;
     }
     }
