@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
-import { MatDialog, MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
-import * as tf from '@tensorflow/tfjs';
+import { MatDialog, MatTableDataSource, MatSort, MatPaginator, MatDatepickerInputEvent } from '@angular/material';
 
 export interface CostModel {
   purchased: number;
@@ -22,6 +21,9 @@ export class SummaryReportComponent implements OnInit {
   @Input() itemId: string;
   @Input() google: any;
   temp: string = null;
+  startDate: any = null;
+  endDate: any = null;
+  isDone = false;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education', 'Projects', 'HomeSchoolInventory'];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
@@ -34,7 +36,6 @@ export class SummaryReportComponent implements OnInit {
   ngOnInit() {
     this.trainModel();
     this.google = this.route.snapshot.data.google;
-
     this.dataService.getSummary()
       .pipe(
         map(logs => {
@@ -53,6 +54,29 @@ export class SummaryReportComponent implements OnInit {
         });
       });
   }
+
+    
+  fetchDataAndAddChart() {
+    this.dataService.getSummaryDatePicker(this.startDate, this.endDate)
+    .pipe(
+      map(logs => {
+        logs.forEach(item => {
+          item.date = this.dateFormat(item.date);
+        });
+        return logs;
+      })
+    )
+    .subscribe(logs => {
+      this.dataService.getAllItems().subscribe(items => {
+        this.getAllNames(items);
+        this.computeDataForPieChart(logs);
+        this.computeDataForTopTenItems(logs);
+        this.comupteDataForLineChart(logs);
+      });
+    });
+  }
+
+
 
   getAllNames(items) {
     items.forEach(element => {
@@ -202,7 +226,24 @@ export class SummaryReportComponent implements OnInit {
     });
     this.drawLineChart(costData, dateToData);
   }
+  
+  addEventStart(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.startDate = event.value;
+    if (this.endDate !== null) {
+      console.log('show graph');
+      this.isDone = true;
+      this.fetchDataAndAddChart();
+    }
+  }
 
+  addEventEnd(type: string, event: MatDatepickerInputEvent<Date>) {
+    this.endDate = event.value;
+    if (this.startDate !== null) {
+      console.log('show graph');
+      this.isDone = true;
+      this.fetchDataAndAddChart();
+    }
+  }
 
 
   drawPieChart(costData) {
@@ -303,7 +344,9 @@ export class SummaryReportComponent implements OnInit {
   }
 
   getFullDate(date) {
+
     return String(date.toLocaleString('en-US'));
+
   }
 
   getName(itemId) {
@@ -315,6 +358,7 @@ export class SummaryReportComponent implements OnInit {
     return (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
   }
 
+<<<<<<< HEAD
   async trainModel() {
     const model = tf.sequential();
     model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
@@ -334,3 +378,6 @@ export class SummaryReportComponent implements OnInit {
   }
 
 }
+=======
+}
+>>>>>>> 720f9255615bea59a5f89acf36e0c6d8ea46c7c3

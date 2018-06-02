@@ -118,7 +118,7 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
             'itemLog': itemLog,
             'item': this.item
           },
-          disableClose: true
+          disableClose: false
         });
 
         dialogRef.afterClosed().subscribe(result => {
