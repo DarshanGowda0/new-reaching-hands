@@ -56,39 +56,52 @@ export class AddNewComponent implements OnInit {
 
   Units = ['kgs', 'grams', 'litres', 'ml', 'numbers'];
 
-  itemName: string;
-  selectedCategory: string;
-  selectedUnit: string;
-  addFormControl = new FormControl();
+  itemName: string ;
+  selectedCategory: string ;
+  selectedUnit: string ;
   thresholdValue: number;
-  mainCategory: string;
+  mainCategory: string ;
   subcategory: string[];
+  addFlag: boolean;
+  itemId = '';
+  itemQuantity = 0;
 
   constructor(private dataService: DataService, private router: Router, public dialogRef: MatDialogRef<AddNewComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
-                this.mainCategory = data.category;
-                this.getSubCategories();
-              }
-
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.initData(data);
+  }
 
   ngOnInit() {
   }
 
+  initData(data: any) {
+    console.log(data);
+    if (data.item) {
+      const tempItem = data.item as Item;
+      this.itemName = tempItem.itemName;
+      this.selectedCategory = tempItem.subCategory;
+      this.mainCategory = tempItem.category;
+      this.selectedUnit = tempItem.unit;
+      this.thresholdValue = tempItem.thresholdValue;
+      this.itemId = tempItem.itemId;
+      this.itemQuantity = tempItem.itemQuantity;
+    } else {
+      this.mainCategory = data.category;
+      console.log('checkkkit',this.mainCategory);
+    }
+    this.getSubCategories();
+  }
   getSubCategories() {
     this.categoryGroups.forEach(element => {
-      if ( element.name === this.mainCategory) {
+      if (element.name === this.mainCategory) {
         this.subcategory = element.category;
+        console.log('this is ??',this.subcategory);
       }
-    });
+    }); 
   }
 
   getmainCategory() {
     return this.mainCategory;
-  }
-
-
-  onReset() {
-    this.addFormControl.reset();
   }
 
   /* onCatInput(){
@@ -103,9 +116,9 @@ export class AddNewComponent implements OnInit {
     const category = this.getmainCategory();
     const dateCreated = this.dataService.getTimeStamp();
     const item: Item = {
-      'itemId': '',
+      'itemId': this.itemId,
       'itemName': this.itemName.toLowerCase(),
-      'itemQuantity': 0,
+      'itemQuantity': this.itemQuantity,
       'lastModified': dateCreated,
       'unit': this.selectedUnit,
       'category': category,
@@ -116,18 +129,26 @@ export class AddNewComponent implements OnInit {
 
     if (item.itemName === undefined || this.selectedCategory === undefined || this.selectedUnit === undefined) {
       alert('fill all details');
-      // TODO: add toast or alert here
     } else {
-      this.dataService.addItem(item).then(() => {
-        console.log('added item succesfully');
-        // TODO: add toast or alert here
-        this.router.navigate(['']);
-      }).catch(err => {
-        console.error('error adding item', err);
+      const a = this.dataService.getLogExists(item).subscribe(doc => {
+        console.log(doc);
+        if (doc.length > 0) {
+          console.error('item already exists');
+          alert('item already exists');
+          a.unsubscribe();
+        } else {
+          this.dataService.addItem(item).then(() => {
+            console.log('added item succesfully');
+            alert(item.itemName + ' added successfully');
+            this.router.navigate(['']);
+          }).catch(err => {
+            console.error('error adding item', err);
+          });
+          a.unsubscribe();
+        }
       });
     }
     this.dialogRef.close();
-
   }
 
   getCategory(selectedCategory) {
