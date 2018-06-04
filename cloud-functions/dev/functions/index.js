@@ -286,6 +286,27 @@ function sendUserAddedAlert(displayName) {
         .catch(err => console.log(err))
 }
 
+exports.onItemDelete = functions.firestore.document('items/{itemId}').onDelete(event => {
+
+    const itemId = event.params.itemId;
+    console.log('on delete called for item id ', itemId);
+
+    var previousDocument = event.data.previous.data();
+
+    const db = admin.firestore();
+    const logsRefQuery = db.collection('logs').where('itemId','==',itemId);
+
+    logsRefQuery.get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            console.log('deleting log ', doc.data().logId);
+            doc.ref.delete();
+        })
+    });
+
+    return 'OK';
+
+});
+
 
 exports.getItemDetails = functions.https.onRequest((req, res) => {
 
