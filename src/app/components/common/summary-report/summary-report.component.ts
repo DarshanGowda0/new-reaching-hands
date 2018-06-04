@@ -4,6 +4,8 @@ import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator, MatDatepickerInputEvent } from '@angular/material';
+import { model } from '@tensorflow/tfjs';
+import * as tf from '@tensorflow/tfjs';
 
 export interface CostModel {
   purchased: number;
@@ -23,12 +25,18 @@ export class SummaryReportComponent implements OnInit {
   temp: string = null;
   startDate: any = null;
   endDate: any = null;
+
+  fullData = [];
+
   isDone = false;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education', 'Projects', 'HomeSchoolInventory'];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
   displayedColumns = ['name', 'cost', 'type', 'category', 'subCategory'];
   nameHash = new Map();
   dataSource: MatTableDataSource<any>;
+
+  isProgress = false;
+
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -54,25 +62,24 @@ export class SummaryReportComponent implements OnInit {
       });
   }
 
-    
   fetchDataAndAddChart() {
     this.dataService.getSummaryDatePicker(this.startDate, this.endDate)
-    .pipe(
-      map(logs => {
-        logs.forEach(item => {
-          item.date = this.dateFormat(item.date);
+      .pipe(
+        map(logs => {
+          logs.forEach(item => {
+            item.date = this.dateFormat(item.date);
+          });
+          return logs;
+        })
+      )
+      .subscribe(logs => {
+        this.dataService.getAllItems().subscribe(items => {
+          this.getAllNames(items);
+          this.computeDataForPieChart(logs);
+          this.computeDataForTopTenItems(logs);
+          this.comupteDataForLineChart(logs);
         });
-        return logs;
-      })
-    )
-    .subscribe(logs => {
-      this.dataService.getAllItems().subscribe(items => {
-        this.getAllNames(items);
-        this.computeDataForPieChart(logs);
-        this.computeDataForTopTenItems(logs);
-        this.comupteDataForLineChart(logs);
       });
-    });
   }
 
 
@@ -223,9 +230,11 @@ export class SummaryReportComponent implements OnInit {
       costData.push(row);
 
     });
+    this.fullData = dataArray;
     this.drawLineChart(costData, dateToData);
+
   }
-  
+
   addEventStart(type: string, event: MatDatepickerInputEvent<Date>) {
     this.startDate = event.value;
     if (this.endDate !== null) {
@@ -355,6 +364,101 @@ export class SummaryReportComponent implements OnInit {
   daysIntoYear(date) {
     date = new Date(date);
     return (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - Date.UTC(date.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
+  }
+
+  showPredictions() {
+    this.isProgress = !this.isProgress;
+    const xs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+    const ys = [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230];
+
+    const xArray = [];
+    const yArray = [];
+
+    this.fullData.forEach(element => {
+      xArray.push(this.daysIntoYear(element.date));
+      yArray.push(element.cost);
+    });
+
+    const predictions = this.fitModel(xs, ys);
+    console.log('pred ', predictions);
+    // this.fitModel(tf.tensor1d(xTrain), tf.tensor1d(yTrain), tf.tensor1d(xTest), tf.tensor1d(yTest));
+  }
+
+  showProgress() {
+    return this.isProgress;
+  }
+
+
+  async fitModel(xArray, yArray) {
+
+    // data prep
+    const xTrain = [];
+    const yTrain = [];
+    const xTest = [];
+    const yTest = [];
+
+    // split test and train dataset to 20/80
+    for (let i = 0; i < xArray.length; i++) {
+      if (i % 5 === 0) {
+        xTest.push(xArray[i]);
+        yTest.push(yArray[i]);
+      } else {
+        xTrain.push(xArray[i]);
+        yTrain.push(yArray[i]);
+      }
+    }
+
+    console.log(xTrain, yTrain);
+
+    const xTrainTensor = tf.tensor1d(xTrain);
+    const yTrainTensor = tf.tensor1d(yTrain);
+    const xTestTensor = tf.tensor1d(xTest);
+    const yTestTensor = tf.tensor1d(yTest);
+
+    // xTrainTensor.print();
+    // yTrainTensor.print();
+    // xTestTensor.print();
+    // yTestTensor.print();
+
+    const linearModel = tf.sequential();
+    linearModel.add(tf.layers.dense({
+      units: 1,
+      inputShape: [1],
+    }));
+
+    linearModel.compile({
+      loss: 'meanSquaredError',
+      optimizer: 'sgd',
+      metrics: ['accuracy']
+    });
+
+    await linearModel.fit(xTrainTensor, yTrainTensor, {
+      epochs: 1000,
+      validationData: [xTestTensor, yTestTensor],
+      callbacks: {
+        onEpochEnd: async (epoch, logs) => {
+          console.log('loss ', logs.loss, ' val ', logs.val_loss);
+          console.log('acc ', logs.acc, ' acc val ', logs.val_acc);
+        },
+      }
+    });
+
+    let xPred = [];
+    xPred = xPred.concat(xTrain);
+    const todayDayNumber = this.daysIntoYear(new Date());
+
+    for (let i = 0; i < 10; i++) {
+      xPred.push(todayDayNumber + i);
+    }
+
+    const output = linearModel.predict(tf.tensor2d(xPred, [xPred.length, 1])) as any;
+    const prediction = Array.from(output.dataSync());
+    const predMap = new Map();
+    for (let i = 0; i < xPred.length; i++) {
+      predMap.set(xPred[i], prediction[i]);
+    }
+    console.log('pred ', predMap);
+    return predMap;
   }
 
 }
