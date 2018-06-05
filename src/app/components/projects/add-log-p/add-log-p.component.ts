@@ -37,7 +37,7 @@ export class AddLogPComponent implements OnInit {
       'date': this.dataService.getTimeStamp(),
       'selectedCommons': this.itemLogP.selectedCommons,
       'cost': Number(this.itemLogP.cost),
-      'remarks': this.itemLogP.remarks,
+      'remarks': this.itemLogP.remarks ? this.itemLogP.remarks : '',
       'logType': this.itemLogP.logType,
       'category': this.item.category,
       'subCategory': this.item.subCategory,

@@ -38,7 +38,7 @@ export class AddLogComponent implements OnInit {
       'quantity': Number(this.itemLog.quantity),
       'selectedCommons': this.itemLog.selectedCommons,
       'cost': Number(this.itemLog.cost),
-      'remarks': this.itemLog.remarks,
+      'remarks': this.itemLog.remarks ? this.itemLog.remarks : '',
       'logType': this.itemLog.logType,
       'category': this.item.category,
       'subCategory': this.item.subCategory,

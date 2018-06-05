@@ -24,12 +24,13 @@ export class InventoryComponent implements OnInit {
   cat: string;
 
   constructor(private router: Router, private dialog: MatDialog) {
-    }
+  }
 
   ngOnInit() {
     // if inv => mainArray = category
     // else mainArray = catHS
     // and use mainArray in html
+
 
   }
 
@@ -58,5 +59,7 @@ export class InventoryComponent implements OnInit {
       console.log('The dialog was closed =>', result);
     });
   }
+
+
 
 }

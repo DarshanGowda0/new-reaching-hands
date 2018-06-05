@@ -1,4 +1,5 @@
-<div>  <mat-form-field style="margin:1.5%">
+<div>
+  <mat-form-field style="margin:1.5%">
     <input matInput [matDatepicker]="picker1" placeholder="Choose a starting date" (dateInput)="addEventStart('input', $event)">
     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
     <mat-datepicker touchUi="true" #picker1></mat-datepicker>
@@ -12,48 +13,60 @@
 </div>
 
 <div style="display: flex">
-    <mat-card id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;margin-left:2%;margin-right:1%;margin-top:2%;"></mat-card>
-    <mat-card id="barchart_values" style="flex: 1;width:50%;height:600px;padding:2%;margin-left:1%;margin-right:2%;margin-top:2%;"></mat-card>
-  </div>
-  <div style="width:100%;">
-    <mat-card id="costChart" style="padding:2%;margin:2%;"></mat-card>
-  </div>
-  
-  <div style="padding:2%;">
-    <div class="mat-elevation-z2">
-      <mat-table #table [dataSource]="dataSource" matSort>
-  
-        <!-- quantity Column -->
-        <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Item Name </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{ getName(element.itemId) }} </mat-cell>
-        </ng-container>
-  
-        <!-- cost Column -->
-        <ng-container matColumnDef="cost">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Cost </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.cost}} </mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="type">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.logType}} </mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="category">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Category </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.category}} </mat-cell>
-        </ng-container>
-  
-        <ng-container matColumnDef="subCategory">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Sub-Category </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.subCategory}} </mat-cell>
-        </ng-container>
-  
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      </mat-table>
-      <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
-      </mat-paginator>
+  <mat-card id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;margin-left:2%;margin-right:1%;margin-top:2%;"></mat-card>
+  <mat-card id="barchart_values" style="flex: 1;width:50%;height:600px;padding:2%;margin-left:1%;margin-right:2%;margin-top:2%;"></mat-card>
+</div>
+
+<div style="width:100%;">
+  <mat-card style="padding:2%;margin:2%;">
+    <div id="predChart">
     </div>
+  </mat-card>
+</div>
+
+<div style="width:100%;">
+  <mat-card style="padding:2%;margin:2%;">
+    <button mat-raised-button (click)="showPredictions()" style="margin:1.5%" color="primary">Show predictions</button>
+    <div id="costChart">
+    </div>
+  </mat-card>
+</div>
+
+<div style="padding:2%;">
+  <div class="mat-elevation-z2">
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+      <!-- quantity Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Item Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ getName(element.itemId) }} </mat-cell>
+      </ng-container>
+
+      <!-- cost Column -->
+      <ng-container matColumnDef="cost">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Cost </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.cost}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Type </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.logType}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Category </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.category}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="subCategory">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Sub-Category </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.subCategory}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]">
+    </mat-paginator>
   </div>
+</div>
