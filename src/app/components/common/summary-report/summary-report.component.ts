@@ -290,10 +290,6 @@ export class SummaryReportComponent implements OnInit {
     const options = {
       title: 'Top 10 items',
       legend: { position: 'top' },
-      chart: {
-        title: 'Top 10 items',
-        subtitle: 'Cost comparison'
-      },
       bars: 'horizontal', // Required for Material Bar Charts.
       axes: {
         x: {
@@ -484,7 +480,7 @@ export class SummaryReportComponent implements OnInit {
     });
 
     await linearModel.fit(xTrainTensor, yTrainTensor, {
-      epochs: 4000,
+      epochs: 2000,
       validationData: [xTestTensor, yTestTensor],
       callbacks: {
         onEpochEnd: async (epoch, logs) => {
@@ -495,7 +491,7 @@ export class SummaryReportComponent implements OnInit {
     });
 
     let xPred = [];
-    xPred = xPred.concat(xTrain);
+    xPred = xPred.concat(xArray);
     const todayDayNumber = this.daysIntoYear(new Date());
 
     for (let i = 0; i < 10; i++) {
