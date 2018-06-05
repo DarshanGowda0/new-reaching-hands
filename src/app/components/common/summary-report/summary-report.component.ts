@@ -27,6 +27,11 @@ export class SummaryReportComponent implements OnInit {
   endDate: any = null;
 
   fullData = [];
+  predictionMap: any;
+
+  // line chart variables
+  lineChartCostData: any;
+  lineChartDatetoData: any;
 
   isDone = false;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education', 'Projects', 'HomeSchoolInventory'];
@@ -225,13 +230,15 @@ export class SummaryReportComponent implements OnInit {
 
       row.push(new Date(element.date));
       row.push(element.cost);
-      row.push(element.cost - 300);
-      row.push(element.cost + 300);
+      // row.push(element.cost - 300);
+      // row.push(element.cost + 300);
       costData.push(row);
 
     });
     this.fullData = dataArray;
-    this.drawLineChart(costData, dateToData);
+    this.lineChartCostData = costData;
+    this.lineChartDatetoData = dateToData;
+    this.drawLineChart();
 
   }
 
@@ -301,16 +308,11 @@ export class SummaryReportComponent implements OnInit {
   }
 
 
-  drawLineChart(costData, dateToData) {
-    const data = new this.google.visualization.DataTable();
-    data.addColumn('date', 'x');
-    data.addColumn('number', 'cost');
-    data.addColumn({ id: 'i0', type: 'number', role: 'interval' });
-    data.addColumn({ id: 'i1', type: 'number', role: 'interval' });
+  drawLineChart() {
 
-    data.addRows(costData);
+    const costData = this.lineChartCostData;
+    const dateToData = this.lineChartDatetoData;
 
-    // The intervals data as narrow lines (useful for showing raw source data)
     const options_lines = {
       title: 'Consumption rate',
       curveType: 'function',
@@ -330,6 +332,15 @@ export class SummaryReportComponent implements OnInit {
       colors: ['#e2431e', '#4374e0'],
     };
 
+    console.log('map ', this.predictionMap);
+    const data = new this.google.visualization.DataTable();
+    data.addColumn('date', 'x');
+    data.addColumn('number', 'cost');
+    // data.addColumn({ id: 'i0', type: 'number', role: 'interval' });
+    // data.addColumn({ id: 'i1', type: 'number', role: 'interval' });
+
+    data.addRows(costData);
+
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
     chart_lines.draw(data, options_lines);
     this.google.visualization.events.addListener(chart_lines, 'select', () => {
@@ -344,6 +355,47 @@ export class SummaryReportComponent implements OnInit {
       }
 
     });
+    if (this.predictionMap !== undefined) {
+      console.log('pred graph called');
+      const originalData = new this.google.visualization.DataTable();
+      originalData.addColumn('date', 'date');
+      originalData.addColumn('number', 'cost');
+      originalData.addRows(costData);
+
+      const predictedDataArray = [];
+      costData.forEach(singleRow => {
+        const tempDate = singleRow[0];
+        if (this.predictionMap.has(this.daysIntoYear(tempDate))) {
+          const predCost = this.predictionMap.get(this.daysIntoYear(tempDate));
+          predictedDataArray.push([tempDate, predCost]);
+        }
+      });
+
+      // add next 10 days
+      for (let i = 0; i < 10; i++) {
+        const today = new Date();
+        today.setDate(today.getDate() + i);
+        console.log(today);
+        if (this.predictionMap.has(this.daysIntoYear(today))) {
+          const mCost = this.predictionMap.get(this.daysIntoYear(today));
+          predictedDataArray.push([today, mCost]);
+        }
+      }
+
+      console.log('pred array ', predictedDataArray);
+
+      const predictedData = new this.google.visualization.DataTable();
+      predictedData.addColumn('date', 'date');
+      predictedData.addColumn('number', 'predicted-cost');
+      predictedData.addRows(predictedDataArray);
+
+      const joinedData = this.google.visualization.data.join(originalData, predictedData, 'full', [[0, 0]], [1], [1]);
+
+      const predLineGraph = new this.google.visualization.LineChart(document.getElementById('predChart'));
+      predLineGraph.draw(joinedData, options_lines);
+
+
+    }
   }
 
   dateFormat(date) {
@@ -379,8 +431,7 @@ export class SummaryReportComponent implements OnInit {
       yArray.push(element.cost);
     });
 
-    const predictions = this.fitModel(xs, ys);
-    console.log('pred ', predictions);
+    this.fitModel(xs, ys);
     // this.fitModel(tf.tensor1d(xTrain), tf.tensor1d(yTrain), tf.tensor1d(xTest), tf.tensor1d(yTest));
   }
 
@@ -458,7 +509,10 @@ export class SummaryReportComponent implements OnInit {
       predMap.set(xPred[i], prediction[i]);
     }
     console.log('pred ', predMap);
-    return predMap;
+    this.predictionMap = predMap;
+    this.drawLineChart();
+
+    // return predMap;
   }
 
 }

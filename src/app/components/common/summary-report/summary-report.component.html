@@ -16,10 +16,17 @@
   <mat-card id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;margin-left:2%;margin-right:1%;margin-top:2%;"></mat-card>
   <mat-card id="barchart_values" style="flex: 1;width:50%;height:600px;padding:2%;margin-left:1%;margin-right:2%;margin-top:2%;"></mat-card>
 </div>
+
+<div style="width:100%;">
+  <mat-card style="padding:2%;margin:2%;">
+    <div id="predChart">
+    </div>
+  </mat-card>
+</div>
+
 <div style="width:100%;">
   <mat-card style="padding:2%;margin:2%;">
     <button mat-raised-button (click)="showPredictions()" style="margin:1.5%" color="primary">Show predictions</button>
-    <mat-progress-bar mode="determinate" value="40" *ngIf="showProgress()"></mat-progress-bar>
     <div id="costChart">
     </div>
   </mat-card>
