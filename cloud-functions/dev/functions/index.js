@@ -310,117 +310,114 @@ exports.onItemDelete = functions.firestore.document('items/{itemId}').onDelete(e
 
 exports.getItemDetails = functions.https.onRequest((req, res) => {
 
-    console.log("request method", req.method);    
+    console.log("request method", req.method);
     var reqArray = req.body.result.parameters;
     const item = reqArray['itemName'];
     var date = reqArray['date'];
-    console.log('date is',date);
+    console.log('date is', date);
     var yestPrev = new Date(date);
     var yestPost = new Date(date);
     var daysPrior = 1;
-    
+
     yestPost.setDate(yestPost.getDate() + daysPrior);
     yestPost = yestPost.toISOString();
-    console.log('datee is prev',yestPrev);
-    console.log('datee is',yestPost);
+    console.log('datee is prev', yestPrev);
+    console.log('datee is', yestPost);
     var action_type = req.body.result['action'];
-    console.log('action type',action_type);
+    console.log('action type', action_type);
     var temp = "Added";
-    var itemVal,unitVal,itemIdValuu,adder;
+    var itemVal, unitVal, itemIdValuu, adder;
     const db = admin.firestore();
-   // if(action_type === 'quantity' ){
-  
+    // if(action_type === 'quantity' ){
 
-    if(date === ''){
-          db.collection("items").where("itemName", "==", item).get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-        itemVal = doc.data().itemQuantity;
-        unitVal = doc.data().unit;
-        const itemIdVal = doc.data().itemId;    
-            console.log('itemIdVal is',itemIdVal);
-        
-            if (req.method === 'POST') {
-        const body = req.body;
-        console.log('body ', body);
-        var reply = "Quantity of " + item + "s left :" + itemVal + unitVal;
-        res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-        res.send(JSON.stringify({
-            "speech": reply, "displayText": reply
-            //"speech" is the spoken version of the response, "displayText" is the visual version
-        }));
-    } else {
-        res.status(500).send('Not a valid request!');
-    
-            }
-    
-    });
-    })
-    .catch((error)=> {
-        console.log("Error getting documents: ", error);
-    });
+
+    if (date === '') {
+        db.collection("items").where("itemName", "==", item).get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    itemVal = doc.data().itemQuantity;
+                    unitVal = doc.data().unit;
+                    const itemIdVal = doc.data().itemId;
+                    console.log('itemIdVal is', itemIdVal);
+
+                    if (req.method === 'POST') {
+                        const body = req.body;
+                        console.log('body ', body);
+                        var reply = "Quantity of " + item + "s left :" + itemVal + unitVal;
+                        res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                        res.send(JSON.stringify({
+                            "speech": reply, "displayText": reply
+                            //"speech" is the spoken version of the response, "displayText" is the visual version
+                        }));
+                    } else {
+                        res.status(500).send('Not a valid request!');
+
+                    }
+
+                });
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
     }
-else if(date != ''){
+    else if (date != '') {
 
-    //return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId)
-  //  .where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
-  db.collection("items").where("itemName", "==", item).get()
-  .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        itemIdVal = doc.data().itemId;
-        unitVal = doc.data().unit;
-        console.log('111111111111111111st',itemIdVal);
-    db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc1) => {
-            console.log('111111111111111111st',itemIdVal);
-            // doc.data() is never undefined for query doc snapshots
-        itemValuu = doc1.data().quantity;
-        adder = doc1.data().addedBy;
-        console.log('docccc',doc1);
-        console.log('value is',itemIdVal,itemValuu,adder);
-        //unitVal = doc.data().cost;
-        db.collection("users").where("uid", "==", adder).get()
-    .then((querySnapshot) => {
-        querySnapshot.forEach((doc2) => {
-            console.log('adddddr',adder);
-            emailVal = doc2.data().email;
-    if (req.method === 'POST') {
-        const body = req.body;
-        console.log('body ', body);
-        var reply = emailVal + " bought " + itemValuu + " "+ unitVal + " of " + item + " on " + date;
-        res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-        res.send(JSON.stringify({
-            "speech": reply, "displayText": reply
-            //"speech" is the spoken version of the response, "displayText" is the visual version
-        }));
-    } else {
-        res.status(500).send('Not a valid request!');
-    
-}
+        //return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId)
+        //  .where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
+        db.collection("items").where("itemName", "==", item).get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    itemIdVal = doc.data().itemId;
+                    unitVal = doc.data().unit;
+                    console.log('111111111111111111st', itemIdVal);
+                    db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).get()
+                        .then((querySnapshot) => {
+                            querySnapshot.forEach((doc1) => {
+                                console.log('111111111111111111st', itemIdVal);
+                                // doc.data() is never undefined for query doc snapshots
+                                itemValuu = doc1.data().quantity;
+                                adder = doc1.data().addedBy;
+                                console.log('docccc', doc1);
+                                console.log('value is', itemIdVal, itemValuu, adder);
+                                //unitVal = doc.data().cost;
+                                db.collection("users").where("uid", "==", adder).get()
+                                    .then((querySnapshot) => {
+                                        querySnapshot.forEach((doc2) => {
+                                            console.log('adddddr', adder);
+                                            emailVal = doc2.data().email;
+                                            if (req.method === 'POST') {
+                                                const body = req.body;
+                                                console.log('body ', body);
+                                                var reply = emailVal + " bought " + itemValuu + " " + unitVal + " of " + item + " on " + date;
+                                                res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                                                res.send(JSON.stringify({
+                                                    "speech": reply, "displayText": reply
+                                                    //"speech" is the spoken version of the response, "displayText" is the visual version
+                                                }));
+                                            } else {
+                                                res.status(500).send('Not a valid request!');
 
-        });
-    })
-    .catch((error)=> {
-        console.log("Error getting documents: ", error);
-    });
-});
-})
-.catch((error)=> {
-    console.log("Error getting documents: ", error);
-});
+                                            }
 
-});
-})
-.catch((error)=> {
-    console.log("Error getting documents: ", error);
-});
-}
+                                        });
+                                    })
+                                    .catch((error) => {
+                                        console.log("Error getting documents: ", error);
+                                    });
+                            });
+                        })
+                        .catch((error) => {
+                            console.log("Error getting documents: ", error);
+                        });
+
+                });
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
+    }
     console.log('yesss');
 
-
-
-
 });
-        
+
