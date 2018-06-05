@@ -4,7 +4,8 @@ import { Item } from '../../../models/item';
 import { DataService } from '../../../core/data-service.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { AddNewComponent } from '../../common/add-new/add-new.component';
 
 @Component({
   selector: 'app-sub-cat-listing2',
@@ -17,7 +18,7 @@ export class SubCatListing2Component implements OnInit {
   nColumns: number;
   items: Observable<Item[]>;
 
-  constructor(public snackBar: MatSnackBar, private auth: AuthService, private dataService: DataService, private router: Router) {
+  constructor(public snackBar: MatSnackBar, private dialog: MatDialog, private auth: AuthService, private dataService: DataService, private router: Router) {
     const mWidth = window.innerWidth;
     this.setWidth(mWidth);
   }
@@ -63,9 +64,9 @@ export class SubCatListing2Component implements OnInit {
     this.router.navigate(['item-details2', id]);
   }
 
-  popUp(message: string,action: string) {
-    this.snackBar.open(message,action,{
-      duration:2500,
+  popUp(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2500,
     });
   }
 
@@ -78,14 +79,37 @@ export class SubCatListing2Component implements OnInit {
       console.error('error while deletng', err);
       alert('error in deleting');
     });
-  }
-  else{
-    this.popUp('Not Admin : ','No Access to Delete');
+  } else {
+    this.popUp('Not Admin : ', 'No Access to Delete');
   }
 });
   }
 
+  onEdit(itm) {
+    console.log('item is', itm);
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canEdit(val)) {
+        const dialogRef = this.dialog.open(AddNewComponent, {
+          width: '450px',
+          data: {
+            'item': itm
+          },
+          disableClose: false
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed =>', result);
+        });
+      } else {
+        console.log('No Access to Edit');
+        this.popUp('Not Admin : ', 'No Access to Edit');
+      }
+    });
+  }
+
 }
+
+
 
 
 
