@@ -193,7 +193,7 @@ export class SummaryReportComponent implements OnInit {
 
       const tempDate = new Date(element.date);
 
-      if (element.logType !== this.logTypeOptions[1]) {
+      if (element.logType === this.logTypeOptions[1]) {
         if (myhash.has(element.date)) {
           const previousCost = myhash.get(element.date);
           myhash.set(element.date, previousCost + element.cost);
@@ -431,7 +431,7 @@ export class SummaryReportComponent implements OnInit {
       yArray.push(element.cost);
     });
 
-    this.fitModel(xs, ys);
+    this.fitModel(xArray, yArray);
     // this.fitModel(tf.tensor1d(xTrain), tf.tensor1d(yTrain), tf.tensor1d(xTest), tf.tensor1d(yTest));
   }
 
@@ -479,16 +479,16 @@ export class SummaryReportComponent implements OnInit {
 
     linearModel.compile({
       loss: 'meanSquaredError',
-      optimizer: 'sgd',
+      optimizer: 'adam',
       metrics: ['accuracy']
     });
 
     await linearModel.fit(xTrainTensor, yTrainTensor, {
-      epochs: 1000,
+      epochs: 4000,
       validationData: [xTestTensor, yTestTensor],
       callbacks: {
         onEpochEnd: async (epoch, logs) => {
-          console.log('loss ', logs.loss, ' val ', logs.val_loss);
+          console.log('epoch ', epoch, 'loss ', logs.loss, ' val ', logs.val_loss);
           console.log('acc ', logs.acc, ' acc val ', logs.val_acc);
         },
       }
