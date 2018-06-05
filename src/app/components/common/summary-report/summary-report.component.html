@@ -1,4 +1,7 @@
 <div>
+  <div style="padding: 1.5%">
+    <h2 style="z-index: 1">Reports - Summary Level</h2>
+  </div>
   <mat-form-field style="margin:1.5%">
     <input matInput [matDatepicker]="picker1" placeholder="Choose a starting date" (dateInput)="addEventStart('input', $event)">
     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
@@ -13,12 +16,23 @@
 </div>
 
 <div style="display: flex">
-  <mat-card id="donutchart" style="flex :1;width:50%;height:600px;padding:2%;margin-left:2%;margin-right:1%;margin-top:2%;"></mat-card>
-  <mat-card id="barchart_values" style="flex: 1;width:50%;height:600px;padding:2%;margin-left:1%;margin-right:2%;margin-top:2%;"></mat-card>
+  <mat-card style="flex :1;padding:2%;margin-left:2%;margin-right:1%;margin-top:2%;">
+    <h4 class="ui header">Cost Donut</h4>
+    <p>All categories</p>
+    <div id="donutchart" style="height:600px;"></div>
+  </mat-card>
+  <mat-card style="flex: 1;padding:2%;margin-left:1%;margin-right:2%;margin-top:2%;">
+    <h4 class="ui header">Top 10 Items</h4>
+    <p class="description">Cost comparison</p>
+    <div id="barchart_values" style="height:600px;"></div>
+  </mat-card>
 </div>
 
 <div style="width:100%;">
   <mat-card style="padding:2%;margin:2%;">
+    <h4 class="ui header">Cost comaparison</h4>
+    <p>Issued cost v/s Predicted Cost</p>
+    <button mat-raised-button (click)="showPredictions()" style="margin:1.5%" color="primary">Show predictions</button>
     <div id="predChart">
     </div>
   </mat-card>
@@ -26,7 +40,8 @@
 
 <div style="width:100%;">
   <mat-card style="padding:2%;margin:2%;">
-    <button mat-raised-button (click)="showPredictions()" style="margin:1.5%" color="primary">Show predictions</button>
+      <h4 class="ui header">Cost comaparison</h4>
+      <p>Only issued</p>
     <div id="costChart">
     </div>
   </mat-card>
