@@ -17,9 +17,26 @@
               <div class="ui blue label">
                 {{item.itemQuantity}} {{item.unit}}
               </div>
-              <button class="circular ui icon button" (click)="onDelete(item.itemId)">
-                <i class="trash icon"></i>
+              <button mat-icon-button (click)="onEdit(item)" style="color:black">
+                <mat-icon aria-label="Example icon-button with a heart icon">
+                  <i class="material-icons">edit</i>
+                </mat-icon>
               </button>
+              <!-- <button class="circular ui icon button" (click)="onEdit(item)">
+                <i class="material-icons">
+                  edit
+                  </i>
+              </button> -->
+              <button mat-icon-button (click)="onDelete(item.itemId)" style="float:right;color:black">
+                <mat-icon aria-label="Example icon-button with a heart icon">
+                  <i class="material-icons">delete</i>
+                </mat-icon>
+              </button>
+              <!-- <button class="circular ui icon button" (click)="">
+                <i class="material-icons">
+                  delete
+                  </i>
+              </button> -->
             </span>
           </div>
         </div>
