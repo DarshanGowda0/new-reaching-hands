@@ -34,11 +34,11 @@ export class AddLogComponent implements OnInit {
   onAdd() {
     const tempItemLog: ItemLog = {
       'logId': this.itemLog.logId ? this.itemLog.logId : this.dataService.generateId(),
-      'date': this.dataService.getTimeStamp(),
+      'date': this.itemLog.date ? this.itemLog.date : this.dataService.getTimeStamp(),
       'quantity': Number(this.itemLog.quantity),
       'selectedCommons': this.itemLog.selectedCommons,
       'cost': Number(this.itemLog.cost),
-      'remarks': this.itemLog.remarks,
+      'remarks': this.itemLog.remarks ? this.itemLog.remarks : '',
       'logType': this.itemLog.logType,
       'category': this.item.category,
       'subCategory': this.item.subCategory,
