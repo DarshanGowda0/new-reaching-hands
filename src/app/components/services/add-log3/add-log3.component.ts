@@ -37,7 +37,7 @@ export class AddLog3Component implements OnInit {
       'date': this.dataService.getTimeStamp(),
       'cost': Number(this.itemLog3.cost),
       'selectedCommons': this.itemLog3.selectedCommons,
-      'remarks': this.itemLog3.remarks,
+      'remarks': this.itemLog3.remarks ? this.itemLog3.remarks : '',
       'logType': this.itemLog3.logType,
       'category': this.item.category,
       'subCategory': this.item.subCategory,
