@@ -21,12 +21,13 @@ export class SubCategoryLevelReportComponent implements OnInit {
   @Input() itemId: string;
   @Input() google: any;
   nameHash = new Map();
+  selectedSubCat = '';
   temp = '';
   totalCost = 0;
   categoryList = ['Inventory', 'Services', 'Maintenance', 'Education', 'Projects', 'HomeSchoolInventory'];
   subCategoryList: string[] = ['Assets', 'Groceries', 'Stationary', 'Toiletries',
     'Perishablegoods', 'Miscellaneous1', 'Miscellaneous2', 'Miscellaneous3', 'Miscellaneous4',
-     'Genericmeds', 'Utilities', 'Studentpersonalcare', 'Medicalcare',
+    'Genericmeds', 'Utilities', 'Studentpersonalcare', 'Medicalcare',
     'Transportation', 'Vehicle', 'Campus', 'Monthlybills', 'School', 'Homeschool', 'Extracurricular', 'Tutorials',
     'Construction', 'Installation', 'Painting', 'General', 'Assets-HS', 'Groceries-HS', 'Toiletries-HS',
     'Stationary-HS', 'Perishablegoods-HS', 'Miscellaneous-HS', 'Genericmeds-HS', 'Utilities-HS'];
@@ -60,13 +61,13 @@ export class SubCategoryLevelReportComponent implements OnInit {
 
 
   chosen(subCat: string) {
-
+    this.selectedSubCat = subCat;
     this.dataService.getSummarysubCat(subCat).subscribe(logs => {
       this.dataService.getAllItems().subscribe(items => {
         this.getAllNames(items);
-          this.computeDataForPieChart(logs, items);
-          this.computeDataForTopTenItems(logs);
-          this.comupteDataForLineChart(logs);
+        this.computeDataForPieChart(logs, items);
+        this.computeDataForTopTenItems(logs);
+        this.comupteDataForLineChart(logs);
       });
     });
   }
@@ -88,14 +89,14 @@ export class SubCategoryLevelReportComponent implements OnInit {
 
     val.forEach(element => {
       if (element.logType !== 'Issued') {
-      if (myhash.has(element.itemId)) {
-        cost = myhash.get(element.itemId) + element.cost;
-        myhash.set(element.itemId, cost);
-      } else {
-        myhash.set(element.itemId, element.cost);
-      }
+        if (myhash.has(element.itemId)) {
+          cost = myhash.get(element.itemId) + element.cost;
+          myhash.set(element.itemId, cost);
+        } else {
+          myhash.set(element.itemId, element.cost);
+        }
 
-    }
+      }
     });
     console.log('itemhashval', myhash);
 
@@ -298,10 +299,6 @@ export class SubCategoryLevelReportComponent implements OnInit {
     const options = {
       title: 'Top 10 items',
       legend: { position: 'top' },
-      chart: {
-        title: 'Top 10 items',
-        subtitle: 'Cost comparison'
-      },
       bars: 'horizontal', // Required for Material Bar Charts.
       axes: {
         x: {

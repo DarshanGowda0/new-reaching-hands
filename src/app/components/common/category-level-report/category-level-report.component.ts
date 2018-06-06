@@ -24,6 +24,7 @@ export class CategoryLevelReportComponent implements OnInit {
   @Input() google: any;
   nameHash = new Map();
   temp: string = null;
+  selectedCategory = '';
   // tslint:disable-next-line:no-inferrable-types
   totalCost: number = 0;
   categoryList = ['HomeSchoolInventory', 'Inventory', 'Services', 'Maintenance', 'Education', 'Projects'];
@@ -70,8 +71,9 @@ export class CategoryLevelReportComponent implements OnInit {
 
 
   chosen(cat: string) {
+    this.selectedCategory = cat;
     const subCategoryList: string[] = null;
-   // this.subCategoryList = null;
+    // this.subCategoryList = null;
     if (cat === 'HomeSchoolInventory') {
       // tslint:disable-next-line:max-line-length
       this.subCategoryList = ['Assets-HS', 'Groceries-HS', 'Stationary-HS', 'Toiletries-HS', 'Perishablegoods-HS', 'Miscellaneous-HS', 'Genericmeds-HS', 'Utilities-HS'];
@@ -295,10 +297,6 @@ export class CategoryLevelReportComponent implements OnInit {
     const options = {
       title: 'Top 10 items',
       legend: { position: 'top' },
-      chart: {
-        title: 'Top 10 items',
-        subtitle: 'Cost comparison'
-      },
       bars: 'horizontal', // Required for Material Bar Charts.
       axes: {
         x: {
