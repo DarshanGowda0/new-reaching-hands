@@ -43,7 +43,12 @@ export class SubCategoryLevelReportComponent implements OnInit {
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
     this.chosen('Assets');
-    this.dataService.getSummary()
+  }
+
+
+  chosen(subCat: string) {
+    this.selectedSubCat = subCat;
+    this.dataService.getSummarysubCat(subCat)
       .pipe(
         map(logs => {
           logs.forEach(item => {
@@ -53,23 +58,13 @@ export class SubCategoryLevelReportComponent implements OnInit {
         })
       )
       .subscribe(logs => {
-        this.dataSource = new MatTableDataSource(logs);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.dataService.getAllItems().subscribe(items => {
+          this.getAllNames(items);
+          this.computeDataForPieChart(logs, items);
+          this.computeDataForTopTenItems(logs);
+          this.comupteDataForLineChart(logs);
+        });
       });
-  }
-
-
-  chosen(subCat: string) {
-    this.selectedSubCat = subCat;
-    this.dataService.getSummarysubCat(subCat).subscribe(logs => {
-      this.dataService.getAllItems().subscribe(items => {
-        this.getAllNames(items);
-        this.computeDataForPieChart(logs, items);
-        this.computeDataForTopTenItems(logs);
-        this.comupteDataForLineChart(logs);
-      });
-    });
   }
   getAllNames(items) {
     items.forEach(element => {
@@ -98,13 +93,10 @@ export class SubCategoryLevelReportComponent implements OnInit {
 
       }
     });
-    console.log('itemhashval', myhash);
 
     items.forEach(element => {
       itemhash.set(element.itemId, element.itemName);
     });
-
-    console.log('itemhash', itemhash);
 
     const dataArray = new Array();
     myhash.forEach((value, key) => {
@@ -114,13 +106,11 @@ export class SubCategoryLevelReportComponent implements OnInit {
       });
     });
 
-    console.log('newboww', dataArray);
-
     for (let i = 0; i < dataArray.length; i++) {
       const id = dataArray[i].id;
       costData.push([itemhash.get(id), dataArray[i].cost]);
     }
-    this.drawChart(costData);
+    this.drawPieChart(costData);
 
   }
 
@@ -181,24 +171,16 @@ export class SubCategoryLevelReportComponent implements OnInit {
       return b.costObject.total - a.costObject.total;
     });
 
-    // console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
     if (dataArray.length > 10) {
       for (let i = 0; i < 10; i++) {
         arrayTen[i] = dataArray[i];
       }
-      this.drawChart1(arrayTen);
+      this.drawBarChart(arrayTen);
     } else {
-      this.drawChart1(dataArray);
+      this.drawBarChart(dataArray);
     }
-    console.log('array', arrayTen[1]);
-
-    // for (let i = 0; i < this.categoryList.length; i++) {
-    //   this.costData.push([this.categoryList[i], this.costComp[i]]);
-    // }
-
-
   }
 
 
@@ -265,7 +247,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
 
 
 
-  drawChart(costData) {
+  drawPieChart(costData) {
     const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'subCategory');
     data.addColumn('number', 'cost');
@@ -284,9 +266,7 @@ export class SubCategoryLevelReportComponent implements OnInit {
 
 
 
-  drawChart1(dataArray) {
-
-    console.log('name ', dataArray);
+  drawBarChart(dataArray) {
 
     const myData = [];
     myData.push(['Item', 'Total', 'Purchased', 'Donated']);
