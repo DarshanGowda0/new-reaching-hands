@@ -109,24 +109,19 @@ export class CategoryLevelReportComponent implements OnInit {
       costComp[i] = 0;
     }
 
-    console.log('val1112', val);
     val.forEach(element => {
       for (let i = 0; i < this.subCategoryList.length; i++) {
-        console.log(i, ':', element.subCategory, 'then', this.subCategoryList[i]);
         if (element.subCategory === this.subCategoryList[i] && element.logType !== 'Issued') {
-          console.log(i, 'enter:', element.subCategory, 'then', this.subCategoryList[i]);
           costComp[i] += element.cost;
-          console.log('val11123', costComp[i]);
         }
       }
 
     });
 
-    console.log('val2', costComp);
     for (let i = 0; i < this.subCategoryList.length; i++) {
       costData.push([this.subCategoryList[i], costComp[i]]);
     }
-    this.drawChart(costData);
+    this.drawPieChart(costData);
   }
 
   computeDataForTopTenItems(logs) {
@@ -176,29 +171,19 @@ export class CategoryLevelReportComponent implements OnInit {
       });
     });
 
-
-
     dataArray.sort(function (a, b) {
       return b.costObject.total - a.costObject.total;
     });
-
-    // console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
     if (dataArray.length > 10) {
       for (let i = 0; i < 10; i++) {
         arrayTen[i] = dataArray[i];
       }
-      this.drawChart1(arrayTen);
+      this.drawBarChart(arrayTen);
     } else {
-      this.drawChart1(dataArray);
+      this.drawBarChart(dataArray);
     }
-    console.log('array', arrayTen[1]);
-
-    // for (let i = 0; i < this.categoryList.length; i++) {
-    //   this.costData.push([this.categoryList[i], this.costComp[i]]);
-    // }
-
 
   }
 
@@ -260,11 +245,7 @@ export class CategoryLevelReportComponent implements OnInit {
     return 0;
   }
 
-
-
-
-
-  drawChart(costData) {
+  drawPieChart(costData) {
 
     const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'subCategory');
@@ -282,9 +263,7 @@ export class CategoryLevelReportComponent implements OnInit {
   }
 
 
-  drawChart1(dataArray) {
-
-    console.log('name ', dataArray);
+  drawBarChart(dataArray) {
 
     const myData = [];
     myData.push(['Item', 'Total', 'Purchased', 'Donated']);
@@ -361,9 +340,6 @@ export class CategoryLevelReportComponent implements OnInit {
   getName(itemId) {
     return this.nameHash.get(itemId);
   }
-
-
-
 
   dateFormat(date) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
