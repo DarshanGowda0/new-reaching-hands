@@ -39,24 +39,22 @@ export class CategoryLevelReportComponent implements OnInit {
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
     this.chosen('Inventory');
-    this.dataService.getSummary()
-      .pipe(
-        map(logs => {
-          logs.forEach(item => {
-            item.date = this.dateFormat(item.date);
-          });
-          return logs;
-        })
-      )
-      .subscribe(logs => {
-        this.dataService.getAllItems().subscribe(items => {
-
-
-          this.dataSource = new MatTableDataSource(logs);
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-        });
-      });
+    // this.dataService.getSummary()
+    //   .pipe(
+    //     map(logs => {
+    //       logs.forEach(item => {
+    //         item.date = this.dateFormat(item.date);
+    //       });
+    //       return logs;
+    //     })
+    //   )
+    //   .subscribe(logs => {
+    //     this.dataService.getAllItems().subscribe(items => {
+    //       this.dataSource = new MatTableDataSource(logs);
+    //       this.dataSource.sort = this.sort;
+    //       this.dataSource.paginator = this.paginator;
+    //     });
+    //   });
 
 
 
@@ -91,14 +89,24 @@ export class CategoryLevelReportComponent implements OnInit {
     }
 
 
-    this.dataService.getSummaryCat(cat).subscribe(logs => {
-      this.dataService.getAllItemsCat(cat).subscribe(items => {
-        this.getAllNames(items);
-        this.computeDataForPieChart(logs);
-        this.computeDataForTopTenItems(logs);
-        this.comupteDataForLineChart(logs);
+    this.dataService.getSummaryCat(cat)
+      .pipe(
+        map(logs => {
+          logs.forEach(item => {
+            item.date = this.dateFormat(item.date);
+          });
+          return logs;
+        })
+      )
+      .subscribe(logs => {
+        console.log(logs);
+        this.dataService.getAllItemsCat(cat).subscribe(items => {
+          this.getAllNames(items);
+          this.computeDataForPieChart(logs);
+          this.computeDataForTopTenItems(logs);
+          this.comupteDataForLineChart(logs);
+        });
       });
-    });
   }
 
   computeDataForPieChart(val) {
@@ -193,7 +201,6 @@ export class CategoryLevelReportComponent implements OnInit {
     const totalCost = 0;
     const myhash = new Map();
     const dateToData = new Map();
-
     val.forEach(element => {
       if (element.logType !== this.logTypeOptions[1]) {
         if (myhash.has(element.date)) {
@@ -232,6 +239,7 @@ export class CategoryLevelReportComponent implements OnInit {
       costData.push(row);
 
     });
+
     this.drawLineChart(costData, dateToData);
   }
 
@@ -259,9 +267,7 @@ export class CategoryLevelReportComponent implements OnInit {
 
     const chart = new this.google.visualization.PieChart(document.getElementById('donutchart'));
     chart.draw(data, options);
-
   }
-
 
   drawBarChart(dataArray) {
 
@@ -322,10 +328,10 @@ export class CategoryLevelReportComponent implements OnInit {
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
     chart_lines.draw(data, options_lines);
     this.google.visualization.events.addListener(chart_lines, 'select', () => {
-      const selectedItem = chart_lines.getSelection()[0]['row'];
+      const selectedItem = chart_lines.getSelection()[0];
       if (selectedItem) {
-        const sDate = costData[selectedItem][0];
-        const tableData = dateToData.get(sDate);
+        const sDate = costData[selectedItem.row][0];
+        const tableData = dateToData.get(this.dateFormat(sDate));
         this.dataSource = new MatTableDataSource(tableData);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;

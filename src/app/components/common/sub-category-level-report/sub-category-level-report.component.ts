@@ -43,7 +43,12 @@ export class SubCategoryLevelReportComponent implements OnInit {
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
     this.chosen('Assets');
-    this.dataService.getSummary()
+  }
+
+
+  chosen(subCat: string) {
+    this.selectedSubCat = subCat;
+    this.dataService.getSummarysubCat(subCat)
       .pipe(
         map(logs => {
           logs.forEach(item => {
@@ -53,23 +58,13 @@ export class SubCategoryLevelReportComponent implements OnInit {
         })
       )
       .subscribe(logs => {
-        this.dataSource = new MatTableDataSource(logs);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.dataService.getAllItems().subscribe(items => {
+          this.getAllNames(items);
+          this.computeDataForPieChart(logs, items);
+          this.computeDataForTopTenItems(logs);
+          this.comupteDataForLineChart(logs);
+        });
       });
-  }
-
-
-  chosen(subCat: string) {
-    this.selectedSubCat = subCat;
-    this.dataService.getSummarysubCat(subCat).subscribe(logs => {
-      this.dataService.getAllItems().subscribe(items => {
-        this.getAllNames(items);
-        this.computeDataForPieChart(logs, items);
-        this.computeDataForTopTenItems(logs);
-        this.comupteDataForLineChart(logs);
-      });
-    });
   }
   getAllNames(items) {
     items.forEach(element => {
