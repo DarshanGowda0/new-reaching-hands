@@ -351,6 +351,8 @@ export class SummaryReportComponent implements OnInit {
       }
 
     });
+
+    // prediction chart
     if (this.predictionMap !== undefined) {
       console.log('pred graph called');
       const originalData = new this.google.visualization.DataTable();
