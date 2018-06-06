@@ -39,24 +39,22 @@ export class CategoryLevelReportComponent implements OnInit {
   ngOnInit() {
     this.google = this.route.snapshot.data.google;
     this.chosen('Inventory');
-    this.dataService.getSummary()
-      .pipe(
-        map(logs => {
-          logs.forEach(item => {
-            item.date = this.dateFormat(item.date);
-          });
-          return logs;
-        })
-      )
-      .subscribe(logs => {
-        this.dataService.getAllItems().subscribe(items => {
-
-
-          this.dataSource = new MatTableDataSource(logs);
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-        });
-      });
+    // this.dataService.getSummary()
+    //   .pipe(
+    //     map(logs => {
+    //       logs.forEach(item => {
+    //         item.date = this.dateFormat(item.date);
+    //       });
+    //       return logs;
+    //     })
+    //   )
+    //   .subscribe(logs => {
+    //     this.dataService.getAllItems().subscribe(items => {
+    //       this.dataSource = new MatTableDataSource(logs);
+    //       this.dataSource.sort = this.sort;
+    //       this.dataSource.paginator = this.paginator;
+    //     });
+    //   });
 
 
 
@@ -91,14 +89,24 @@ export class CategoryLevelReportComponent implements OnInit {
     }
 
 
-    this.dataService.getSummaryCat(cat).subscribe(logs => {
-      this.dataService.getAllItemsCat(cat).subscribe(items => {
-        this.getAllNames(items);
-        this.computeDataForPieChart(logs);
-        this.computeDataForTopTenItems(logs);
-        this.comupteDataForLineChart(logs);
+    this.dataService.getSummaryCat(cat)
+      .pipe(
+        map(logs => {
+          logs.forEach(item => {
+            item.date = this.dateFormat(item.date);
+          });
+          return logs;
+        })
+      )
+      .subscribe(logs => {
+        console.log(logs);
+        this.dataService.getAllItemsCat(cat).subscribe(items => {
+          this.getAllNames(items);
+          this.computeDataForPieChart(logs);
+          this.computeDataForTopTenItems(logs);
+          this.comupteDataForLineChart(logs);
+        });
       });
-    });
   }
 
   computeDataForPieChart(val) {
@@ -109,24 +117,19 @@ export class CategoryLevelReportComponent implements OnInit {
       costComp[i] = 0;
     }
 
-    console.log('val1112', val);
     val.forEach(element => {
       for (let i = 0; i < this.subCategoryList.length; i++) {
-        console.log(i, ':', element.subCategory, 'then', this.subCategoryList[i]);
         if (element.subCategory === this.subCategoryList[i] && element.logType !== 'Issued') {
-          console.log(i, 'enter:', element.subCategory, 'then', this.subCategoryList[i]);
           costComp[i] += element.cost;
-          console.log('val11123', costComp[i]);
         }
       }
 
     });
 
-    console.log('val2', costComp);
     for (let i = 0; i < this.subCategoryList.length; i++) {
       costData.push([this.subCategoryList[i], costComp[i]]);
     }
-    this.drawChart(costData);
+    this.drawPieChart(costData);
   }
 
   computeDataForTopTenItems(logs) {
@@ -176,29 +179,19 @@ export class CategoryLevelReportComponent implements OnInit {
       });
     });
 
-
-
     dataArray.sort(function (a, b) {
       return b.costObject.total - a.costObject.total;
     });
-
-    // console.log('array',dataArray[1]);
 
     const arrayTen = new Array();
     if (dataArray.length > 10) {
       for (let i = 0; i < 10; i++) {
         arrayTen[i] = dataArray[i];
       }
-      this.drawChart1(arrayTen);
+      this.drawBarChart(arrayTen);
     } else {
-      this.drawChart1(dataArray);
+      this.drawBarChart(dataArray);
     }
-    console.log('array', arrayTen[1]);
-
-    // for (let i = 0; i < this.categoryList.length; i++) {
-    //   this.costData.push([this.categoryList[i], this.costComp[i]]);
-    // }
-
 
   }
 
@@ -208,7 +201,6 @@ export class CategoryLevelReportComponent implements OnInit {
     const totalCost = 0;
     const myhash = new Map();
     const dateToData = new Map();
-
     val.forEach(element => {
       if (element.logType !== this.logTypeOptions[1]) {
         if (myhash.has(element.date)) {
@@ -247,6 +239,7 @@ export class CategoryLevelReportComponent implements OnInit {
       costData.push(row);
 
     });
+
     this.drawLineChart(costData, dateToData);
   }
 
@@ -260,11 +253,7 @@ export class CategoryLevelReportComponent implements OnInit {
     return 0;
   }
 
-
-
-
-
-  drawChart(costData) {
+  drawPieChart(costData) {
 
     const data = new this.google.visualization.DataTable();
     data.addColumn('string', 'subCategory');
@@ -278,13 +267,9 @@ export class CategoryLevelReportComponent implements OnInit {
 
     const chart = new this.google.visualization.PieChart(document.getElementById('donutchart'));
     chart.draw(data, options);
-
   }
 
-
-  drawChart1(dataArray) {
-
-    console.log('name ', dataArray);
+  drawBarChart(dataArray) {
 
     const myData = [];
     myData.push(['Item', 'Total', 'Purchased', 'Donated']);
@@ -343,10 +328,10 @@ export class CategoryLevelReportComponent implements OnInit {
     const chart_lines = new this.google.visualization.LineChart(document.getElementById('costChart'));
     chart_lines.draw(data, options_lines);
     this.google.visualization.events.addListener(chart_lines, 'select', () => {
-      const selectedItem = chart_lines.getSelection()[0]['row'];
+      const selectedItem = chart_lines.getSelection()[0];
       if (selectedItem) {
-        const sDate = costData[selectedItem][0];
-        const tableData = dateToData.get(sDate);
+        const sDate = costData[selectedItem.row][0];
+        const tableData = dateToData.get(this.dateFormat(sDate));
         this.dataSource = new MatTableDataSource(tableData);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -361,9 +346,6 @@ export class CategoryLevelReportComponent implements OnInit {
   getName(itemId) {
     return this.nameHash.get(itemId);
   }
-
-
-
 
   dateFormat(date) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
