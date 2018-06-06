@@ -72,9 +72,16 @@ export class ItemReportComponent implements OnInit {
     let currentQuantity = 0, currentCost = 0;
     this.quantityData = [];
     this.costData = [];
+
+    const issuedArray = [[], []];
+    const donatedArray = [[], []];
+    const purchasedArray = [[], []];
+    const currentArray = [[], []];
+
     this.initializeReportDetails();
     val.forEach(ele => {
       let row = [], costRow = [];
+      // added
       if (ele.logType === this.logTypeOptions[0]) {
 
         currentQuantity += ele.quantity;
@@ -83,10 +90,17 @@ export class ItemReportComponent implements OnInit {
         currentCost += ele.cost;
         costRow = [this.dateFormat(ele.date), ele.cost, 0, 0, currentCost];
 
+        purchasedArray[0].push([ele.date, ele.quantity]);
+        purchasedArray[1].push([ele.date, ele.cost]);
+        currentArray[0].push([ele.date, ele.currentQuantity]);
+        currentArray[1].push([ele.date, ele.currentCost]);
+
         this.reportDetails.addedCost += ele.cost;
         this.reportDetails.addedQuantity += ele.quantity;
 
-      } else if (ele.logType === this.logTypeOptions[1]) {
+      }
+      // issued
+      else if (ele.logType === this.logTypeOptions[1]) {
 
         currentQuantity -= ele.quantity;
         row = [this.dateFormat(ele.date), 0, ele.quantity, 0, currentQuantity];
@@ -94,15 +108,27 @@ export class ItemReportComponent implements OnInit {
         currentCost -= ele.cost;
         costRow = [this.dateFormat(ele.date), 0, ele.cost, 0, currentCost];
 
+        issuedArray[0].push([ele.date, ele.quantity]);
+        issuedArray[1].push([ele.date, ele.cost]);
+        currentArray[0].push([ele.date, ele.currentQuantity]);
+        currentArray[1].push([ele.date, ele.currentCost]);
+
         this.reportDetails.issuedCost += ele.cost;
         this.reportDetails.issuedQuantity += ele.quantity;
-      } else {
+      }
+      // donated
+      else {
 
         currentQuantity += ele.quantity;
         row = [this.dateFormat(ele.date), 0, 0, ele.quantity, currentQuantity];
 
         currentCost += ele.cost;
         costRow = [this.dateFormat(ele.date), 0, 0, ele.cost, currentCost];
+
+        donatedArray[0].push([ele.date, ele.quantity]);
+        donatedArray[1].push([ele.date, ele.cost]);
+        currentArray[0].push([ele.date, ele.currentQuantity]);
+        currentArray[1].push([ele.date, ele.currentCost]);
 
         this.reportDetails.donatedCost += ele.cost;
         this.reportDetails.donatedQuantity += ele.quantity;
