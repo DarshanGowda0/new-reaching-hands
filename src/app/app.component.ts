@@ -85,61 +85,6 @@ export class AppComponent implements OnDestroy, OnInit {
     console.log('signed out');
   }
 
-  // comupteDataForLineChart(val) {
-  //   const costData = [];
-  //   const dataHash = new Map();
-  //   const dateToData = new Map();
-
-  //   val.forEach(element => {
-
-  //     const tempDate = new Date(element.date);
-
-  //     if (element.logType !== this.logTypeOptions[1]) {
-  //       if (dataHash.has(element.date)) {
-  //         const previousCost = dataHash.get(element.date);
-  //         dataHash.set(element.date, previousCost + element.cost);
-
-  //         const tempArray = dateToData.get(element.date);
-  //         tempArray.push(element);
-  //         dateToData.set(element.date, tempArray);
-  //       } else {
-  //         dataHash.set(element.date, element.cost);
-
-  //         const elementDataArray = new Array();
-  //         elementDataArray.push(element);
-  //         dateToData.set(element.date, elementDataArray);
-  //       }
-  //     }
-  //   });
-
-  //   const dataArray = new Array();
-  //   dataHash.forEach((value, key) => {
-  //     dataArray.push({
-  //       'date': key,
-  //       'cost': value
-  //     });
-  //   });
-
-  //   dataArray.sort((a, b) => {
-  //     const aDate = new Date(b.date);
-  //     const bDate = new Date(a.date);
-  //     return (bDate > aDate ? 1 : -1);
-  //   });
-
-  //   dataArray.forEach(element => {
-  //     const row = [];
-
-  //     row.push(new Date(element.date));
-  //     row.push(element.cost);
-  //     row.push(element.cost - 300);
-  //     row.push(element.cost + 300);
-  //     costData.push(row);
-
-  //   });
-  //   this.train(dataArray, costData, dateToData);
-
-  // }
-
   processData(logs) {
     const costData = [];
     let dataHash = new Map();
