@@ -4,7 +4,8 @@ import { Item } from '../../../models/item';
 import { DataService } from '../../../core/data-service.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { AddNewComponent } from '../../common/add-new/add-new.component';
 
 @Component({
   selector: 'app-sub-cat-listing1',
@@ -17,7 +18,7 @@ export class SubCatListing1Component implements OnInit {
   nColumns: number;
   items: Observable<Item[]>;
 
-  constructor(public snackBar: MatSnackBar, private auth: AuthService, private dataService: DataService, private router: Router) {
+  constructor(public snackBar: MatSnackBar, private dialog: MatDialog, private auth: AuthService, private dataService: DataService, private router: Router) {
     const mWidth = window.innerWidth;
     this.setWidth(mWidth);
   }
@@ -84,5 +85,29 @@ export class SubCatListing1Component implements OnInit {
   }
 });
   }
+
+  onEdit(itm) {
+    console.log('item is',itm);
+    this.auth.user.take(1).subscribe(val => {
+      if (this.auth.canEdit(val)) {
+        const dialogRef = this.dialog.open(AddNewComponent, {
+          width: '450px',
+          data: {
+           
+            'item': itm
+          },
+          disableClose: false
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log('The dialog was closed =>', result);
+        });
+      } else {
+        console.log('No Access to Edit');
+        this.popUp('Not Admin : ', 'No Access to Edit');
+      }
+    });
+  }
+
 
 }
