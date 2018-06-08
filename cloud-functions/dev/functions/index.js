@@ -325,6 +325,7 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
     var temps = "Issued";
     let itemValuu = 0;
     let itemCost = 0;
+    let countVar = 0;
     var unitVal, itemIdValuu, adder;
     const db = admin.firestore();
     // if(action_type === 'quantity' ){
@@ -355,12 +356,13 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                                     console.log('value is', itemIdVal, itemVal, itemValuu, adder);
                                     //unitVal = doc.data().cost;
                                     console.log('meowwww', doc1.data().date, aMonth);
-
+                                    countVar = countVar + 1;
+                                    console.log('count var :',countVar);
                                 });
 
-                                perDay = Math.ceil(itemValuu / oneMonth);
-                                a = itemValuu % oneMonth;
-                                console.log('perday', perDay, perDay - a);
+                                perDay = Math.ceil(itemValuu / countVar);
+                              
+                                console.log('perday', perDay);
 
                                 daysLeft = Math.ceil(itemVal / perDay);
                                 console.log('daysleft', daysLeft);
@@ -568,16 +570,12 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                                     console.log('value is', itemIdVal, itemVal, itemValuu, adder);
                                     //unitVal = doc.data().cost;
                                     console.log('meowwww', doc1.data().date, aMonth);
-
+                                    countVar = countVar + 1;
+                                    console.log('count var :',countVar);
                                 });
 
-                                avgMonth = Math.ceil(itemCost / oneMonth);
-                                // a = itemValuu % oneMonth;
-                                // console.log('perday', perDay, perDay - a);
-
-                                // daysLeft = Math.ceil(itemVal / perDay);
-                                // console.log('daysleft', daysLeft);
-
+                                avgMonth = Math.ceil(itemCost / countVar);
+                             
                                 if (req.method === 'POST') {
                                     const body = req.body;
                                     console.log('body ', body);
@@ -625,10 +623,12 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                                     console.log('value is', itemIdVal, itemVal, itemValuu, adder);
                                     //unitVal = doc.data().cost;
                                     console.log('meowwww', doc1.data().date, aMonth);
-
+                                    console.log('count var :',countVar);
+                                    countVar = countVar + 1;
+                                    console.log('count var :',countVar);
                                 });
 
-                                avgYear = Math.ceil(itemCost / oneMonth);
+                                avgYear = Math.ceil(itemCost / countVar);
                                 // a = itemValuu % oneMonth;
                                 // console.log('perday', perDay, perDay - a);
 
