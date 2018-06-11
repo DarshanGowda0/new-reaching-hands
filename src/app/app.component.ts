@@ -28,7 +28,7 @@ export class AppComponent implements OnDestroy, OnInit {
   image: string;
   nameHash = new Map();
   cat: string;
-
+  banner = 'on';
   constructor(public auth: AuthService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
     private router: Router, private afs: AngularFirestore, public msg: MessagingService, private dataService: DataService) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
@@ -115,6 +115,11 @@ export class AppComponent implements OnDestroy, OnInit {
     });
 
     return newHash;
+  }
+
+  onClick(){
+    this.banner = 'off';
+
   }
 
   getLeastDate(dates) {

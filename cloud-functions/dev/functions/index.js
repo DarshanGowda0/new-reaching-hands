@@ -290,13 +290,13 @@ function sendUserAddedAlert(displayName) {
 exports.getItemDetails = functions.https.onRequest((req, res) => {
 
     console.log("request method", req.method);
-    var reqArray = req.body.result.parameters;
-    const item = reqArray['itemName'];
+    var reqArray = req.body.queryResult.parameters;
+    const item = reqArray['item_name'];
     var date = reqArray['date'];
-    var temp = reqArray['conjunction'];
+    //var temp = reqArray['conjunction'];
     var conjuct = temp[0];
-    var exprtime = reqArray['expression-time'];
-    var verbTemp = reqArray['verb'];
+    //var exprtime = reqArray['expression-time'];
+    //var verbTemp = reqArray['verb'];
     var send = verbTemp[2];
     var how = verbTemp[1];
     var avg = verbTemp[0];
@@ -319,7 +319,7 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
     console.log('req date', currentDate, 'and', aMonth, aYear);
     console.log('datee is prev', yestPrev);
     console.log('datee is', yestPost);
-    var action_type = req.body.result['action'];
+    var action_type = req.body.queryResult['action'];
     console.log('action type', action_type);
     var temp = "Added";
     var temps = "Issued";
@@ -330,9 +330,167 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
     const db = admin.firestore();
     // if(action_type === 'quantity' ){
 
-    if (date === '') {
-        if (conjuct === 'when' && exprtime === '') {//conjuct === 'when' && 
 
+    if (action_type === 'getWhenWillItemRunOut') {//conjuct === 'when' && 
+
+
+        db.collection("items").where("itemName", "==", item).get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    itemIdVal = doc.data().itemId;
+                    unitVal = doc.data().unit;
+                    itemVal = doc.data().itemQuantity;
+                    console.log('111111111111111111st', itemIdVal);
+                    db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temps).where('date', '>=', aMonth).where('date', '<=', currentDate).orderBy('date').get()
+                        .then((querySnapshot) => {
+
+                            querySnapshot.forEach((doc1) => {
+
+                                console.log('111111111111111111ssst', doc1.data());
+
+                                // doc.data() is never undefined for query doc snapshots
+                                itemValuu = itemValuu + doc1.data().quantity;
+                                console.log('total is :', itemValuu);
+                                adder = doc1.data().addedBy;
+                                console.log('docccc', doc1);
+                                console.log('value is', itemIdVal, itemVal, itemValuu, adder);
+                                //unitVal = doc.data().cost;
+                                console.log('meowwww', doc1.data().date, aMonth);
+                                countVar = countVar + 1;
+                                console.log('count var :', countVar);
+                            });
+
+                            perDay = Math.ceil(itemValuu / countVar);
+
+                            console.log('perday', perDay);
+
+                            daysLeft = Math.ceil(itemVal / perDay);
+                            console.log('daysleft', daysLeft);
+
+                            if (req.method === 'POST') {
+                                const body = req.body;
+                                console.log('body ', body);
+                                var reply = " You will run out of " + item + " in " + daysLeft + " days ";
+                                res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                                res.send(JSON.stringify({
+                                    "speech": reply, "displayText": reply
+                                    //"speech" is the spoken version of the response, "displayText" is the visual version
+                                }));
+                            } else {
+                                res.status(500).send('Not a valid request!');
+
+                            }
+                        })
+                        .catch((error) => {
+                            console.log("Error getting documents: ", error);
+                        });
+                });
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
+
+
+    } else if (action_type === 'getWhenWasItemLastBought') {//conjuct === 'when' && 
+
+        db.collection("items").where("itemName", "==", item).get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    itemIdVal = doc.data().itemId;
+                    unitVal = doc.data().unit;
+                    console.log('111111111111111111st', itemIdVal);
+                    db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).orderBy('date', 'desc').get()
+                        .then((querySnapshot) => {
+                            querySnapshot.forEach((doc1) => {
+                                console.log('111111111111111111st', itemIdVal);
+                                // doc.data() is never undefined for query doc snapshots
+                                lastDay = new Date(doc1.data().date);
+                                itemValuu = doc1.data().quantity;
+                                adder = doc1.data().addedBy;
+                                console.log('docccc', doc1);
+                                console.log('value is', itemIdVal, itemValuu, adder);
+                                //unitVal = doc.data().cost;
+                                if (req.method === 'POST') {
+                                    const body = req.body;
+                                    console.log('body ', body);
+                                    var reply = item + " was last bought on " + lastDay;
+                                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                                    res.send(JSON.stringify({
+                                        "speech": reply, "displayText": reply
+                                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                                    }));
+                                } else {
+                                    res.status(500).send('Not a valid request!');
+
+                                }
+
+
+                            });
+                        })
+                        .catch((error) => {
+                            console.log("Error getting documents: ", error);
+                        });
+                });
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
+
+
+
+    }
+    else if (action_type === '') {
+        if (exprtime === 'lastmonth') {
+            db.collection("items").where("itemName", "==", item).get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        itemIdVal = doc.data().itemId;
+                        unitVal = doc.data().unit;
+                        itemVal = doc.data().itemQuantity;
+                        console.log('111111111111111111st', itemIdVal);
+                        db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).where('date', '>=', aMonth).where('date', '<=', currentDate).orderBy('date').get()
+                            .then((querySnapshot) => {
+
+                                querySnapshot.forEach((doc1) => {
+
+                                    console.log('111111111111111111ssst', doc1.data());
+
+                                    // doc.data() is never undefined for query doc snapshots
+                                    itemCost = itemCost + doc1.data().cost;
+                                    console.log('total is :', itemValuu)
+                                    adder = doc1.data().addedBy;
+                                    console.log('docccc', doc1);
+                                    console.log('value is', itemIdVal, itemVal, itemCost, adder);
+                                    //unitVal = doc.data().cost;
+                                    console.log('meowwww', doc1.data().date, aYear);
+
+                                });
+
+                                if (req.method === 'POST') {
+                                    const body = req.body;
+                                    console.log('body ', body);
+                                    var reply = " Last month,you spent Rs." + itemCost + " on " + item;
+                                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                                    res.send(JSON.stringify({
+                                        "speech": reply, "displayText": reply
+                                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                                    }));
+                                } else {
+                                    res.status(500).send('Not a valid request!');
+
+                                }
+                            })
+                            .catch((error) => {
+                                console.log("Error getting documents: ", error);
+                            });
+                    });
+                })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
+
+        }
+        else if (exprtime === 'lastyear') {
 
             db.collection("items").where("itemName", "==", item).get()
                 .then((querySnapshot) => {
@@ -341,7 +499,7 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                         unitVal = doc.data().unit;
                         itemVal = doc.data().itemQuantity;
                         console.log('111111111111111111st', itemIdVal);
-                        db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temps).where('date', '>=', aMonth).where('date', '<=', currentDate).orderBy('date').get()
+                        db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).where('date', '>=', aYear).where('date', '<=', currentDate).orderBy('date').get()
                             .then((querySnapshot) => {
 
                                 querySnapshot.forEach((doc1) => {
@@ -349,28 +507,20 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                                     console.log('111111111111111111ssst', doc1.data());
 
                                     // doc.data() is never undefined for query doc snapshots
-                                    itemValuu = itemValuu + doc1.data().quantity;
-                                    console.log('total is :', itemValuu);
+                                    itemCost = itemCost + doc1.data().cost;
+                                    console.log('total is :', itemValuu)
                                     adder = doc1.data().addedBy;
                                     console.log('docccc', doc1);
-                                    console.log('value is', itemIdVal, itemVal, itemValuu, adder);
+                                    console.log('value is', itemIdVal, itemVal, itemCost, adder);
                                     //unitVal = doc.data().cost;
-                                    console.log('meowwww', doc1.data().date, aMonth);
-                                    countVar = countVar + 1;
-                                    console.log('count var :',countVar);
+                                    console.log('meowwww', doc1.data().date, aYear);
+
                                 });
-
-                                perDay = Math.ceil(itemValuu / countVar);
-                              
-                                console.log('perday', perDay);
-
-                                daysLeft = Math.ceil(itemVal / perDay);
-                                console.log('daysleft', daysLeft);
 
                                 if (req.method === 'POST') {
                                     const body = req.body;
                                     console.log('body ', body);
-                                    var reply = " You will run out of " + item + " in " + daysLeft + " days ";
+                                    var reply = "Last year,you spent Rs." + itemCost + " on " + item;
                                     res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
                                     res.send(JSON.stringify({
                                         "speech": reply, "displayText": reply
@@ -391,164 +541,14 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                 });
 
 
-        } else if (conjuct === 'when' && exprtime !== '') {//conjuct === 'when' && 
+        }
 
+
+
+    }
+    else if (action_type === 'ave') {
+        if (exprtime === 'lastmonth') {
             db.collection("items").where("itemName", "==", item).get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        itemIdVal = doc.data().itemId;
-                        unitVal = doc.data().unit;
-                        console.log('111111111111111111st', itemIdVal);
-                        db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).orderBy('date', 'desc').get()
-                            .then((querySnapshot) => {
-                                querySnapshot.forEach((doc1) => {
-                                    console.log('111111111111111111st', itemIdVal);
-                                    // doc.data() is never undefined for query doc snapshots
-                                    lastDay = new Date(doc1.data().date);
-                                    itemValuu = doc1.data().quantity;
-                                    adder = doc1.data().addedBy;
-                                    console.log('docccc', doc1);
-                                    console.log('value is', itemIdVal, itemValuu, adder);
-                                    //unitVal = doc.data().cost;
-                                    if (req.method === 'POST') {
-                                        const body = req.body;
-                                        console.log('body ', body);
-                                        var reply = item + " was last bought on " + lastDay;
-                                        res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-                                        res.send(JSON.stringify({
-                                            "speech": reply, "displayText": reply
-                                            //"speech" is the spoken version of the response, "displayText" is the visual version
-                                        }));
-                                    } else {
-                                        res.status(500).send('Not a valid request!');
-
-                                    }
-
-
-                                });
-                            })
-                            .catch((error) => {
-                                console.log("Error getting documents: ", error);
-                            });
-                    });
-                })
-                .catch((error) => {
-                    console.log("Error getting documents: ", error);
-                });
-
-
-
-        }
-        else if (how === 'how' && send === 'spend') {
-            if (exprtime === 'lastmonth') {
-                db.collection("items").where("itemName", "==", item).get()
-                    .then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            itemIdVal = doc.data().itemId;
-                            unitVal = doc.data().unit;
-                            itemVal = doc.data().itemQuantity;
-                            console.log('111111111111111111st', itemIdVal);
-                            db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).where('date', '>=', aMonth).where('date', '<=', currentDate).orderBy('date').get()
-                                .then((querySnapshot) => {
-
-                                    querySnapshot.forEach((doc1) => {
-
-                                        console.log('111111111111111111ssst', doc1.data());
-
-                                        // doc.data() is never undefined for query doc snapshots
-                                        itemCost = itemCost + doc1.data().cost;
-                                        console.log('total is :', itemValuu)
-                                        adder = doc1.data().addedBy;
-                                        console.log('docccc', doc1);
-                                        console.log('value is', itemIdVal, itemVal, itemCost, adder);
-                                        //unitVal = doc.data().cost;
-                                        console.log('meowwww', doc1.data().date, aYear);
-
-                                    });
-
-                                    if (req.method === 'POST') {
-                                        const body = req.body;
-                                        console.log('body ', body);
-                                        var reply = " Last month,you spent Rs." + itemCost + " on " + item;
-                                        res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-                                        res.send(JSON.stringify({
-                                            "speech": reply, "displayText": reply
-                                            //"speech" is the spoken version of the response, "displayText" is the visual version
-                                        }));
-                                    } else {
-                                        res.status(500).send('Not a valid request!');
-
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log("Error getting documents: ", error);
-                                });
-                        });
-                    })
-                    .catch((error) => {
-                        console.log("Error getting documents: ", error);
-                    });
-
-            }
-            else if (exprtime === 'lastyear') {
-
-                db.collection("items").where("itemName", "==", item).get()
-                    .then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            itemIdVal = doc.data().itemId;
-                            unitVal = doc.data().unit;
-                            itemVal = doc.data().itemQuantity;
-                            console.log('111111111111111111st', itemIdVal);
-                            db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).where('date', '>=', aYear).where('date', '<=', currentDate).orderBy('date').get()
-                                .then((querySnapshot) => {
-
-                                    querySnapshot.forEach((doc1) => {
-
-                                        console.log('111111111111111111ssst', doc1.data());
-
-                                        // doc.data() is never undefined for query doc snapshots
-                                        itemCost = itemCost + doc1.data().cost;
-                                        console.log('total is :', itemValuu)
-                                        adder = doc1.data().addedBy;
-                                        console.log('docccc', doc1);
-                                        console.log('value is', itemIdVal, itemVal, itemCost, adder);
-                                        //unitVal = doc.data().cost;
-                                        console.log('meowwww', doc1.data().date, aYear);
-
-                                    });
-
-                                    if (req.method === 'POST') {
-                                        const body = req.body;
-                                        console.log('body ', body);
-                                        var reply = "Last year,you spent Rs." + itemCost + " on " + item;
-                                        res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-                                        res.send(JSON.stringify({
-                                            "speech": reply, "displayText": reply
-                                            //"speech" is the spoken version of the response, "displayText" is the visual version
-                                        }));
-                                    } else {
-                                        res.status(500).send('Not a valid request!');
-
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.log("Error getting documents: ", error);
-                                });
-                        });
-                    })
-                    .catch((error) => {
-                        console.log("Error getting documents: ", error);
-                    });
-
-
-            }
-
-
-
-        }
-        else if (avg === 'average') {
-            if (exprtime === 'lastmonth') {
-                db.collection("items").where("itemName", "==", item).get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                         itemIdVal = doc.data().itemId;
@@ -563,19 +563,18 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                                     console.log('111111111111111111ssst', doc1.data());
 
                                     // doc.data() is never undefined for query doc snapshots
-                                    itemCost = itemCost + doc1.data().cost;                                  
-                                      console.log('total is :', itemCost);
+                                    itemCost = itemCost + doc1.data().cost;
+                                    console.log('total is :', itemCost);
                                     adder = doc1.data().addedBy;
                                     console.log('docccc', doc1);
                                     console.log('value is', itemIdVal, itemVal, itemValuu, adder);
                                     //unitVal = doc.data().cost;
                                     console.log('meowwww', doc1.data().date, aMonth);
                                     countVar = countVar + 1;
-                                    console.log('count var :',countVar);
+                                    console.log('count var :', countVar);
                                 });
-
                                 avgMonth = Math.ceil(itemCost / countVar);
-                             
+
                                 if (req.method === 'POST') {
                                     const body = req.body;
                                     console.log('body ', body);
@@ -599,9 +598,9 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                     console.log("Error getting documents: ", error);
                 });
 
-            }
-            else if (exprtime === 'lastyear') {
-                db.collection("items").where("itemName", "==", item).get()
+        }
+        else if (exprtime === 'lastyear') {
+            db.collection("items").where("itemName", "==", item).get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                         itemIdVal = doc.data().itemId;
@@ -616,16 +615,16 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
                                     console.log('111111111111111111ssst', doc1.data());
 
                                     // doc.data() is never undefined for query doc snapshots
-                                    itemCost = itemCost + doc1.data().cost;                           
-                                     console.log('total is :', itemCost);
+                                    itemCost = itemCost + doc1.data().cost;
+                                    console.log('total is :', itemCost);
                                     adder = doc1.data().addedBy;
                                     console.log('docccc', doc1);
                                     console.log('value is', itemIdVal, itemVal, itemValuu, adder);
                                     //unitVal = doc.data().cost;
                                     console.log('meowwww', doc1.data().date, aMonth);
-                                    console.log('count var :',countVar);
+                                    console.log('count var :', countVar);
                                     countVar = countVar + 1;
-                                    console.log('count var :',countVar);
+                                    console.log('count var :', countVar);
                                 });
 
                                 avgYear = Math.ceil(itemCost / countVar);
@@ -660,41 +659,40 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
 
 
 
-            }
-        }
-        else {
-
-            db.collection("items").where("itemName", "==", item).get()
-                .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
-                        // doc.data() is never undefined for query doc snapshots
-                        itemVal = doc.data().itemQuantity;
-                        unitVal = doc.data().unit;
-                        const itemIdVal = doc.data().itemId;
-                        console.log('itemIdVal is', itemIdVal);
-
-                        if (req.method === 'POST') {
-                            const body = req.body;
-                            console.log('body ', body);
-                            var reply = "Quantity of " + item + "s left :" + itemVal + unitVal;
-                            res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-                            res.send(JSON.stringify({
-                                "speech": reply, "displayText": reply
-                                //"speech" is the spoken version of the response, "displayText" is the visual version
-                            }));
-                        } else {
-                            res.status(500).send('Not a valid request!');
-
-                        }
-
-                    });
-                })
-                .catch((error) => {
-                    console.log("Error getting documents: ", error);
-                });
         }
     }
-    else if (date != '') {
+    else if (action_type == 'getItemQuantity') {
+
+        db.collection("items").where("itemName", "==", item).get()
+            .then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    // doc.data() is never undefined for query doc snapshots
+                    itemVal = doc.data().itemQuantity;
+                    unitVal = doc.data().unit;
+                    const itemIdVal = doc.data().itemId;
+                    console.log('itemIdVal is', itemIdVal);
+
+                    if (req.method === 'POST') {
+                        const body = req.body;
+                        console.log('body ', body);
+                        var reply = "Quantity of " + item + "s left :" + itemVal + unitVal;
+                        res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                        res.send(JSON.stringify({
+                            "speech": reply, "displayText": reply
+                            //"speech" is the spoken version of the response, "displayText" is the visual version
+                        }));
+                    } else {
+                        res.status(500).send('Not a valid request!');
+
+                    }
+
+                });
+            })
+            .catch((error) => {
+                console.log("Error getting documents: ", error);
+            });
+    }
+    else if (action_type === 'getUserWhoBought') {
 
         //return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId)
         //  .where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();

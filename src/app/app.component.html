@@ -54,10 +54,16 @@
       </mat-list>
     </mat-sidenav>
     <mat-sidenav-content class="router-content">
-      <div class="ui floating message" style="position:fixed;top:5%; right:5%; z-index:10" *ngIf="msg.currentMessage | async as message ">
+      <div *ngIf="this.banner == 'on'">
+      <div class="ui floating message" style="position:fixed;top:5%; right:5%; z-index:10" *ngIf="msg.currentMessage | async as message">
+        <button mat-icon-button (click)="onClick()">
+          <!-- msg.currentMessage | async as message  this.banner == 'on' -->
+          <mat-icon color="warn">edit</mat-icon>
+        </button>
         <h3>{{message.notification.title}}</h3>
         <p>{{message.notification.body}}</p>
       </div>
+    </div>
       <router-outlet>
       </router-outlet>
     </mat-sidenav-content>
