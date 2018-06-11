@@ -130,23 +130,33 @@ export class AddNewComponent implements OnInit {
     if (item.itemName === undefined || this.selectedCategory === undefined || this.selectedUnit === undefined) {
       alert('fill all details');
     } else {
-      const a = this.dataService.getLogExists(item).subscribe(doc => {
-        console.log(doc);
-        if (doc.length > 0) {
-          console.error('item already exists');
-          alert('item already exists');
-          a.unsubscribe();
-        } else {
-          this.dataService.addItem(item).then(() => {
-            console.log('added item succesfully');
-            alert(item.itemName + ' added successfully');
-            this.router.navigate(['']);
-          }).catch(err => {
-            console.error('error adding item', err);
-          });
-          a.unsubscribe();
-        }
-      });
+      if ( this.itemId === '') {
+        const a = this.dataService.getLogExists(item).subscribe(doc => {
+          console.log(doc);
+          if (doc.length > 0) {
+            console.error('item already exists');
+            alert('item already exists');
+            a.unsubscribe();
+          } else {
+            this.dataService.addItem(item).then(() => {
+              console.log('added item succesfully');
+              alert(item.itemName + ' added successfully');
+              this.router.navigate(['']);
+            }).catch(err => {
+              console.error('error adding item', err);
+            });
+            a.unsubscribe();
+          }
+        });
+      } else {
+        this.dataService.addItem(item).then(() => {
+          console.log('edited item succesfully');
+          alert(item.itemName + ' edited successfully');
+          this.router.navigate(['']);
+        }).catch(err => {
+          console.error('error adding item', err);
+        });
+      }
     }
     this.dialogRef.close();
   }
