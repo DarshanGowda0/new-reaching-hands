@@ -751,7 +751,90 @@ exports.getItemDetails = functions.https.onRequest((req, res) => {
     }
     console.log('yesss');
 
-
-
-
 });
+
+
+
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+
+
+
+    let action = request.body.queryResult.action;
+    const parameters = request.body.queryResult.parameters;
+
+    const inputContexts = request.body.queryResult.contexts;
+
+    console.log(action);
+    console.log(parameters);
+
+    let res = '';
+    switch (action) {
+        case 'getItemQuantity':
+            res = getItemQuantity(parameters);
+            break;
+        case 'getAverageSpent':
+            res = getAverageSpent(parameters);
+            break;
+        case 'getUserWhoBought':
+            res = getUserWhoBought(parameters);
+            break;
+        case 'getItemBoughtQuantity':
+            res = getItemBoughtQuantity(parameters);
+            break;
+        case 'getWhenWasItemLastBought':
+            res = getWhenWasItemLastBought(parameters);
+            break;
+        case 'getWhenWillItemRunOut':
+            res = getWhenWillItemRunOut(parameters);
+            break;
+        default:
+            res = {
+                "fulfillmentText": "This is a text response",
+                "fulfillmentMessages": [
+                    {
+                        "card": {
+                            "title": "card title",
+                            "subtitle": "card text",
+                            "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+                            "buttons": [
+                                {
+                                    "text": "button text",
+                                    "postback": "https://assistant.google.com/"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            };
+            break;
+    }
+
+    response.send(res);
+    return;
+});
+
+function getItemQuantity(parameters) {
+    console.log('inside get item quantity with params ', parameters);
+    const itemName = parameters['item_name'].trim();
+
+    let res = {};
+    res.fulfillmentText = 'This is reponse for ' + itemName;
+    res.fulfillmentMessages = [
+        {
+            "card": {
+                "title": itemName,
+                "subtitle": "quantity of " + itemName + " is 12kgs",
+                "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+                "buttons": [
+                    {
+                        "text": "Go to " + itemName,
+                        "postback": "https://localhost:4200/someItemId"
+                    }
+                ]
+            }
+        }
+    ]
+
+    return res;
+
+}
