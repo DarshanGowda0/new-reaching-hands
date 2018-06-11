@@ -141,7 +141,7 @@ export class AddNewComponent implements OnInit {
             this.dataService.addItem(item).then(() => {
               console.log('added item succesfully');
               alert(item.itemName + ' added successfully');
-              this.router.navigate(['']);
+              // this.router.navigate(['']);
             }).catch(err => {
               console.error('error adding item', err);
             });
@@ -152,7 +152,7 @@ export class AddNewComponent implements OnInit {
         this.dataService.addItem(item).then(() => {
           console.log('edited item succesfully');
           alert(item.itemName + ' edited successfully');
-          this.router.navigate(['']);
+          // this.router.navigate(['']);
         }).catch(err => {
           console.error('error adding item', err);
         });
