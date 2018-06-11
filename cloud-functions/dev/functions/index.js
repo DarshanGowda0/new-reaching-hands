@@ -286,7 +286,7 @@ function sendUserAddedAlert(displayName) {
         .catch(err => console.log(err))
 }
 
-
+const db = admin.firestore();
 exports.getItemDetails = functions.https.onRequest((req, res) => {
 
     console.log("request method", req.method);
@@ -770,22 +770,22 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let res = '';
     switch (action) {
         case 'getItemQuantity':
-            res = getItemQuantity(parameters);
+            getItemQuantity(parameters, response);
             break;
         case 'getAverageSpent':
-            res = getAverageSpent(parameters);
+            res = getAverageSpent(parameters, response);
             break;
         case 'getUserWhoBought':
-            res = getUserWhoBought(parameters);
+            res = getUserWhoBought(parameters, response);
             break;
         case 'getItemBoughtQuantity':
-            res = getItemBoughtQuantity(parameters);
+            res = getItemBoughtQuantity(parameters, response);
             break;
         case 'getWhenWasItemLastBought':
-            res = getWhenWasItemLastBought(parameters);
+            res = getWhenWasItemLastBought(parameters, response);
             break;
         case 'getWhenWillItemRunOut':
-            res = getWhenWillItemRunOut(parameters);
+            res = getWhenWillItemRunOut(parameters, response);
             break;
         default:
             res = {
@@ -809,32 +809,314 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
             break;
     }
 
-    response.send(res);
-    return;
+    // response.send(res);
+    // return;
 });
 
-function getItemQuantity(parameters) {
+function getItemQuantity(parameters, response) {
     console.log('inside get item quantity with params ', parameters);
     const itemName = parameters['item_name'].trim();
-
-    let res = {};
-    res.fulfillmentText = 'This is reponse for ' + itemName;
-    res.fulfillmentMessages = [
-        {
-            "card": {
-                "title": itemName,
-                "subtitle": "quantity of " + itemName + " is 12kgs",
-                "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
-                "buttons": [
+    console.log('item is', itemName);
+    db.collection("items").where("itemName", "==", itemName).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots 
+                console.log('doc ', doc);
+                itemVal = doc.data().itemQuantity;
+                unitVal = doc.data().unit;
+                const itemIdVal = doc.data().itemId;
+                let res = {};
+                res.fulfillmentText = 'This is reponse for ' + itemName;
+                res.fulfillmentMessages = [
                     {
-                        "text": "Go to " + itemName,
-                        "postback": "https://localhost:4200/someItemId"
+                        "card": {
+                            "title": itemName,
+                            "subtitle": "Quantity of " + itemName + "s is " + itemVal + unitVal,
+                            "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+                            "buttons": [
+                                {
+                                    "text": "Go to " + itemName,
+                                    "postback": "https://localhost:4200/someItemId"
+                                }
+                            ]
+                        }
                     }
                 ]
-            }
-        }
-    ]
+                response.send(res);
+            });
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
 
-    return res;
+}
+
+function getUserWhoBought(parameters, response) {
+    const itemName = parameters['item_name'].trim();
+    const date = parameters['date'];
+    var yestPrev = new Date(date);
+    var yestPost = new Date(date);
+    var daysPrior = 1;
+
+    yestPost.setDate(yestPost.getDate() + daysPrior);
+    console.log('inside get item quantity with params ', parameters);
+
+    console.log('item is', itemName);
+    db.collection("items").where("itemName", "==", itemName).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                itmIdVal = doc.data().itemId;
+                unitVal = doc.data().unit;
+                console.log('111111111111111111st', itmIdVal);
+                db.collection("logs").where("itemId", "==", itmIdVal).where('logType', '==', temp).where('date', '>=', yestPrev).where('date', '<=', yestPost).orderBy('date', 'desc')
+                    .get()
+                    .then((querySnapshot) => {
+                        console.log('qsp', querySnapshot);
+                        querySnapshot.forEach((doc1) => {
+                            console.log('111111111111111111st2nd', itmIdVal);
+                            // doc.data() is never undefined for query doc snapshots
+                            itmValuu = doc1.data().quantity;
+                            adder = doc1.data().addedBy;
+                            console.log('docccc', doc1);
+                            console.log('value is', itmIdVal, itmValuu, adder);
+                            // unitVal = doc.data().cost;
+                            admin.auth().getUser(adder)
+                                .then(function (userRecord) {
+                                    console.log('adddddr', adder);
+                                    dispName = userRecord.displayName;
+
+                                    let res = {};
+                                    res.fulfillmentText = 'This is reponse for ' + itemName;
+                                    res.fulfillmentMessages = [
+                                        {
+                                            "card": {
+                                                "title": itemName,
+                                                "subtitle": dispName + " bought " + itmValuu + " " + unitVal + " of " + itemName + " on " + date,
+                                                "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+                                                "buttons": [
+                                                    {
+                                                        "text": "Go to " + itemName,
+                                                        "postback": "https://localhost:4200/someItemId"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                    response.send(res);
+                                })
+                                .catch(function (error) {
+                                    console.log("Error fetching user data:", error);
+                                });
+                        });
+                    })
+                    .catch((error) => {
+                        console.log("Error getting documents: ", error);
+                    });
+
+            });
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
+
+}
+
+function getAverageSpent(parameters, response) {
+    var temp = "Added";
+    let itemCost = 0;
+    let countVar = 0;
+    console.log('inside get item quantity with params ', parameters);
+    const itemName = parameters['item_name'].trim();
+    var startDate = new Date(parameters.date - period['startDate']);
+    var stopDate = new Date(parameters.date - period['endDate']);
+    console.log('item is', itemName, startDate, endDate);
+
+    db.collection("items").where("itemName", "==", itemName).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                itemIdVal = doc.data().itemId;
+                unitVal = doc.data().unit;
+                itemVal = doc.data().itemQuantity;
+                console.log('111111111111111111st', itemIdVal);
+                db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).where('date', '>=', startDate).where('date', '<=', stopDate).orderBy('date').get()
+                    .then((querySnapshot) => {
+
+                        querySnapshot.forEach((doc1) => {
+
+                            console.log('111111111111111111ssst', doc1.data());
+
+                            // doc.data() is never undefined for query doc snapshots
+                            itemCost = itemCost + doc1.data().cost;
+                            console.log('total is :', itemCost);
+                            adder = doc1.data().addedBy;
+                            console.log('docccc', doc1);
+                            console.log('value is', itemIdVal, itemVal, itemValuu, adder);
+                            //unitVal = doc.data().cost;
+                            console.log('meowwww', doc1.data().date, aMonth);
+                            countVar = countVar + 1;
+                            console.log('count var :', countVar);
+                        });
+                        avgMonth = Math.ceil(itemCost / countVar);
+
+                        let res = {};
+                        res.fulfillmentText = 'This is reponse for ' + itemName;
+                        res.fulfillmentMessages = [
+                            {
+                                "card": {
+                                    "title": itemName,
+                                    "subtitle": "Average amount" + "is Rs" + avgMonth,
+                                    "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+                                    "buttons": [
+                                        {
+                                            "text": "Go to " + itemName,
+                                            "postback": "https://localhost:4200/someItemId"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                        response.send(res);
+                    });
+            })
+                .catch((error) => {
+                    console.log("Error getting documents: ", error);
+                });
+
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
+
+
+
+}
+
+
+function getWhenWasItemLastBought(parameters, response) {
+    var temp = "Added";
+    console.log('inside get item quantity with params ', parameters);
+    const itemName = parameters['item_name'].trim();
+    const date = parameters['date'];
+    console.log('item is', itemName);
+    db.collection("items").where("itemName", "==", itemName).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                itemIdVal = doc.data().itemId;
+                unitVal = doc.data().unit;
+                console.log('111111111111111111st', itemIdVal);
+                db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temp).orderBy('date', 'desc').get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc1) => {
+                            console.log('111111111111111111st', itemIdVal);
+                            // doc.data() is never undefined for query doc snapshots
+                            lastDay = new Date(doc1.data().date);
+                            itemValuu = doc1.data().quantity;
+                            adder = doc1.data().addedBy;
+                            console.log('docccc', doc1);
+                            console.log('value is', itemIdVal, itemValuu, adder);
+                            let res = {};
+                            res.fulfillmentText = 'This is reponse for ' + itemName;
+                            res.fulfillmentMessages = [
+                                {
+                                    "card": {
+                                        "title": itemName,
+                                        "subtitle": itemName + " was last bought on " + lastDay,
+                                        "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+                                        "buttons": [
+                                            {
+                                                "text": "Go to " + itemName,
+                                                "postback": "https://localhost:4200/someItemId"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                            response.send(res);
+
+                        });
+                    })
+                    .catch((error) => {
+                        console.log("Error getting documents: ", error);
+                    });
+            });
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
+
+
+}
+
+function getWhenWillItemRunOut(parameters, response){
+    console.log('inside get item quantity with params ', parameters);
+    const itemName = parameters['item_name'].trim();
+    console.log('item is', itemName);
+    var oneMonth = 30;
+    var temps = "Issued";
+    var daysLeft;
+    var currentDate = new Date(Date.now());
+    var aMonth = new Date(Date.now());
+    aMonth.setDate(aMonth.getDate() - oneMonth);
+    db.collection("items").where("itemName", "==", itemName).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                itemIdVal = doc.data().itemId;
+                unitVal = doc.data().unit;
+                itemVal = doc.data().itemQuantity;
+                console.log('111111111111111111st', itemIdVal);
+                db.collection("logs").where("itemId", "==", itemIdVal).where('logType', '==', temps).where('date', '>=', aMonth).where('date', '<=', currentDate).orderBy('date').get()
+                    .then((querySnapshot) => {
+
+                        querySnapshot.forEach((doc1) => {
+
+                            console.log('111111111111111111ssst', doc1.data());
+
+                            // doc.data() is never undefined for query doc snapshots
+                            itemValuu = itemValuu + doc1.data().quantity;
+                            console.log('total is :', itemValuu);
+                            adder = doc1.data().addedBy;
+                            console.log('docccc', doc1);
+                            console.log('value is', itemIdVal, itemVal, itemValuu, adder);
+                            //unitVal = doc.data().cost;
+                            console.log('meowwww', doc1.data().date, aMonth);
+                            countVar = countVar + 1;
+                            console.log('count var :', countVar);
+                        });
+
+                        perDay = Math.ceil(itemValuu / countVar);
+
+                        console.log('perday', perDay);
+
+                        daysLeft = Math.ceil(itemVal / perDay);
+                        console.log('daysleft', daysLeft);
+
+                        let res = {};
+                        res.fulfillmentText = 'This is reponse for ' + itemName;
+                        res.fulfillmentMessages = [
+                            {
+                                "card": {
+                                    "title": itemName,
+                                    "subtitle": " You will run out of " + itemName + " in " + daysLeft + " days ",
+                                    "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+                                    "buttons": [
+                                        {
+                                            "text": "Go to " + itemName,
+                                            "postback": "https://localhost:4200/someItemId"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                        response.send(res);
+
+                    })
+                    .catch((error) => {
+                        console.log("Error getting documents: ", error);
+                    });
+            });
+        })
+        .catch((error) => {
+            console.log("Error getting documents: ", error);
+        });
 
 }
