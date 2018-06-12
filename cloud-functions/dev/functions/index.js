@@ -787,9 +787,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         case 'getWhenWillItemRunOut':
             getWhenWillItemRunOut(parameters, response);
             break;
-        case 'getItemBoughtQuantity':
-            getItemBoughtQuantity(parameters,response);
-            break;
+        // case 'getItemBoughtQuantity':
+        //     getItemBoughtQuantity(parameters,response);
+        //     break;
         default:
             res = {
                 "fulfillmentText": "This is a text response",
@@ -857,6 +857,7 @@ function getItemQuantity(parameters, response) {
 function getUserWhoBought(parameters, response) {
     const itemName = parameters['item_name'].trim();
     const date = parameters['date'];
+    console.log('date is',date);
     var yestPrev = new Date(date);
     var yestPost = new Date(date);
     var daysPrior = 1;
@@ -1127,6 +1128,6 @@ function getWhenWillItemRunOut(parameters, response){
 
 }
 
-function getItemBoughtQuantity(parameters,response){
+// function getItemBoughtQuantity(parameters,response){
 
-}
+// }
