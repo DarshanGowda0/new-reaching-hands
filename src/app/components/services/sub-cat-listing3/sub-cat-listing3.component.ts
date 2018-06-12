@@ -73,18 +73,21 @@ export class SubCatListing3Component implements OnInit {
   }
 
   onDelete(id) {
-    this.auth.user.take(1).subscribe(val => {
-      if (this.auth.canDelete(val)) {
-        this.dataService.deleteItemById(id).then(() => {
-          console.log('deleted item succesfully');
-        }).catch(err => {
-          console.error('error while deletng', err);
-          alert('error in deleting');
-        });
-      } else {
-        this.popUp('Not Admin : ', 'No Access to Delete');
-      }
-    });
+    const p = prompt('If you want to delete the item enter Y ');
+    console.log(p);
+    if ( p === 'Y' || p === 'y') {
+      this.auth.user.take(1).subscribe(val => {
+        if (this.auth.canDelete(val)) {
+      this.dataService.deleteItemById(id).then(() => {
+        console.log('deleted item succesfully');
+      }).catch(err => {
+        console.error('error while deletng', err);
+        alert('error in deleting');
+      });
+    } else {
+      this.popUp('Not Admin : ', 'No Access to Delete');
+    }});
+    }
   }
 
   onEdit(itm) {
