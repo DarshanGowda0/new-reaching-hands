@@ -769,20 +769,26 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
     let res = '';
     switch (action) {
+        // working
         case 'getItemQuantity':
             getItemQuantity(parameters, response);
             break;
         case 'getAverageSpent':
-            res = getAverageSpent(parameters, response);
+            getAverageSpent(parameters, response);
             break;
         case 'getUserWhoBought':
-            res = getUserWhoBought(parameters, response);
+            getUserWhoBought(parameters, response);
             break;
+            // working
         case 'getWhenWasItemLastBought':
-            res = getWhenWasItemLastBought(parameters, response);
+            getWhenWasItemLastBought(parameters, response);
             break;
+            // working
         case 'getWhenWillItemRunOut':
-            res = getWhenWillItemRunOut(parameters, response);
+            getWhenWillItemRunOut(parameters, response);
+            break;
+        case 'getItemBoughtQuantity':
+            getItemBoughtQuantity(parameters,response);
             break;
         default:
             res = {
@@ -833,7 +839,7 @@ function getItemQuantity(parameters, response) {
                             "buttons": [
                                 {
                                     "text": "Go to " + itemName,
-                                    "postback": "https://localhost:4200/someItemId"
+                                    "postback": "http://localhost:4200/item-details/"+itemIdVal
                                 }
                             ]
                         }
@@ -858,7 +864,7 @@ function getUserWhoBought(parameters, response) {
 
     yestPost.setDate(yestPost.getDate() + daysPrior);
     console.log('datess',date,yestPost,yestPrev);
-    console.log('inside get item quantity with params ', parameters);
+    console.log('inside get user who bought ', parameters);
 
     console.log('item is', itemName);
     db.collection("items").where("itemName", "==", itemName).get()
@@ -867,7 +873,7 @@ function getUserWhoBought(parameters, response) {
                 itmIdVal = doc.data().itemId;
                 unitVal = doc.data().unit;
                 console.log('111111111111111111st', itmIdVal);
-                db.collection("logs").where("itemId", "==", itmIdVal).where('logType', '==', temp).where('date', '>=', yestPrev).where('date', '<=', yestPost).orderBy('date', 'desc')
+                db.collection("logs").where("itemId", "==", itmIdVal).where('logType', '==', temp).where('date', '>=', yestPrev).where('date', '<', yestPost).orderBy('date', 'desc')
                     .get()
                     .then((querySnapshot) => {
                         console.log('qsp', querySnapshot);
@@ -895,7 +901,7 @@ function getUserWhoBought(parameters, response) {
                                                 "buttons": [
                                                     {
                                                         "text": "Go to " + itemName,
-                                                        "postback": "https://localhost:4200/someItemId"
+                                                        "postback": "http://localhost:4200/item-details/"+itmIdVal
                                                     }
                                                 ]
                                             }
@@ -968,7 +974,7 @@ function getAverageSpent(parameters, response) {
                                     "buttons": [
                                         {
                                             "text": "Go to " + itemName,
-                                            "postback": "https://localhost:4200/someItemId"
+                                            "postback": "http://localhost:4200/item-details/"+itemIdVal
                                         }
                                     ]
                                 }
@@ -1024,7 +1030,7 @@ function getWhenWasItemLastBought(parameters, response) {
                                         "buttons": [
                                             {
                                                 "text": "Go to " + itemName,
-                                                "postback": "https://localhost:4200/someItemId"
+                                                "postback": "http://localhost:4200/item-details/"+itemIdVal
                                             }
                                         ]
                                     }
@@ -1056,6 +1062,7 @@ function getWhenWillItemRunOut(parameters, response){
     var currentDate = new Date(Date.now());
     var aMonth = new Date(Date.now());
     aMonth.setDate(aMonth.getDate() - oneMonth);
+    var itemValuu = 0, countVar = 0;
     db.collection("items").where("itemName", "==", itemName).get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -1100,7 +1107,7 @@ function getWhenWillItemRunOut(parameters, response){
                                     "buttons": [
                                         {
                                             "text": "Go to " + itemName,
-                                            "postback": "https://localhost:4200/someItemId"
+                                            "postback": "http://localhost:4200/item-details/"+itemIdVal
                                         }
                                     ]
                                 }
@@ -1117,5 +1124,9 @@ function getWhenWillItemRunOut(parameters, response){
         .catch((error) => {
             console.log("Error getting documents: ", error);
         });
+
+}
+
+function getItemBoughtQuantity(parameters,response){
 
 }
