@@ -829,7 +829,7 @@ function getItemQuantity(parameters, response) {
                 unitVal = doc.data().unit;
                 const itemIdVal = doc.data().itemId;
                 let res = {};
-                res.fulfillmentText = "Quantity of " + itemName + "s is " + itemVal + unitVal;
+                res.fulfillmentText = "Quantity of " + itemName + " is " + itemVal +" "+ unitVal;
                 res.fulfillmentMessages = [
                     {
                         "card": {
