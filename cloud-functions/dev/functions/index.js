@@ -778,9 +778,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         case 'getUserWhoBought':
             res = getUserWhoBought(parameters, response);
             break;
-        case 'getItemBoughtQuantity':
-            res = getItemBoughtQuantity(parameters, response);
-            break;
         case 'getWhenWasItemLastBought':
             res = getWhenWasItemLastBought(parameters, response);
             break;
@@ -857,8 +854,10 @@ function getUserWhoBought(parameters, response) {
     var yestPrev = new Date(date);
     var yestPost = new Date(date);
     var daysPrior = 1;
+    var temp = "Added";
 
     yestPost.setDate(yestPost.getDate() + daysPrior);
+    console.log('datess',date,yestPost,yestPrev);
     console.log('inside get item quantity with params ', parameters);
 
     console.log('item is', itemName);
