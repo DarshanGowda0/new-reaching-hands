@@ -829,7 +829,7 @@ function getItemQuantity(parameters, response) {
                 unitVal = doc.data().unit;
                 const itemIdVal = doc.data().itemId;
                 let res = {};
-                res.fulfillmentText = 'This is reponse for ' + itemName;
+                res.fulfillmentText = "Quantity of " + itemName + "s is " + itemVal + unitVal;
                 res.fulfillmentMessages = [
                     {
                         "card": {
@@ -892,7 +892,7 @@ function getUserWhoBought(parameters, response) {
                                     dispName = userRecord.displayName;
 
                                     let res = {};
-                                    res.fulfillmentText = 'This is reponse for ' + itemName;
+                                    res.fulfillmentText = dispName + " bought " + itmValuu + " " + unitVal + " of " + itemName + " on " + date;
                                     res.fulfillmentMessages = [
                                         {
                                             "card": {
@@ -965,7 +965,7 @@ function getAverageSpent(parameters, response) {
                         avgMonth = Math.ceil(itemCost / countVar);
 
                         let res = {};
-                        res.fulfillmentText = 'This is reponse for ' + itemName;
+                        res.fulfillmentText = "Average amount" + "is Rs" + avgMonth;
                         res.fulfillmentMessages = [
                             {
                                 "card": {
@@ -1021,7 +1021,7 @@ function getWhenWasItemLastBought(parameters, response) {
                             console.log('docccc', doc1);
                             console.log('value is', itemIdVal, itemValuu, adder);
                             let res = {};
-                            res.fulfillmentText = 'This is reponse for ' + itemName;
+                            res.fulfillmentText = itemName + " was last bought on " + lastDay;
                             res.fulfillmentMessages = [
                                 {
                                     "card": {
@@ -1098,12 +1098,12 @@ function getWhenWillItemRunOut(parameters, response){
                         console.log('daysleft', daysLeft);
 
                         let res = {};
-                        res.fulfillmentText = 'This is reponse for ' + itemName;
+                        res.fulfillmentText = "You will run out of " + itemName + " in " + daysLeft + " days ";
                         res.fulfillmentMessages = [
                             {
                                 "card": {
                                     "title": itemName,
-                                    "subtitle": " You will run out of " + itemName + " in " + daysLeft + " days ",
+                                    "subtitle": "You will run out of " + itemName + " in " + daysLeft + " days ",
                                     "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
                                     "buttons": [
                                         {
