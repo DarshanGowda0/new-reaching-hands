@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
+import { Observable, Observer, of } from 'rxjs';
 
 
 // shared/google-chart.resolver.ts
@@ -17,7 +16,7 @@ export class GoogleChartResolver implements Resolve<any> {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
         if (GoogleChartResolver.googleChartLoaded) {
-            return Observable.of(google);
+            return of(google);
         } else {
             return Observable.create(function (observer: Observer<any>) {
 

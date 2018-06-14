@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DataService } from '../../../core/data-service.service';
 import { MatDatepickerInputEvent } from '@angular/material';
 import { forEach } from '@firebase/util';
-import { tap } from 'rxjs/operators/tap';
+import { tap } from 'rxjs/operators';
 import { ReportDetails } from '../../../models/report-details';
 
 @Component({
