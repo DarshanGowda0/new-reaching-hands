@@ -4,9 +4,8 @@ import { OnDestroy, OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AuthService } from './core/auth.service';
-import { tap, map, take } from 'rxjs/operators';
 import { MessagingService } from './core/messaging-service.service';
-import 'rxjs/add/operator/take';
+import { filter, take } from 'rxjs/operators';
 import { DataService } from './core/data-service.service';
 
 @Component({
@@ -38,9 +37,10 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
-    this.auth.user
-      .filter(user => !!user) // filter null
-      .take(1) // take first real user
+    this.auth.user.pipe(
+      filter(user => !!user),
+      take(1) // filter null
+    ) // take first real user
       .subscribe(user => {
         if (user) {
           this.msg.getPermission(user);

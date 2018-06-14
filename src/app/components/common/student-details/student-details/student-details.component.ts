@@ -1,10 +1,10 @@
-import { Component, OnInit,  AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatSnackBar } from '@angular/material';
 import { AuthService } from '../../../../core/auth.service';
 import { DataService } from '../../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { User } from '../../../../core/user';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, take } from 'rxjs/operators';
 import { StudentLog, StudentLog2 } from '../../../../models/student-logs';
 import { AddStudentLogComponent } from '../add-student-log/add-student-log.component';
 
@@ -19,7 +19,7 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   category = [
-     'Student Details'
+    'Student Details'
   ];
 
   displayedColumns = ['studentName', 'dateOfBirth', 'fathersName', 'emailId', 'edit', 'delete'];
@@ -64,7 +64,7 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
     });
   }
   onDelete(logId) {
-    this.auth.user.take(1).subscribe(val => {
+    this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canDelete(val)) {
         this.dataService.deleteStudentLogById(logId).then(() => {
           console.log('deleted succesfully');
@@ -79,15 +79,15 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  
+
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
   }
-  
+
   onEdit(studentLog) {
-    this.auth.user.take(1).subscribe(val => {
+    this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canEdit(val)) {
         const dialogRef = this.dialog.open(AddStudentLogComponent, {
           width: '450px',
