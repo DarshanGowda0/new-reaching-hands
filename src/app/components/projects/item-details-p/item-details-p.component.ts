@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatSnackBar } from '@angular/material';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { ItemLogP } from '../../../models/item-log';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DataService } from '../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../../../models/item';
 import { AddLogPComponent } from '../add-log-p/add-log-p.component';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, take } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
@@ -94,7 +94,7 @@ export class ItemDetailsPComponent implements OnInit, AfterViewInit {
   }
 
   onDelete(logId) {
-    this.auth.user.take(1).subscribe(val => {
+    this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canDelete(val)) {
         this.dataService.deleteLogById(logId).then(() => {
           console.log('deleted succesfully');
@@ -110,7 +110,7 @@ export class ItemDetailsPComponent implements OnInit, AfterViewInit {
   }
 
   onEdit(itemLog) {
-    this.auth.user.take(1).subscribe(val => {
+    this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canEdit(val)) {
         const dialogRef = this.dialog.open(AddLogPComponent, {
           width: '450px',

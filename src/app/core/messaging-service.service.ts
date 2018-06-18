@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AuthService } from './auth.service';
 import * as firebase from 'firebase';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { DataService } from './data-service.service';
 
 @Injectable()

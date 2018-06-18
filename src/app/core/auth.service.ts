@@ -4,8 +4,8 @@ import * as firebase from 'firebase/app';
 import { User } from './user';
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { take, switchMap } from 'rxjs/operators';
 @Injectable()
 export class AuthService {
 
@@ -13,13 +13,13 @@ export class AuthService {
   authUser;
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private router: Router) {
     this.authUser = this.afAuth.authState;
-    this.user = this.afAuth.authState.switchMap(user => {
+    this.user = this.afAuth.authState.pipe(switchMap(user => {
       if (user) {
         return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
       } else {
-        return Observable.of(null);
+        return of(null);
       }
-    });
+    }));
     this.afAuth.auth.getRedirectResult()
       .then((credential) => {
         this.updateUserData(credential.user);
@@ -50,7 +50,7 @@ export class AuthService {
       uid: user.uid,
       email: user.email,
       // checkAdmin: user.checkAdmin,
-      //checkEditor: user.checkEditor
+      // checkEditor: user.checkEditor
     };
     return userRef.set(data, { merge: true });
   }

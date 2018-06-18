@@ -1,14 +1,13 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { AngularFirestoreCollection, AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
-import { tap, map } from 'rxjs/operators';
 import { User } from '../../../core/user';
 import { DataService } from '../../../core/data-service.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../../../core/auth.service';
-
+import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-accesscontrol',
   templateUrl: './accesscontrol.component.html',
@@ -31,39 +30,48 @@ export class AccesscontrolComponent implements OnInit, AfterViewInit {
 
 
   popUp(message: string, action: string) {
-      this.snackBar.open(message, action, {
-        duration: 2500,
-      });
-    }
+    this.snackBar.open(message, action, {
+      duration: 2500,
+    });
+  }
 
   onCheckEditor($even, uid) {
-    this.auth.user.take(1).subscribe(val => {
-      if (this.auth.canAccess(val)) {
-    this.afs.collection<User>(`users`).doc(uid).set({
-      checkEditor: $even.checked
-    }, { merge: true });
-  } else {
-    console.log('No Access to Modify');
-    this.popUp('Not Admin : ', 'No Access');
-  }
-});
+    this.auth.user.
+      pipe(
+        take(1)
+      )
+      .subscribe(val => {
+        if (this.auth.canAccess(val)) {
+          this.afs.collection<User>(`users`).doc(uid).set({
+            checkEditor: $even.checked
+          }, { merge: true });
+        } else {
+          console.log('No Access to Modify');
+          this.popUp('Not Admin : ', 'No Access');
+        }
+      });
   }
 
 
   onCheckAdmin($event, uid) {
-    this.auth.user.take(1).subscribe(val => {
-      if (this.auth.canAccess(val)) {if(uid != val.uid){
-    this.afs.collection<User>(`users`).doc(uid).set({
-      checkAdmin: $event.checked
-    }, { merge: true });
-  }else{
-    this.popUp('Hey Admin, ', 'Action denied');
-  }
-  } else {
-    console.log('No Access to Modify');
-    this.popUp('Not Admin : ', 'No Access');
-  }
-});
+    this.auth.user.
+      pipe(
+        take(1)
+      )
+      .subscribe(val => {
+        if (this.auth.canAccess(val)) {
+          if (uid !== val.uid) {
+            this.afs.collection<User>(`users`).doc(uid).set({
+              checkAdmin: $event.checked
+            }, { merge: true });
+          } else {
+            this.popUp('Hey Admin, ', 'Action denied');
+          }
+        } else {
+          console.log('No Access to Modify');
+          this.popUp('Not Admin : ', 'No Access');
+        }
+      });
 
   }
 

@@ -4,7 +4,7 @@ import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator, MatDatepickerInputEvent } from '@angular/material';
-import { model } from '@tensorflow/tfjs';
+// import { model } from '@tensorflow/tfjs';
 import * as tf from '@tensorflow/tfjs';
 
 export interface CostModel {
@@ -47,6 +47,7 @@ export class SummaryReportComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
   ngOnInit() {
+
     this.google = this.route.snapshot.data.google;
     this.dataService.getSummary()
       .pipe(
@@ -344,7 +345,7 @@ export class SummaryReportComponent implements OnInit {
       const selectedItem = chart_lines.getSelection()[0];
       if (selectedItem) {
         const sDate = costData[selectedItem.row][0];
-        const tableData = dateToData.get(this.dateFormat(sDate));
+        const tableData = dateToData.get(this.dateFormatForDate(sDate));
         this.dataSource = new MatTableDataSource(tableData);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -397,6 +398,11 @@ export class SummaryReportComponent implements OnInit {
   }
 
   dateFormat(date) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return String(date.toDate().toLocaleString('en-US')).substr(0, 9);
+  }
+
+  dateFormatForDate(date) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return String(date.toLocaleString('en-US')).substr(0, 9);
   }
