@@ -4,7 +4,7 @@ import { DataService } from '../../../core/data-service.service';
 import { tap, map } from 'rxjs/operators';
 import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator, MatDatepickerInputEvent } from '@angular/material';
-import { model } from '@tensorflow/tfjs';
+// import { model } from '@tensorflow/tfjs';
 import * as tf from '@tensorflow/tfjs';
 
 export interface CostModel {
@@ -47,6 +47,7 @@ export class SummaryReportComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
   ngOnInit() {
+
     this.google = this.route.snapshot.data.google;
     this.dataService.getSummary()
       .pipe(
