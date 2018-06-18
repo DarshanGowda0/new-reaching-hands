@@ -488,7 +488,7 @@ export class SummaryReportComponent implements OnInit {
     });
 
     await linearModel.fit(xTrainTensor, yTrainTensor, {
-      epochs: 2000,
+      epochs: 1000,
       validationData: [xTestTensor, yTestTensor],
       callbacks: {
         onEpochEnd: async (epoch, logs) => {

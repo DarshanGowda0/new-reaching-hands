@@ -27,7 +27,7 @@
           <ng-container matColumnDef="dateOfBirth">
               <mat-header-cell *matHeaderCellDef mat-sort-header>Date of Birth</mat-header-cell>
               <mat-cell *matCellDef="let element">
-                <span matTooltip="{{element.date}}"> {{element.dateOfBirth|date: 'MM/dd/yyyy'}} </span>
+                <span matTooltip="{{element.date}}"> {{element.dateOfBirth.toDate()|date: 'MM/dd/yyyy'}} </span>
               </mat-cell>
             </ng-container>
             

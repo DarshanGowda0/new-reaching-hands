@@ -264,7 +264,7 @@ export class ItemReportComponent implements OnInit {
 
   dateFormat(date) {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return String(date.toLocaleString('en-US'));
+    return String(date.toDate().toLocaleString('en-US'));
   }
 
 }
