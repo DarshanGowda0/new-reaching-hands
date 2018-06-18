@@ -33,7 +33,7 @@
        <ng-container matColumnDef="dateOfPurchase">
          <mat-header-cell *matHeaderCellDef mat-sort-header>Date of Purchase</mat-header-cell>
          <mat-cell *matCellDef="let element">
-           <span matTooltip="{{element.date}}"> {{element.dateOfPurchase|date: 'MM/dd/yyyy'}} </span>
+           <span matTooltip="{{element.date}}"> {{element.dateOfPurchase.toDate() |date: 'MM/dd/yyyy'}} </span>
          </mat-cell>
        </ng-container>
        
