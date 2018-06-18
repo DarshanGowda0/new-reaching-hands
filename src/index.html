@@ -22,6 +22,9 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <!-- fix for tfjs issue https://github.com/tensorflow/tfjs/issues/436 -->
+  <script> if (global === undefined) { var global = window; } </script>
 </head>
 
 <body>
