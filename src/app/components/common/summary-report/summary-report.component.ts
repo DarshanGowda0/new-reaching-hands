@@ -345,7 +345,7 @@ export class SummaryReportComponent implements OnInit {
       const selectedItem = chart_lines.getSelection()[0];
       if (selectedItem) {
         const sDate = costData[selectedItem.row][0];
-        const tableData = dateToData.get(this.dateFormat(sDate));
+        const tableData = dateToData.get(this.dateFormatForDate(sDate));
         this.dataSource = new MatTableDataSource(tableData);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -398,6 +398,11 @@ export class SummaryReportComponent implements OnInit {
   }
 
   dateFormat(date) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return String(date.toDate().toLocaleString('en-US')).substr(0, 9);
+  }
+
+  dateFormatForDate(date) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return String(date.toLocaleString('en-US')).substr(0, 9);
   }
