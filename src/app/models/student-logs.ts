@@ -16,4 +16,5 @@ export interface StudentLog2 {
     fathersName: string;
     emailId: string;
     addedBy: string;
+    photo: string;
 }

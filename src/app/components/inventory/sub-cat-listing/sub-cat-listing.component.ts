@@ -1,13 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Item } from '../../../models/item';
 import { DataService } from '../../../core/data-service.service';
 import { Router } from '@angular/router';
 import { MatSnackBar, } from '@angular/material';
 import { AuthService } from '../../../core/auth.service';
 import { AddNewComponent } from '../../common/add-new/add-new.component';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sub-cat-listing',
@@ -21,7 +22,8 @@ export class SubCatListingComponent implements OnInit {
   nColumns: number;
   items: Observable<Item[]>;
 
-  constructor(public snackBar: MatSnackBar, private dialog: MatDialog, private auth: AuthService, private dataService: DataService, private router: Router) {
+  constructor(public snackBar: MatSnackBar, private dialog: MatDialog,
+    private auth: AuthService, private dataService: DataService, private router: Router) {
     const mWidth = window.innerWidth;
     this.setWidth(mWidth);
   }
@@ -76,24 +78,25 @@ export class SubCatListingComponent implements OnInit {
   onDelete(id) {
     const p = prompt('If you want to delete the item enter Y ');
     console.log(p);
-    if ( p === 'Y' || p === 'y') {
-      this.auth.user.take(1).subscribe(val => {
+    if (p === 'Y' || p === 'y') {
+      this.auth.user.pipe(take(1)).subscribe(val => {
         if (this.auth.canDelete(val)) {
-      this.dataService.deleteItemById(id).then(() => {
-        console.log('deleted item succesfully');
-      }).catch(err => {
-        console.error('error while deletng', err);
-        alert('error in deleting');
+          this.dataService.deleteItemById(id).then(() => {
+            console.log('deleted item succesfully');
+          }).catch(err => {
+            console.error('error while deletng', err);
+            alert('error in deleting');
+          });
+        } else {
+          this.popUp('Not Admin : ', 'No Access to Delete');
+        }
       });
-    } else {
-      this.popUp('Not Admin : ', 'No Access to Delete');
-    }});
     }
   }
 
   onEdit(itm) {
     console.log('item is', itm);
-    this.auth.user.take(1).subscribe(val => {
+    this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canEdit(val)) {
         const dialogRef = this.dialog.open(AddNewComponent, {
           width: '450px',

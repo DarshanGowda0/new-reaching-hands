@@ -2,12 +2,12 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatSnackBar } from '@angular/material';
 import { AngularFirestoreCollection } from 'angularfire2/firestore';
 import { ItemLog3 } from '../../../models/item-log';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { DataService } from '../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from '../../../models/item';
 import { AddLog3Component } from '../add-log3/add-log3.component';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, take } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth.service';
 
 @Component({
@@ -27,7 +27,8 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(public snackBar: MatSnackBar, private auth: AuthService, private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
+  constructor(public snackBar: MatSnackBar, private auth: AuthService,
+     private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -86,7 +87,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   }
 
   onDelete(logId) {
-    this.auth.user.take(1).subscribe(val => {
+    this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canDelete(val)) {
         this.dataService.deleteLogById(logId).then(() => {
           console.log('deleted succesfully');
@@ -102,7 +103,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   }
 
   onEdit(itemLog) {
-    this.auth.user.take(1).subscribe(val => {
+    this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canEdit(val)) {
         const dialogRef = this.dialog.open(AddLog3Component, {
           width: '450px',
