@@ -9,11 +9,13 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { GoogleChartResolver } from './google-chart-resolver';
 import { CanAccessGuard } from './can-access.guard';
 import { MessagingService } from './messaging-service.service';
+import { AngularFireStorageModule } from 'angularfire2/storage';
 
 @NgModule({
   imports: [
     CommonModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    AngularFireStorageModule,
   ],
   declarations: [],
   providers: [
