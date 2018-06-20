@@ -29,11 +29,6 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.auth.user.subscribe(params => {
-      this.dataService.getStudentLogById(params.uid).subscribe(item => {
-        this.studentLog2 = item;
-      });
-    });
   }
 
   addNewLog() {
