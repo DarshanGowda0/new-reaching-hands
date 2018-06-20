@@ -7,6 +7,7 @@ var firestore = admin.firestore();
 const { google } = require('googleapis');
 const fs = require('fs');
 
+
 exports.testDrive = functions.https.onRequest((request, response) => {
 
     console.log('called test drive function');
@@ -106,16 +107,16 @@ exports.usersUpdate = functions.firestore.document('users/{uid}').onUpdate(event
 
         if (isAllowed !== null) {
             var email = document.email;
-    
+
             var permission = {
                 'type': 'user',
                 'role': 'writer',
                 'emailAddress': email
             };
-    
+
             if (isAllowed) {
                 console.log('user is allowed to access ');
-    
+
                 drive.permissions.create({
                     resource: permission,
                     fileId: fileID,
@@ -134,39 +135,111 @@ exports.usersUpdate = functions.firestore.document('users/{uid}').onUpdate(event
                             return mTransaction.get(userDocRef)
                                 .then(userDoc => {
                                     mTransaction.update(userDocRef, {
-                                        'permissionId': permissionId 
+                                        'permissionId': permissionId
                                     });
                                 })
                         }).then(result => {
-                            console.log('Transaction for added log success');
+                            console.log('Transaction for permission log success');
                         }).catch(err => {
-                            console.error('Transaction error for add log ', err);
+                            console.error('Transaction error for permission log ', err);
                         })
                     }
                 });
-    
-    
+
+
             } else {
                 console.log('removing user access');
-    
+
                 var permissionID = document.permissionId;
 
                 drive.permissions.delete({
                     fileId: fileID,
                     permissionId: permissionID
-                },function(err,res){
-                    if(err){
+                }, function (err, res) {
+                    if (err) {
                         console.error(err);
-                    }else{
+                    } else {
                         console.log('successfully removed permission');
                     }
                 });
-    
+
             }
         }
 
     });
 
+    return "OK";
+
+});
+
+exports.createStudentFolder = functions.firestore.document('studentLogs/{studentId}').onCreate(event => {
+    const studentId = event.params.studentId;
+    const fileID = '1bzsEZWsQny90E2ZkEYz_35jhbCfMCVcr';
+
+    console.log('on create called for student id ', studentId);
+
+    var document = event.data.data();
+    console.log('doc ', document);
+    var studentName = document.studentName;
+
+    // create student folder
+
+    const jwtClient = new google.auth.JWT(
+        key.client_email,
+        null,
+        key.private_key,
+        ['https://www.googleapis.com/auth/drive'],
+        null
+    );
+
+    jwtClient.authorize((authErr) => {
+        if (authErr) {
+            console.log(authErr);
+            return;
+        }
+
+        console.log('autherized ');
+        const drive = google.drive({ version: 'v3', auth: jwtClient });
+        // Make an authorized requests
+
+        var fileMetadata = {
+            'name': studentName,
+            parents: [fileID],
+            'mimeType': 'application/vnd.google-apps.folder'
+        };
+
+        drive.files.create({
+            resource: fileMetadata,
+            fields: 'id'
+        }, function (err, file) {
+            if (err) {
+                // Handle error
+                console.error(err);
+            } else {
+                console.log('Folder Id: ', file.data.id);
+
+                var folderId = file.data.id;
+                // store this folder id in student doc
+
+                studentDocRef = firestore.doc('studentLogs/' + studentId);
+                var transaction = firestore.runTransaction(mTransaction => {
+                    return mTransaction.get(studentDocRef)
+                        .then(studentDoc => {
+                            mTransaction.update(studentDocRef, {
+                                folderId: folderId
+                            });
+                        })
+                }).then(result => {
+                    console.log('Transaction for added foler log success');
+                }).catch(err => {
+                    console.error('Transaction error for folder log ', err);
+                })
+
+            }
+        });
+
+
+    });
     return "OK";
 
 });
