@@ -3,6 +3,248 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 var firestore = admin.firestore();
 
+// for drive access
+const { google } = require('googleapis');
+const fs = require('fs');
+
+
+exports.testDrive = functions.https.onRequest((request, response) => {
+
+    console.log('called test drive function');
+
+    const jwtClient = new google.auth.JWT(
+        key.client_email,
+        null,
+        key.private_key,
+        ['https://www.googleapis.com/auth/drive'],
+        null
+    );
+
+    jwtClient.authorize((authErr) => {
+        if (authErr) {
+            console.log(authErr);
+            return;
+        }
+
+        console.log('autherized ');
+        const drive = google.drive({ version: 'v3', auth: jwtClient });
+        // Make an authorized requests
+
+        var fileMetadata = {
+            'name': 'RootShared',
+            'mimeType': 'application/vnd.google-apps.folder'
+        };
+
+        drive.files.create({
+            resource: fileMetadata,
+            fields: 'id'
+        }, function (err, file) {
+            if (err) {
+                // Handle error
+                console.error(err);
+            } else {
+                console.log('Folder Id: ', file.data.id);
+
+                const fileId = file.data.id;
+
+                var permission = {
+                    'type': 'user',
+                    'role': 'writer',
+                    'emailAddress': 'darshan.narayanaswamy@tsgforce.com'
+                };
+
+                drive.permissions.create({
+                    resource: permission,
+                    fileId: fileId,
+                    fields: 'id',
+                }, function (err, res) {
+                    if (err) {
+                        // Handle error...
+                        console.error(err);
+                        //   permissionCallback(err);
+                    } else {
+                        console.log('Permission ID: ', res.data.id);
+                        //   permissionCallback();
+                    }
+                });
+            }
+        });
+
+    });
+
+    return;
+
+});
+
+
+exports.usersUpdate = functions.firestore.document('users/{uid}').onUpdate(event => {
+
+    const fileID = '1bzsEZWsQny90E2ZkEYz_35jhbCfMCVcr';
+    const uid = event.params.uid;
+    console.log('on update called for user id ', uid);
+
+    var document = event.data.data();
+
+    var isAllowed = document.checkEditor;
+
+    const jwtClient = new google.auth.JWT(
+        key.client_email,
+        null,
+        key.private_key,
+        ['https://www.googleapis.com/auth/drive'],
+        null
+    );
+
+    jwtClient.authorize((authErr) => {
+        if (authErr) {
+            console.log(authErr);
+            return;
+        }
+
+        console.log('autherized ');
+        const drive = google.drive({ version: 'v3', auth: jwtClient });
+        // Make an authorized requests
+
+        if (isAllowed !== null) {
+            var email = document.email;
+
+            var permission = {
+                'type': 'user',
+                'role': 'writer',
+                'emailAddress': email
+            };
+
+            if (isAllowed) {
+                console.log('user is allowed to access ');
+
+                drive.permissions.create({
+                    resource: permission,
+                    fileId: fileID,
+                    fields: 'id',
+                }, function (err, res) {
+                    if (err) {
+                        // Handle error...
+                        console.error(err);
+                        //   permissionCallback(err);
+                    } else {
+                        console.log('Permission ID: ', res.data.id);
+                        var permissionId = res.data.id;
+
+                        userDocRef = firestore.doc('users/' + uid);
+                        var transaction = firestore.runTransaction(mTransaction => {
+                            return mTransaction.get(userDocRef)
+                                .then(userDoc => {
+                                    mTransaction.update(userDocRef, {
+                                        'permissionId': permissionId
+                                    });
+                                })
+                        }).then(result => {
+                            console.log('Transaction for permission log success');
+                        }).catch(err => {
+                            console.error('Transaction error for permission log ', err);
+                        })
+                    }
+                });
+
+
+            } else {
+                console.log('removing user access');
+
+                var permissionID = document.permissionId;
+
+                drive.permissions.delete({
+                    fileId: fileID,
+                    permissionId: permissionID
+                }, function (err, res) {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        console.log('successfully removed permission');
+                    }
+                });
+
+            }
+        }
+
+    });
+
+    return "OK";
+
+});
+
+exports.createStudentFolder = functions.firestore.document('studentLogs/{studentId}').onCreate(event => {
+    const studentId = event.params.studentId;
+    const fileID = '1bzsEZWsQny90E2ZkEYz_35jhbCfMCVcr';
+
+    console.log('on create called for student id ', studentId);
+
+    var document = event.data.data();
+    console.log('doc ', document);
+    var studentName = document.studentName;
+
+    // create student folder
+
+    const jwtClient = new google.auth.JWT(
+        key.client_email,
+        null,
+        key.private_key,
+        ['https://www.googleapis.com/auth/drive'],
+        null
+    );
+
+    jwtClient.authorize((authErr) => {
+        if (authErr) {
+            console.log(authErr);
+            return;
+        }
+
+        console.log('autherized ');
+        const drive = google.drive({ version: 'v3', auth: jwtClient });
+        // Make an authorized requests
+
+        var fileMetadata = {
+            'name': studentName,
+            parents: [fileID],
+            'mimeType': 'application/vnd.google-apps.folder'
+        };
+
+        drive.files.create({
+            resource: fileMetadata,
+            fields: 'id'
+        }, function (err, file) {
+            if (err) {
+                // Handle error
+                console.error(err);
+            } else {
+                console.log('Folder Id: ', file.data.id);
+
+                var folderId = file.data.id;
+                // store this folder id in student doc
+
+                studentDocRef = firestore.doc('studentLogs/' + studentId);
+                var transaction = firestore.runTransaction(mTransaction => {
+                    return mTransaction.get(studentDocRef)
+                        .then(studentDoc => {
+                            mTransaction.update(studentDocRef, {
+                                folderId: folderId
+                            });
+                        })
+                }).then(result => {
+                    console.log('Transaction for added foler log success');
+                }).catch(err => {
+                    console.error('Transaction error for folder log ', err);
+                })
+
+            }
+        });
+
+
+    });
+    return "OK";
+
+});
+
+
 exports.helloWorld = functions.https.onRequest((request, response) => {
 
     const payload = {
@@ -779,11 +1021,11 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         case 'getUserWhoBought':
             getUserWhoBought(parameters, response);
             break;
-            // working
+        // working
         case 'getWhenWasItemLastBought':
             getWhenWasItemLastBought(parameters, response);
             break;
-            // working
+        // working
         case 'getWhenWillItemRunOut':
             getWhenWillItemRunOut(parameters, response);
             break;
@@ -829,7 +1071,7 @@ function getItemQuantity(parameters, response) {
                 unitVal = doc.data().unit;
                 const itemIdVal = doc.data().itemId;
                 let res = {};
-                res.fulfillmentText = "Quantity of " + itemName + " is " + itemVal +" "+ unitVal;
+                res.fulfillmentText = "Quantity of " + itemName + " is " + itemVal + " " + unitVal;
                 res.fulfillmentMessages = [
                     {
                         "card": {
@@ -839,7 +1081,7 @@ function getItemQuantity(parameters, response) {
                             "buttons": [
                                 {
                                     "text": "Go to " + itemName,
-                                    "postback": "http://localhost:4200/item-details/"+itemIdVal
+                                    "postback": "http://localhost:4200/item-details/" + itemIdVal
                                 }
                             ]
                         }
@@ -857,14 +1099,14 @@ function getItemQuantity(parameters, response) {
 function getUserWhoBought(parameters, response) {
     const itemName = parameters['item_name'].trim();
     const date = parameters['date'];
-    console.log('date is',date);
+    console.log('date is', date);
     var yestPrev = new Date(date);
     var yestPost = new Date(date);
     var daysPrior = 1;
     var temp = "Added";
 
     yestPost.setDate(yestPost.getDate() + daysPrior);
-    console.log('datess',date,yestPost,yestPrev);
+    console.log('datess', date, yestPost, yestPrev);
     console.log('inside get user who bought ', parameters);
 
     console.log('item is', itemName);
@@ -902,7 +1144,7 @@ function getUserWhoBought(parameters, response) {
                                                 "buttons": [
                                                     {
                                                         "text": "Go to " + itemName,
-                                                        "postback": "http://localhost:4200/item-details/"+itmIdVal
+                                                        "postback": "http://localhost:4200/item-details/" + itmIdVal
                                                     }
                                                 ]
                                             }
@@ -975,7 +1217,7 @@ function getAverageSpent(parameters, response) {
                                     "buttons": [
                                         {
                                             "text": "Go to " + itemName,
-                                            "postback": "http://localhost:4200/item-details/"+itemIdVal
+                                            "postback": "http://localhost:4200/item-details/" + itemIdVal
                                         }
                                     ]
                                 }
@@ -1031,7 +1273,7 @@ function getWhenWasItemLastBought(parameters, response) {
                                         "buttons": [
                                             {
                                                 "text": "Go to " + itemName,
-                                                "postback": "http://localhost:4200/item-details/"+itemIdVal
+                                                "postback": "http://localhost:4200/item-details/" + itemIdVal
                                             }
                                         ]
                                     }
@@ -1053,7 +1295,7 @@ function getWhenWasItemLastBought(parameters, response) {
 
 }
 
-function getWhenWillItemRunOut(parameters, response){
+function getWhenWillItemRunOut(parameters, response) {
     console.log('inside get item quantity with params ', parameters);
     const itemName = parameters['item_name'].trim();
     console.log('item is', itemName);
@@ -1108,7 +1350,7 @@ function getWhenWillItemRunOut(parameters, response){
                                     "buttons": [
                                         {
                                             "text": "Go to " + itemName,
-                                            "postback": "http://localhost:4200/item-details/"+itemIdVal
+                                            "postback": "http://localhost:4200/item-details/" + itemIdVal
                                         }
                                     ]
                                 }
@@ -1131,3 +1373,5 @@ function getWhenWillItemRunOut(parameters, response){
 // function getItemBoughtQuantity(parameters,response){
 
 // }
+
+

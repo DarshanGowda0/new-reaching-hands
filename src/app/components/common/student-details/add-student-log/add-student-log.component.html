@@ -14,14 +14,31 @@
 
 
   <mat-form-field hintLabel="Example: Darshan" style="display:block;clear: both;">
-    <span matPrefix>&#8377; </span>
     <input matInput #input placeholder="Enter Father's Name" required [(ngModel)]="studentLog.fathersName" pattern="[a-zA-Z]*">
   </mat-form-field>
 
-  <mat-form-field hintLabel="Example:emailId" style="display:block;clear: both;">
-    <span matPrefix>&#8377; </span>
+  <mat-form-field hintLabel="Example:arjun@gmail.com" style="display:block;clear: both;">
     <input matInput #input placeholder="Email Id" required [(ngModel)]="studentLog.emailId" pattern="[a-zA-Z][0-9]@">
   </mat-form-field>
+
+  <mat-form-field hintLabel="Optional" style="display:block;clear: both;">
+    <input matInput #input placeholder="Adhar number" [(ngModel)]="studentLog.adhar" pattern="[a-zA-Z][0-9]@">
+  </mat-form-field>
+
+  <div style="margin-top: 2%;">
+    <div class="ui action input" onclick="document.getElementById('file').click()">
+      <input type="text" id="selectedFile" placeholder="Select Image files" readonly required>
+      <input type="file" id="file" style="display:none" (change)="detectFiles($event)" multiple>
+      <button class="ui icon button">
+        <i class="attach icon"></i>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="selectedFiles">
+    <mat-label>Progress: {{progress}} % Complete</mat-label>
+    <mat-progress-bar mode="determinate" [value]="progress">
+    </mat-progress-bar>
+  </div>
 
   <mat-dialog-actions>
     <button mat-button mat-dialog-close>Cancel</button>
