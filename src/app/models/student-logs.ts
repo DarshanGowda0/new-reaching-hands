@@ -8,6 +8,7 @@ export interface StudentLog {
     addedBy: string;
     image: string;
     adhar: string;
+    folderId: string;
 }
 
 export interface StudentLog2 {
@@ -21,4 +22,5 @@ export interface StudentLog2 {
     photo: string;
     image: string;
     adhar: string;
+    folderId: string;
 }
