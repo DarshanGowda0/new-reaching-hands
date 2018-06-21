@@ -50,6 +50,7 @@ import { AddReimbursementLogComponent } from './components/common/reimbursement/
 import { StudentDetailsComponent } from './components/common/student-details/student-details/student-details.component';
 import { AddStudentLogComponent } from './components/common/student-details/add-student-log/add-student-log.component';
 import { ReimbursementDetailsComponent } from './components/common/reimbursement/reimbursement-details/reimbursement-details.component';
+import { FolderViewComponent } from './components/common/student-details/folder-view/folder-view.component';
 
 
 
@@ -89,6 +90,7 @@ import { ReimbursementDetailsComponent } from './components/common/reimbursement
     StudentDetailsComponent,
     AddStudentLogComponent,
     ReimbursementDetailsComponent,
+    FolderViewComponent,
   ],
   imports: [
     BrowserModule,

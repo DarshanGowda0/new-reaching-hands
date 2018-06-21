@@ -13,7 +13,6 @@ declare var $: any;
 export class AddStudentLogComponent implements OnInit {
 
   studentLog: StudentLog = {} as StudentLog;
-  studentLog2: StudentLog2;
   logFormControl = new FormControl();
 
   selectedFiles: FileList;
@@ -21,8 +20,7 @@ export class AddStudentLogComponent implements OnInit {
   download_url;
   constructor(public dialogRef: MatDialogRef<AddStudentLogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
-    this.studentLog2 = data.item;
-    if (data.studentLog) {
+    if (data && data.studentLog) {
       this.studentLog = data.studentLog;
     }
   }
@@ -52,9 +50,10 @@ export class AddStudentLogComponent implements OnInit {
       'fathersName': this.studentLog.fathersName,
       'emailId': this.studentLog.emailId,
       'addedBy': this.dataService.uid,
-      'logdate': this.dataService.getTimeStamp(),
+      'logdate': this.studentLog.dateOfBirth,
       'image': this.download_url ? this.download_url : '',
-      'adhar': this.studentLog.adhar
+      'adhar': this.studentLog.adhar,
+      'folderId': this.studentLog.folderId ? this.studentLog.folderId : ''
     };
     console.log('check', tempItemLog);
     this.dataService.addStudentLog(tempItemLog).then(() => {

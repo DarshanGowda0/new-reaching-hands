@@ -114,7 +114,7 @@ export class DataService {
   }
 
   getLogsofStudents() {
-    return this.firestore.collection('studentLogs', ref => ref.orderBy('studentName', 'asc')).valueChanges();
+    return this.firestore.collection<StudentLog>('studentLogs', ref => ref.orderBy('studentName', 'asc')).valueChanges();
   }
 
   addAuth(uid: string) {
