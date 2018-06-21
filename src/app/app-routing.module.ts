@@ -24,6 +24,7 @@ import { SubCategoryLevelReportComponent } from './components/common/sub-categor
 import { CategoryLevelReportComponent } from './components/common/category-level-report/category-level-report.component';
 import { ReimbursementComponent } from './components/common/reimbursement/reimbursement/reimbursement.component';
 import { StudentDetailsComponent } from './components/common/student-details/student-details/student-details.component';
+import { FolderViewComponent } from './components/common/student-details/folder-view/folder-view.component';
 
 const routes: Routes = [
   {
@@ -135,6 +136,11 @@ const routes: Routes = [
     path: 'SubCategory-level',
     component: SubCategoryLevelReportComponent,
     resolve: { google: GoogleChartResolver },
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'student-folder/:id',
+    component: FolderViewComponent,
     canActivate: [AuthGuard]
   },
   {

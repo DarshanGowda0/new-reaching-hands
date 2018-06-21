@@ -7,6 +7,7 @@ import { User } from '../../../../core/user';
 import { tap, map, take } from 'rxjs/operators';
 import { StudentLog, StudentLog2 } from '../../../../models/student-logs';
 import { AddStudentLogComponent } from '../add-student-log/add-student-log.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-student-details',
@@ -15,34 +16,27 @@ import { AddStudentLogComponent } from '../add-student-log/add-student-log.compo
 })
 export class StudentDetailsComponent implements OnInit, AfterViewInit {
 
-  dataSource: MatTableDataSource<any>;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   category = [
     'Student Details'
   ];
 
-  displayedColumns = ['studentName', 'dateOfBirth', 'fathersName', 'emailId', 'edit', 'delete'];
+
+  nColumns: number;
+  students: Observable<StudentLog[]>;
+
   user: User;
-  studentLog2: StudentLog2 = {} as StudentLog2;
   constructor(public snackBar: MatSnackBar, private auth: AuthService,
-    private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
+    private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog,
+    private router: Router) {
+  }
 
   ngOnInit() {
-    this.auth.user.subscribe(params => {
-      this.dataService.getStudentLogById(params.uid).subscribe(item => {
-        this.studentLog2 = item;
-      });
-    });
+    this.students = this.dataService.getLogsofStudents();
   }
 
   addNewLog() {
     const dialogRef = this.dialog.open(AddStudentLogComponent, {
       width: '450px',
-      data: {
-        'studentLog': undefined,
-        'studentLog2': this.studentLog2
-      },
       disableClose: true
     });
   }
@@ -51,9 +45,7 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
     this.auth.user.subscribe(params => {
       console.log(params.uid);
       this.dataService.getLogsofStudents().subscribe(val => {
-        this.dataSource = new MatTableDataSource(val);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+
       });
     });
   }
@@ -80,12 +72,6 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
   }
 
 
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim();
-    filterValue = filterValue.toLowerCase();
-    this.dataSource.filter = filterValue;
-  }
-
   onEdit(studentLog) {
     this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canEdit(val)) {
@@ -93,7 +79,6 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
           width: '450px',
           data: {
             'studentLog': studentLog,
-            'studentLog2': this.studentLog2
           },
           disableClose: true
         });
@@ -105,5 +90,19 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
         this.popUp('Not Admin : ', 'No Access to Edit');
       }
     });
+  }
+
+  getAge(birthday) { // birthday is a date
+    console.log(birthday.toDate());
+    // birthday = birthday.toDate();
+    // const ageDifMs = Date.now() - birthday.getTime();
+    // const ageDate = new Date(ageDifMs); // miliseconds from epoch
+    // return Math.abs(ageDate.getUTCFullYear() - 1970);
+    return 22;
+  }
+
+  openFolder(folderId) {
+    console.log('clicked for ', folderId);
+    this.router.navigate(['student-folder', folderId]);
   }
 }

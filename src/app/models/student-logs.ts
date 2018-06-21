@@ -6,6 +6,9 @@ export interface StudentLog {
     fathersName: string;
     emailId: string;
     addedBy: string;
+    image: string;
+    adhar: string;
+    folderId: string;
 }
 
 export interface StudentLog2 {
@@ -17,4 +20,7 @@ export interface StudentLog2 {
     emailId: string;
     addedBy: string;
     photo: string;
+    image: string;
+    adhar: string;
+    folderId: string;
 }

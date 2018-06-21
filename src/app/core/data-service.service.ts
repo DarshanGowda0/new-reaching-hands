@@ -3,18 +3,19 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import * as firebase from 'firebase';
 import { Item } from '../models/item';
 import { AuthService } from './auth.service';
-import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract} from '../models/item-log';
+import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
 import { ReimbursementLog, ReimbursementLog2 } from '../models/reimbursement-log';
-import {StudentLog, StudentLog2 } from '../models/student-logs';
+import { StudentLog, StudentLog2 } from '../models/student-logs';
+import { AngularFireStorage } from 'angularfire2/storage';
 
 @Injectable()
 export class DataService {
 
   uid: string;
 
-  constructor(private firestore: AngularFirestore, private authService: AuthService) {
+  constructor(private firestore: AngularFirestore, private authService: AuthService, private storage: AngularFireStorage) {
     this.authService.user.subscribe(user => {
       this.uid = user.uid;
     });
@@ -29,15 +30,15 @@ export class DataService {
   }
 
   addItem(item: Item) {
-    if(item.itemId === ''){
-    item.itemId = this.generateId();
+    if (item.itemId === '') {
+      item.itemId = this.generateId();
     }
     item.addedBy = this.uid;
     return this.firestore.collection(`items`).doc(item.itemId).set(item);
   }
 
   getLogExists(item: Item) {
-    return this.firestore.collection<Item>(`items`, ref => ref.where('category', '==' , item.category)
+    return this.firestore.collection<Item>(`items`, ref => ref.where('category', '==', item.category)
       .where('subCategory', '==', item.subCategory)
       .where('itemName', '==', item.itemName)).valueChanges();
   }
@@ -50,9 +51,9 @@ export class DataService {
     return this.firestore.doc<ReimbursementLog2>(`reimbursementLogs/${uid}`).valueChanges();
   }
 
-  getStudentLogById(uid: string) {
-    return this.firestore.doc<StudentLog2>(`studentLogs`).valueChanges();
-  }
+  // getStudentLogById(uid: string) {
+  //   return this.firestore.doc<StudentLog2>(`studentLogs`).valueChanges();
+  // }
 
   getItems(subCategory: string, queryString: string) {
     return this.firestore.collection<Item>(`items`, ref => ref.where('subCategory', '==', subCategory)
@@ -89,7 +90,7 @@ export class DataService {
   }
 
   getLogsOfItemAsce(itemId: string, startDate: any, endDate: any) {
-    console.log('date issssss',startDate);
+    console.log('date issssss', startDate);
     return this.firestore.collection<ItemLog>(`logs`, ref => ref.where('itemId', '==', itemId)
       .where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
   }
@@ -106,14 +107,14 @@ export class DataService {
   getLogsofReimbursement(uid: string, status: string) {
     if (status === 'open') {
       return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', status)
-    .orderBy('dateOfPurchase', 'desc')).valueChanges();
+        .orderBy('dateOfPurchase', 'desc')).valueChanges();
     }
-      return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', 'closed')
-    .orderBy('dateOfPurchase', 'desc')).valueChanges();
+    return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', 'closed')
+      .orderBy('dateOfPurchase', 'desc')).valueChanges();
   }
 
   getLogsofStudents() {
-    return this.firestore.collection('studentLogs', ref => ref.orderBy('studentName', 'asc')).valueChanges();
+    return this.firestore.collection<StudentLog>('studentLogs', ref => ref.orderBy('studentName', 'asc')).valueChanges();
   }
 
   addAuth(uid: string) {
@@ -151,7 +152,8 @@ export class DataService {
     return this.firestore.collection<ItemAbstract>(`logs`).valueChanges();
   }
   getSummaryDatePicker(startDate: any, endDate: any) {
-    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
+    return this.firestore.collection<ItemAbstract>(`logs`, ref => ref.
+      where('date', '>=', startDate).where('date', '<=', endDate).orderBy('date')).valueChanges();
   }
 
 
@@ -186,6 +188,18 @@ export class DataService {
       const tokens = { ...currentTokens, [token]: true };
       userRef.update({ fcmTokens: tokens });
     }
+  }
+
+  startUpload(file: File) {
+    // Client-side validation example
+    if (file.type.split('/')[0] !== 'image') {
+      console.error('unsupported file type :( ');
+      return;
+    }
+
+    const path = `/studentImages/${new Date().getTime()}_${file.name}`;
+    const customMetadata = { app: 'Student Images' };
+    return this.storage.upload(path, file, { customMetadata });
   }
 
 }
