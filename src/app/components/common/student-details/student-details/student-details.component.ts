@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
   templateUrl: './student-details.component.html',
   styleUrls: ['./student-details.component.css']
 })
-export class StudentDetailsComponent implements OnInit, AfterViewInit {
+export class StudentDetailsComponent implements OnInit {
 
   category = [
     'Student Details'
@@ -31,22 +31,13 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.students = this.dataService.getLogsofStudents();
+    this.students = this.dataService.getLogsofStudents('');
   }
 
   addNewLog() {
     const dialogRef = this.dialog.open(AddStudentLogComponent, {
       width: '450px',
       disableClose: true
-    });
-  }
-
-  ngAfterViewInit() {
-    this.auth.user.subscribe(params => {
-      console.log(params.uid);
-      this.dataService.getLogsofStudents().subscribe(val => {
-
-      });
     });
   }
 
@@ -93,7 +84,7 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
   }
 
   getAge(birthday) { // birthday is a date
-    console.log(birthday.toDate());
+    // console.log(birthday.toDate());
     // birthday = birthday.toDate();
     // const ageDifMs = Date.now() - birthday.getTime();
     // const ageDate = new Date(ageDifMs); // miliseconds from epoch
@@ -104,5 +95,15 @@ export class StudentDetailsComponent implements OnInit, AfterViewInit {
   openFolder(folderId) {
     console.log('clicked for ', folderId);
     this.router.navigate(['student-folder', folderId]);
+  }
+
+  search($event) {
+    const query = $event.target.value;
+    if (query) {
+      this.students = this.dataService.getLogsofStudents(query);
+      console.log('called');
+    } else {
+      this.students = this.dataService.getLogsofStudents('');
+    }
   }
 }

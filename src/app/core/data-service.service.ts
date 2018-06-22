@@ -61,6 +61,14 @@ export class DataService {
       .orderBy('itemName')).valueChanges();
   }
 
+  getLogsofStudents(queryString: string) {
+    return this.firestore.collection<StudentLog>('studentLogs', ref => ref
+      .where('studentName', '>', `${queryString}`).where('studentName', '<', `${queryString}z`)
+      .orderBy('studentName', 'asc')
+    ).valueChanges();
+  }
+
+
   deleteItemById(itemId) {
     return this.firestore.collection<Item>(`items`).doc(itemId).delete();
     // delete all logs related to item
@@ -113,9 +121,6 @@ export class DataService {
       .orderBy('dateOfPurchase', 'desc')).valueChanges();
   }
 
-  getLogsofStudents() {
-    return this.firestore.collection<StudentLog>('studentLogs', ref => ref.orderBy('studentName', 'asc')).valueChanges();
-  }
 
   addAuth(uid: string) {
 

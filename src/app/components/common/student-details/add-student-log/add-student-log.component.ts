@@ -17,7 +17,7 @@ export class AddStudentLogComponent implements OnInit {
 
   selectedFiles: FileList;
   progress = 0;
-  download_url;
+
   constructor(public dialogRef: MatDialogRef<AddStudentLogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
     if (data && data.studentLog) {
@@ -34,7 +34,7 @@ export class AddStudentLogComponent implements OnInit {
       this.progress = val;
     });
     task.snapshotChanges().subscribe(val => {
-      this.download_url = val.downloadURL;
+      this.studentLog.image = val.downloadURL;
     });
   }
 
@@ -51,7 +51,7 @@ export class AddStudentLogComponent implements OnInit {
       'emailId': this.studentLog.emailId,
       'addedBy': this.dataService.uid,
       'logdate': this.studentLog.dateOfBirth,
-      'image': this.download_url ? this.download_url : '',
+      'image': this.studentLog.image ? this.studentLog.image : '',
       'adhar': this.studentLog.adhar,
       'folderId': this.studentLog.folderId ? this.studentLog.folderId : ''
     };
