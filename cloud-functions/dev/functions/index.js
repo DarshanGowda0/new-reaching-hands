@@ -7,7 +7,6 @@ var firestore = admin.firestore();
 const { google } = require('googleapis');
 const fs = require('fs');
 
-
 exports.testDrive = functions.https.onRequest((request, response) => {
 
     console.log('called test drive function');
@@ -86,6 +85,8 @@ exports.usersUpdate = functions.firestore.document('users/{uid}').onUpdate(event
     var document = event.data.data();
 
     var isAllowed = document.checkEditor;
+    var previousDocument = event.data.previous.data();
+    var prevIsAllowed = previousDocument.checkEditor;
 
     const jwtClient = new google.auth.JWT(
         key.client_email,
@@ -114,7 +115,7 @@ exports.usersUpdate = functions.firestore.document('users/{uid}').onUpdate(event
                 'emailAddress': email
             };
 
-            if (isAllowed) {
+            if (isAllowed && !prevIsAllowed) {
                 console.log('user is allowed to access ');
 
                 drive.permissions.create({
