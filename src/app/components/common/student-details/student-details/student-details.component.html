@@ -1,6 +1,10 @@
+<mat-form-field style="width:100%;padding:2%">
+  <input matInput placeholder="Search Students" type="search" (keyup)="search($event)">
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>
 <div style="margin: 2%;">
   <div class="ui four stackable cards">
-    <div class="card" *ngFor="let student of students | async" >
+    <div class="card" *ngFor="let student of students | async">
       <div class="image" (click)="openFolder(student.folderId)">
         <img src="{{student.image}}">
       </div>
