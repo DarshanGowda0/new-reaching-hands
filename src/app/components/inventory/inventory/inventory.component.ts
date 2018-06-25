@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AddNewComponent } from '../../common/add-new/add-new.component';
-import { MatDialog } from '@angular/material';
-import { AppComponent } from '../../../app.component';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
 
 @Component({
   selector: 'app-inventory',

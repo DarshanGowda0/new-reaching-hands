@@ -4,7 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { AppComponent } from './app.component';
+import { AppComponent, ChatBotDialogComponent } from './app.component';
 
 import { environment } from '../environments/environment';
 import { MaterialModule } from './material/material.module';
@@ -91,6 +91,7 @@ import { FolderViewComponent } from './components/common/student-details/folder-
     AddStudentLogComponent,
     ReimbursementDetailsComponent,
     FolderViewComponent,
+    ChatBotDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -117,6 +118,7 @@ import { FolderViewComponent } from './components/common/student-details/folder-
     AddReimbursementLogComponent,
     AddStudentLogComponent,
     AddLogPComponent,
+    ChatBotDialogComponent
   ]
 })
 export class AppModule { }
