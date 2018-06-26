@@ -22,8 +22,8 @@ export class ReimbursementDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   displayedColumns = [];
-  allColumns = ['itemName', 'dateOfPurchase', 'billNumber', 'totalCost', 'edit', 'delete', 'approve'];
-  approvedColums = ['itemName', 'dateOfPurchase', 'billNumber', 'totalCost'];
+  allColumns = ['itemName', 'addedBy', 'dateOfPurchase', 'billNumber', 'totalCost', 'edit', 'delete', 'approve'];
+  approvedColums = ['itemName', 'addedBy', 'dateOfPurchase', 'billNumber', 'totalCost'];
   user: User;
   stat = 'closed';
   constructor(public snackBar: MatSnackBar, private auth: AuthService,

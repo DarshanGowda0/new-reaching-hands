@@ -5,6 +5,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DataService } from '../../../../core/data-service.service';
 import { ReimbursementComponent } from '../reimbursement/reimbursement.component';
 import { AuthService } from '../../../../core/auth.service';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Component({
   selector: 'app-add-reimbursement-log',
@@ -17,7 +18,8 @@ export class AddReimbursementLogComponent implements OnInit {
   reimbursementLog2: ReimbursementLog;
   logFormControl = new FormControl();
   constructor(public dialogRef: MatDialogRef<AddReimbursementLogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService, private auth: AuthService) {
+    @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService, private auth: AuthService,
+    private afAuth: AngularFireAuth) {
     this.reimbursementLog2 = data.item;
     if (data.reimbursementLog) {
       this.reimbursementLog = data.reimbursementLog;
@@ -37,17 +39,15 @@ export class AddReimbursementLogComponent implements OnInit {
       'addedBy': this.dataService.uid,
       'status': 'open',
       'logdate': this.dataService.getTimeStamp(),
-      'email': ''
+      'name': ''
     };
     console.log('check', tempItemLog);
-    this.auth.user.subscribe(user => {
-      tempItemLog.email = user.email;
-      this.dataService.addReimbursementLog(tempItemLog).then(() => {
-        console.log('added log succesfully');
-      }).catch(err => {
-        console.error('error while adding log', err);
-        alert('error adding log');
-      });
+    tempItemLog.name = this.afAuth.auth.currentUser.displayName;
+    this.dataService.addReimbursementLog(tempItemLog).then(() => {
+      console.log('added log succesfully');
+    }).catch(err => {
+      console.error('error while adding log', err);
+      alert('error adding log');
     });
 
     this.dialogRef.close();

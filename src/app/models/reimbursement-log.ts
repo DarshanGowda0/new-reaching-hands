@@ -7,5 +7,5 @@ export interface ReimbursementLog {
     addedBy: string;
     dateOfPurchase: any;
     status: string;
-    email: string;
+    name: string;
 }
