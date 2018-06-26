@@ -8,12 +8,12 @@
         <span>Reaching Hand</span>
       </a>
       <span class="toolbar-spacer"></span>
-      <button mat-icon-button (click)="signOut()" style="position:absolute;right:10px;color:white">
-        <mat-icon aria-label="Example icon-button with a heart icon">
-          <i class="material-icons">settings_power</i>
-        </mat-icon>
+      <button mat-icon-button (click)="openDialog()" style="color:white">
+        <mat-icon class="example-icon">textsms</mat-icon>
       </button>
-      <span class="toolbar-spacer"></span>
+      <button mat-icon-button (click)="signOut()" style="color:white">
+        <mat-icon class="example-icon">settings_power</mat-icon>
+      </button>
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-sidenav-container class="sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
@@ -38,7 +38,7 @@
           <h3>Categories:</h3>
           <mat-list-item *ngFor="let item of category">
             <mat-icon mat-list-icon>folder</mat-icon>
-            <a mat-list-item routerLink="./{{item}}" >{{item}}</a>
+            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
           </mat-list-item>
           <h3>Reports:</h3>
           <mat-list-item *ngFor="let item of reports">
@@ -55,15 +55,15 @@
     </mat-sidenav>
     <mat-sidenav-content class="router-content">
       <div *ngIf="this.banner == 'on'">
-      <div class="ui floating message" style="position:fixed;top:5%; right:5%; z-index:10" *ngIf="msg.currentMessage | async as message">
-        <button mat-icon-button (click)="onClick()" style="position:absolute;right:10px;">
-          <!-- msg.currentMessage | async as message  this.banner == 'on' -->
-          <mat-icon color="warn">cancel</mat-icon>
-        </button>
-        <h3>{{message.notification.title}}</h3>
-        <p>{{message.notification.body}}</p>
+        <div class="ui floating message" style="position:fixed;top:5%; right:5%; z-index:10" *ngIf="msg.currentMessage | async as message">
+          <button mat-icon-button (click)="onClick()" style="position:absolute;right:10px;">
+            <!-- msg.currentMessage | async as message  this.banner == 'on' -->
+            <mat-icon color="warn">cancel</mat-icon>
+          </button>
+          <h3>{{message.notification.title}}</h3>
+          <p>{{message.notification.body}}</p>
+        </div>
       </div>
-    </div>
       <router-outlet>
       </router-outlet>
     </mat-sidenav-content>

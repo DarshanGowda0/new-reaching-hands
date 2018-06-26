@@ -4,10 +4,6 @@ import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatSnackBar } fro
 import { AuthService } from '../../../../core/auth.service';
 import { DataService } from '../../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ReimbursementLog2 } from '../../../../models/reimbursement-log';
-import { tap, map } from 'rxjs/operators';
-import { User } from '../../../../core/user';
-
 
 @Component({
   selector: 'app-reimbursement',

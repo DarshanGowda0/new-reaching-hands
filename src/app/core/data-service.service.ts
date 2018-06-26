@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { ItemLog, ItemLog1, ItemLog3, ItemLog2, ItemAbstract } from '../models/item-log';
 import { tap, map } from 'rxjs/operators';
 import { User } from './user';
-import { ReimbursementLog, ReimbursementLog2 } from '../models/reimbursement-log';
+import { ReimbursementLog } from '../models/reimbursement-log';
 import { StudentLog, StudentLog2 } from '../models/student-logs';
 import { AngularFireStorage } from 'angularfire2/storage';
 
@@ -47,10 +47,6 @@ export class DataService {
     return this.firestore.doc<Item>(`items/${itemId}`).valueChanges();
   }
 
-  getReimbursementLogById(uid: string) {
-    return this.firestore.doc<ReimbursementLog2>(`reimbursementLogs/${uid}`).valueChanges();
-  }
-
   // getStudentLogById(uid: string) {
   //   return this.firestore.doc<StudentLog2>(`studentLogs`).valueChanges();
   // }
@@ -87,7 +83,7 @@ export class DataService {
     return this.firestore.collection<ItemLog3>(`logs`).doc(log.logId).set(log);
   }
   addReimbursementLog(log: ReimbursementLog) {
-    return this.firestore.collection<ReimbursementLog2>(`reimbursementLogs`).doc(log.reimburesmentId).set(log);
+    return this.firestore.collection<ReimbursementLog>(`reimbursementLogs`).doc(log.reimburesmentId).set(log);
   }
   addStudentLog(log: StudentLog) {
     return this.firestore.collection<StudentLog2>('studentLogs').doc(log.logId).set(log);
@@ -112,13 +108,23 @@ export class DataService {
   getLogsOfItem3(itemId: string) {
     return this.firestore.collection<ItemLog3>(`logs`, ref => ref.where('itemId', '==', itemId).orderBy('date', 'desc')).valueChanges();
   }
-  getLogsofReimbursement(uid: string, status: string) {
-    if (status === 'open') {
-      return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', status)
+  getLogsofReimbursement(uid: string, status: string, isAdmin: boolean) {
+    if (isAdmin) {
+      if (status === 'open') {
+        return this.firestore.collection(`reimbursementLogs`, ref => ref.where('status', '==', status)
+          .orderBy('dateOfPurchase', 'desc')).valueChanges();
+      }
+      return this.firestore.collection(`reimbursementLogs`, ref => ref.where('status', '==', 'closed')
+        .orderBy('dateOfPurchase', 'desc')).valueChanges();
+    } else {
+      if (status === 'open') {
+        return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', status)
+          .orderBy('dateOfPurchase', 'desc')).valueChanges();
+      }
+      return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', 'closed')
         .orderBy('dateOfPurchase', 'desc')).valueChanges();
     }
-    return this.firestore.collection(`reimbursementLogs`, ref => ref.where('addedBy', '==', uid).where('status', '==', 'closed')
-      .orderBy('dateOfPurchase', 'desc')).valueChanges();
+
   }
 
 
@@ -180,7 +186,7 @@ export class DataService {
   }
 
   deleteRemibusrementLogById(logId: string) {
-    return this.firestore.collection<ReimbursementLog2>(`reimbursementLogs`).doc(logId).delete();
+    return this.firestore.collection<ReimbursementLog>(`reimbursementLogs`).doc(logId).delete();
   }
 
   // save the permission token in firestore

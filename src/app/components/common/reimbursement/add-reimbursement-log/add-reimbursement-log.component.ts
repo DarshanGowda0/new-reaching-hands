@@ -3,7 +3,6 @@ import { ReimbursementLog } from '../../../../models/reimbursement-log';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DataService } from '../../../../core/data-service.service';
-import { ReimbursementLog2 } from '../../../../models/reimbursement-log';
 import { ReimbursementComponent } from '../reimbursement/reimbursement.component';
 import { AuthService } from '../../../../core/auth.service';
 
@@ -15,15 +14,15 @@ import { AuthService } from '../../../../core/auth.service';
 export class AddReimbursementLogComponent implements OnInit {
 
   reimbursementLog: ReimbursementLog = {} as ReimbursementLog;
-  reimbursementLog2: ReimbursementLog2;
+  reimbursementLog2: ReimbursementLog;
   logFormControl = new FormControl();
-    constructor(public dialogRef: MatDialogRef<AddReimbursementLogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService) {
+  constructor(public dialogRef: MatDialogRef<AddReimbursementLogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any, private dataService: DataService, private auth: AuthService) {
     this.reimbursementLog2 = data.item;
     if (data.reimbursementLog) {
       this.reimbursementLog = data.reimbursementLog;
     }
-   }
+  }
 
   ngOnInit() {
   }
@@ -31,21 +30,26 @@ export class AddReimbursementLogComponent implements OnInit {
   onAdd() {
     const tempItemLog: ReimbursementLog = {
       'reimburesmentId': this.reimbursementLog.reimburesmentId ? this.reimbursementLog.reimburesmentId : this.dataService.generateId(),
-      'dateOfPurchase' : this.reimbursementLog.dateOfPurchase,
+      'dateOfPurchase': this.reimbursementLog.dateOfPurchase,
       'itemName': this.reimbursementLog.itemName,
       'totalCost': this.reimbursementLog.totalCost,
       'billNumber': this.reimbursementLog.billNumber,
       'addedBy': this.dataService.uid,
       'status': 'open',
-      'logdate': this.dataService.getTimeStamp()
+      'logdate': this.dataService.getTimeStamp(),
+      'email': ''
     };
     console.log('check', tempItemLog);
-    this.dataService.addReimbursementLog(tempItemLog).then(() => {
-      console.log('added log succesfully');
-    }).catch(err => {
-      console.error('error while adding log', err);
-      alert('error adding log');
+    this.auth.user.subscribe(user => {
+      tempItemLog.email = user.email;
+      this.dataService.addReimbursementLog(tempItemLog).then(() => {
+        console.log('added log succesfully');
+      }).catch(err => {
+        console.error('error while adding log', err);
+        alert('error adding log');
+      });
     });
+
     this.dialogRef.close();
   }
 

@@ -4,7 +4,7 @@ import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatSnackBar } fro
 import { AuthService } from '../../../../core/auth.service';
 import { DataService } from '../../../../core/data-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ReimbursementLog2, ReimbursementLog } from '../../../../models/reimbursement-log';
+import { ReimbursementLog } from '../../../../models/reimbursement-log';
 import { tap, map, take } from 'rxjs/operators';
 import { User } from '../../../../core/user';
 
@@ -21,27 +21,27 @@ export class ReimbursementDetailsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  displayedColumns = ['itemName', 'dateOfPurchase', 'billNumber', 'totalCost', 'edit', 'delete', 'approve'];
+  displayedColumns = [];
+  allColumns = ['itemName', 'dateOfPurchase', 'billNumber', 'totalCost', 'edit', 'delete', 'approve'];
+  approvedColums = ['itemName', 'dateOfPurchase', 'billNumber', 'totalCost'];
   user: User;
-  reimbursementLog2: ReimbursementLog2 = {} as ReimbursementLog2;
   stat = 'closed';
   constructor(public snackBar: MatSnackBar, private auth: AuthService,
     private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.auth.user.subscribe(params => {
-      this.dataService.getReimbursementLogById(params.uid).subscribe(item => {
-        this.reimbursementLog2 = item;
-      });
-    });
+    if (this.currentStatus === 'closed') {
+      this.displayedColumns = this.approvedColums;
+    } else {
+      this.displayedColumns = this.allColumns;
+    }
   }
   addNewLog() {
     const dialogRef = this.dialog.open(AddReimbursementLogComponent, {
       width: '450px',
       data: {
         'reimbursementlog': undefined,
-        'reimbursementLog2': this.reimbursementLog2
       },
       disableClose: true
     });
@@ -54,7 +54,11 @@ export class ReimbursementDetailsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.auth.user.subscribe(params => {
       console.log(params.uid);
-      this.dataService.getLogsofReimbursement(params.uid, this.currentStatus).subscribe(val => {
+      let isAdmin = false;
+      if (params.checkAdmin != null) {
+        isAdmin = params.checkAdmin;
+      }
+      this.dataService.getLogsofReimbursement(params.uid, this.currentStatus, isAdmin).subscribe(val => {
         this.dataSource = new MatTableDataSource(val);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -63,6 +67,7 @@ export class ReimbursementDetailsComponent implements OnInit, AfterViewInit {
     this.stat = this.currentStatus;
     console.log('status is', this.stat);
   }
+
   onDelete(logId) {
     this.auth.user.pipe(take(1)).subscribe(val => {
       if (this.auth.canDelete(val)) {
@@ -85,7 +90,6 @@ export class ReimbursementDetailsComponent implements OnInit, AfterViewInit {
           width: '450px',
           data: {
             'reimbursementLog': reimbursementLog,
-            'reimbursementLog2': this.reimbursementLog2
           },
           disableClose: true
         });

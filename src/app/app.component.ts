@@ -7,6 +7,8 @@ import { AuthService } from './core/auth.service';
 import { MessagingService } from './core/messaging-service.service';
 import { filter, take } from 'rxjs/operators';
 import { DataService } from './core/data-service.service';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Inject } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +31,8 @@ export class AppComponent implements OnDestroy, OnInit {
   cat: string;
   banner = 'on';
   constructor(public auth: AuthService, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-    private router: Router, private afs: AngularFirestore, public msg: MessagingService, private dataService: DataService) {
+    private router: Router, private afs: AngularFirestore, public msg: MessagingService,
+    public dialog: MatDialog) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
@@ -117,7 +120,7 @@ export class AppComponent implements OnDestroy, OnInit {
     return newHash;
   }
 
-  onClick(){
+  onClick() {
     this.banner = 'off';
 
   }
@@ -149,5 +152,36 @@ export class AppComponent implements OnDestroy, OnInit {
     return Math.floor((utc2 - utc1) / _MS_PER_DAY);
   }
 
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ChatBotDialogComponent, {
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+}
+
+
+
+// another component
+@Component({
+  selector: 'app-dialog-chatbot',
+  template: `<iframe
+  width="350"
+  height="430"
+  src="https://console.dialogflow.com/api-client/demo/embedded/a6d3f3e2-58af-45fa-b7f3-81fc3884322e">
+</iframe>`
+})
+export class ChatBotDialogComponent {
+
+  constructor(
+    public dialogRef: MatDialogRef<ChatBotDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 
 }
