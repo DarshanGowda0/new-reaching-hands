@@ -56,7 +56,7 @@ export interface ItemLog2 {
 }
 export interface ItemLog3 {
     logId: string;
-    serviceDate: string;
+    serviceDate: any;
     servicer: string;
     logType: string; // donation etc
     selectedCommons: string;

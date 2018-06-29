@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDatepickerInputEvent } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { ItemLog3 } from '../../../models/item-log';
 import { DataService } from '../../../core/data-service.service';
 import { Item } from '../../../models/item';
-
+import * as types from '@firebase/firestore-types';
 
 @Component({
   selector: 'app-add-log3',
@@ -55,6 +55,17 @@ export class AddLog3Component implements OnInit {
       alert('error adding log');
     });
     this.dialogRef.close();
+  }
+
+  addEvent(event: MatDatepickerInputEvent<Date>) {
+    const date = new Date(event.value);
+    this.itemLog3.serviceDate = date.getMilliseconds();
+    console.log('date ', this.itemLog3.serviceDate);
+  }
+
+  getCorrectDate() {
+    // return types.Timestamp.fromDate(this.itemLog3.serviceDate).toDate();
+    return '';
   }
 
 }
