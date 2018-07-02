@@ -37,17 +37,25 @@
           <br>
           <h3>Categories:</h3>
           <mat-list-item *ngFor="let item of category">
-            <mat-icon mat-list-icon>folder</mat-icon>
-            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+            <mat-icon mat-list-icon>dashboard</mat-icon>
+            <a mat-list-item routerLink="./{{item}}" >{{item}}</a>
           </mat-list-item>
           <h3>Reports:</h3>
           <mat-list-item *ngFor="let item of reports">
-            <mat-icon mat-list-icon>note</mat-icon>
+            <mat-icon mat-list-icon>insert_chart</mat-icon>
             <a mat-list-item routerLink="./{{item}}">{{item}}</a>
           </mat-list-item>
           <h3>Admin Control:</h3>
           <mat-list-item *ngFor="let item of misc">
-            <mat-icon mat-list-icon>folder</mat-icon>
+            <mat-icon mat-list-icon>supervised_user_circle</mat-icon>
+            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+          </mat-list-item>
+          <mat-list-item *ngFor="let item of misc1">
+            <mat-icon mat-list-icon>receipt</mat-icon>
+            <a mat-list-item routerLink="./{{item}}">{{item}}</a>
+          </mat-list-item>
+          <mat-list-item *ngFor="let item of misc2">
+            <mat-icon mat-list-icon>school</mat-icon>
             <a mat-list-item routerLink="./{{item}}">{{item}}</a>
           </mat-list-item>
         </mat-nav-list>

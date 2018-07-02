@@ -19,7 +19,9 @@ export class AppComponent implements OnDestroy, OnInit {
 
 
   mobileQuery: MediaQueryList;
-  misc = ['AccessControl', 'Reimbursement', 'Student Details'];
+  misc = ['AccessControl'];
+  misc1 = ['Reimbursement']
+  misc2 = ['Student Details'];
   category = ['HomeSchoolInventory', 'Inventory', 'Projects', 'Services', 'Education', 'Maintenance'];
   reports = ['Summary-level', 'Category-level', 'SubCategory-level'];
   logTypeOptions = ['Added', 'Issued', 'Donated'];
