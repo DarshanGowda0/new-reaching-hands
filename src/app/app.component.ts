@@ -171,7 +171,7 @@ export class AppComponent implements OnDestroy, OnInit {
   template: `<iframe
   width="350"
   height="430"
-  src="https://console.dialogflow.com/api-client/demo/embedded/a6d3f3e2-58af-45fa-b7f3-81fc3884322e">
+  src="https://console.dialogflow.com/api-client/demo/embedded/cee75b54-326c-4490-9f8f-747c1890d1fc">
 </iframe>`
 })
 export class ChatBotDialogComponent {

@@ -51,3 +51,4 @@ Thumbs.db
 /cloud-functions/prod/functions/package-lock.json
 package-lock.json
 cloud-functions/dev/functions/creds
+cloud-functions/prod/functions/creds

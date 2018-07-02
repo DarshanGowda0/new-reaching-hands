@@ -8,7 +8,7 @@ import { AppComponent, ChatBotDialogComponent } from './app.component';
 
 import { environment } from '../environments/environment';
 import { MaterialModule } from './material/material.module';
-import { AngularFireModule } from 'angularfire2';
+import { AngularFireModule, FirebaseOptionsToken } from 'angularfire2';
 import { AngularFirestore, AngularFirestoreModule } from 'angularfire2/firestore';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -98,7 +98,7 @@ import { FolderViewComponent } from './components/common/student-details/folder-
     AppRoutingModule,
     ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
     MaterialModule,
-    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireModule,
     AngularFirestoreModule.enablePersistence(),
     FormsModule,
     ReactiveFormsModule,
@@ -107,7 +107,10 @@ import { FolderViewComponent } from './components/common/student-details/folder-
     CoreModule,
     MatCheckboxModule
   ],
-  providers: [{provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}],
+  providers: [
+    {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
+    {provide: FirebaseOptionsToken, useValue: environment.firebase},
+  ],
   bootstrap: [AppComponent],
   entryComponents: [
     AddLogComponent,

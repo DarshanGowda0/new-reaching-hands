@@ -6,6 +6,7 @@ import { forEach } from '@firebase/util';
 import { MatDialog, MatTableDataSource, MatSort, MatPaginator, MatDatepickerInputEvent } from '@angular/material';
 // import { model } from '@tensorflow/tfjs';
 import * as tf from '@tensorflow/tfjs';
+import { Regularizer, l1 } from '@tensorflow/tfjs-layers/dist/regularizers';
 
 export interface CostModel {
   purchased: number;
@@ -476,15 +477,27 @@ export class SummaryReportComponent implements OnInit {
     // yTestTensor.print();
 
     const linearModel = tf.sequential();
+    const reg =
+      linearModel.add(tf.layers.dense({
+        units: 1,
+        inputShape: [1],
+        //  useBias: false,
+        biasRegularizer: 'l1l2',
+        kernelRegularizer: 'l1l2'
+      }));
+
     linearModel.add(tf.layers.dense({
       units: 1,
-      inputShape: [1],
+      biasRegularizer: 'l1l2',
+      kernelRegularizer: 'l1l2'
     }));
 
+    const mOptimizer = tf.train.adagrad(0.2);
+
     linearModel.compile({
-      loss: 'meanSquaredError',
-      optimizer: 'adam',
-      metrics: ['accuracy']
+      loss: 'meanSquaredLogarithmicError',
+      optimizer: mOptimizer,
+      metrics: ['accuracy'],
     });
 
     await linearModel.fit(xTrainTensor, yTrainTensor, {

@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "firebase-admin": "~5.8.1",
-    "firebase-functions": "^0.8.1"
+    "firebase-functions": "^0.8.1",
+    "googleapis": "^27.0.0"
   },
   "private": true
 }
