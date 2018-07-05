@@ -1,5 +1,6 @@
 # NewReachingHands
 
+PPT - [Presentation](https://docs.google.com/presentation/d/1fM_NeFZZICqjQhvFEG-sAShR2Zbsh0XtGiNCjIcREcY/edit?usp=sharing)
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.7.1.
 
 ## Development server
