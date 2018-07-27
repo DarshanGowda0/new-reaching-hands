@@ -228,6 +228,11 @@ export class CategoryLevelReportComponent implements OnInit {
       });
     });
 
+    dataArray1.sort((a, b) => {
+      const aDate = new Date(b.date);
+      const bDate = new Date(a.date);
+      return (bDate > aDate ? 1 : -1);
+    });
 
     dataArray1.forEach(element => {
       const row = [];
@@ -241,16 +246,6 @@ export class CategoryLevelReportComponent implements OnInit {
     });
 
     this.drawLineChart(costData, dateToData);
-  }
-
-  compare(a, b) {
-    if (a.last_nom < b.last_nom) {
-      return -1;
-    }
-    if (a.last_nom > b.last_nom) {
-      return 1;
-    }
-    return 0;
   }
 
   drawPieChart(costData) {

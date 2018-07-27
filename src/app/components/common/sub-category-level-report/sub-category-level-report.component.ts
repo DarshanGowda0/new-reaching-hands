@@ -218,6 +218,12 @@ export class SubCategoryLevelReportComponent implements OnInit {
       });
     });
 
+    dataArray1.sort((a, b) => {
+      const aDate = new Date(b.date);
+      const bDate = new Date(a.date);
+      return (bDate > aDate ? 1 : -1);
+    });
+
 
     dataArray1.forEach(element => {
       const row = [];
