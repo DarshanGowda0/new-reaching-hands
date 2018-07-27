@@ -9,13 +9,14 @@ import { Item } from '../../../models/item';
 import { AddLog3Component } from '../add-log3/add-log3.component';
 import { tap, map, take } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth.service';
+import { firestore } from '../../../../../node_modules/firebase';
 
 @Component({
   selector: 'app-item-details3',
   templateUrl: './item-details3.component.html',
   styleUrls: ['./item-details3.component.css']
 })
-export class ItemDetails3Component implements OnInit, AfterViewInit  {
+export class ItemDetails3Component implements OnInit, AfterViewInit {
 
   item: Item = {} as Item;
   currentQuantity = 0;
@@ -28,7 +29,7 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(public snackBar: MatSnackBar, private auth: AuthService,
-     private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
+    private route: ActivatedRoute, private dataService: DataService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -122,6 +123,16 @@ export class ItemDetails3Component implements OnInit, AfterViewInit  {
         this.popUp('Not Admin : ', 'No Access to Edit');
       }
     });
+  }
+
+  showDate(serviceDate) {
+
+    if (serviceDate instanceof firestore.Timestamp) {
+      return serviceDate.toDate();
+    } else if (serviceDate instanceof Date) {
+      return serviceDate;
+    }
+    return '';
   }
 
 }

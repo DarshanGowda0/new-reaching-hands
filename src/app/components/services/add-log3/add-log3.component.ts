@@ -4,7 +4,8 @@ import { FormControl } from '@angular/forms';
 import { ItemLog3 } from '../../../models/item-log';
 import { DataService } from '../../../core/data-service.service';
 import { Item } from '../../../models/item';
-import * as types from '@firebase/firestore-types';
+// import * as types from '@firebase/firestore-types';
+import { firestore } from 'firebase/app';
 
 @Component({
   selector: 'app-add-log3',
@@ -59,13 +60,19 @@ export class AddLog3Component implements OnInit {
 
   addEvent(event: MatDatepickerInputEvent<Date>) {
     const date = new Date(event.value);
-    this.itemLog3.serviceDate = date.getMilliseconds();
+    console.log('chosen date ', date);
+    this.itemLog3.serviceDate = date;
     console.log('date ', this.itemLog3.serviceDate);
   }
 
   getCorrectDate() {
-    // return types.Timestamp.fromDate(this.itemLog3.serviceDate).toDate();
-    return '';
+
+    if( this.itemLog3.serviceDate instanceof firestore.Timestamp){
+      return this.itemLog3.serviceDate.toDate();
+    }else if( this.itemLog3.serviceDate instanceof Date){
+      return this.itemLog3.serviceDate;
+    }
+     return ''
   }
 
 }
