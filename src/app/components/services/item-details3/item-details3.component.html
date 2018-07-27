@@ -31,7 +31,7 @@
       <ng-container matColumnDef="serviceDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Service Date</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <span matTooltip="{{element.date}}"> {{showDate(element.serviceDate)|date: "h:mma 'on' MM/dd/yyyy"}} </span>
+          <span matTooltip="{{element.date}}"> {{element.serviceDate|date: "h:mma 'on' MM/dd/yyyy"}} </span>
         </mat-cell>
       </ng-container>
 

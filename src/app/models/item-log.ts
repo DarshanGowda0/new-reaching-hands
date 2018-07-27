@@ -26,7 +26,7 @@ export interface ItemLog {
 export interface ItemLog1 {
 
     logId: string;
-    serviceDate: string;
+    serviceDate: any;
     servicer: string;
     logType: string; // donation etc
     selectedCommons: string;
@@ -42,8 +42,8 @@ export interface ItemLog1 {
 export interface ItemLog2 {
     logId: string;
     date: any;
-    startDate: string;
-    endDate: string;
+    startDate: any;
+    endDate: any;
     selectedCommons: string;
     studentName: string;
     cost: number;

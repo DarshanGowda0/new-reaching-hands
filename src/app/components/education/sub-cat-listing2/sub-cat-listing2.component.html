@@ -43,7 +43,7 @@
         <div class="extra content">
           <span>
             <i class="history icon"></i>
-            {{item.lastModified.toDate()|date: "h:mma 'on' MM/dd/yyyy"}}
+            {{item.lastModified ? (item.lastModified.toDate()|date: "h:mma 'on' MM/dd/yyyy") : 'loading...' }}
           </span>
         </div>
       </div>

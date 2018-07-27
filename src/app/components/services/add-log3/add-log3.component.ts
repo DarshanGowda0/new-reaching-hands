@@ -58,21 +58,4 @@ export class AddLog3Component implements OnInit {
     this.dialogRef.close();
   }
 
-  addEvent(event: MatDatepickerInputEvent<Date>) {
-    const date = new Date(event.value);
-    console.log('chosen date ', date);
-    this.itemLog3.serviceDate = date;
-    console.log('date ', this.itemLog3.serviceDate);
-  }
-
-  getCorrectDate() {
-
-    if( this.itemLog3.serviceDate instanceof firestore.Timestamp){
-      return this.itemLog3.serviceDate.toDate();
-    }else if( this.itemLog3.serviceDate instanceof Date){
-      return this.itemLog3.serviceDate;
-    }
-     return ''
-  }
-
 }

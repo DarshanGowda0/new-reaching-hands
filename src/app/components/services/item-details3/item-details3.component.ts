@@ -41,11 +41,22 @@ export class ItemDetails3Component implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.dataService.getLogsOfItem3(this.item.itemId).subscribe(val => {
-      this.dataSource = new MatTableDataSource(val);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    });
+    this.dataService.getLogsOfItem3(this.item.itemId)
+      .pipe(
+        map(val => {
+          val.forEach(element => {
+            if (element.date instanceof firestore.Timestamp)
+              element.date = element.date.toDate();
+            element.serviceDate = element.serviceDate.toDate();
+          })
+          return val;
+        })
+      )
+      .subscribe(val => {
+        this.dataSource = new MatTableDataSource(val);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      });
   }
 
   // getCurrentQuantity(val) {
@@ -125,14 +136,6 @@ export class ItemDetails3Component implements OnInit, AfterViewInit {
     });
   }
 
-  showDate(serviceDate) {
 
-    if (serviceDate instanceof firestore.Timestamp) {
-      return serviceDate.toDate();
-    } else if (serviceDate instanceof Date) {
-      return serviceDate;
-    }
-    return '';
-  }
 
 }

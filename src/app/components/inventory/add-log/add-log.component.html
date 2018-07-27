@@ -28,6 +28,11 @@
   <mat-form-field style="display:block;clear: both;">
     <textarea matInput placeholder="Remarks" matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10" [(ngModel)]="itemLog.remarks"></textarea>
   </mat-form-field>
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Choose the Service Date" required [(ngModel)]="itemLog.date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker touchUi="true" #picker></mat-datepicker>
+  </mat-form-field>
   <mat-dialog-actions>
     <button mat-button mat-dialog-close>Cancel</button>
     <button mat-raised-button color="accent" (click)="onAdd()">ADD</button>

@@ -9,6 +9,7 @@ import { Item } from '../../../models/item';
 import { AddLogComponent } from '../add-log/add-log.component';
 import { tap, map, take } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth.service';
+import { firestore } from '../../../../../node_modules/firebase';
 
 @Component({
   selector: 'app-item-details',
@@ -46,12 +47,21 @@ export class ItemDetailsComponent implements OnInit, AfterViewInit {
     this.dataService.getLogsOfItem(this.item.itemId).pipe(
       tap(val => {
         this.currentQuantity = this.getCurrentQuantity(val);
+      }),
+      map(val => {
+        val.forEach(element => {
+          if (element.date instanceof firestore.Timestamp) {
+            element.date = element.date.toDate();
+          }
+        });
+        return val;
       })
-    ).subscribe(val => {
-      this.dataSource = new MatTableDataSource(val);
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-    });
+    )
+      .subscribe(val => {
+        this.dataSource = new MatTableDataSource(val);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      });
   }
 
   getCurrentQuantity(val) {
