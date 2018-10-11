@@ -52,3 +52,4 @@ Thumbs.db
 package-lock.json
 cloud-functions/dev/functions/creds
 cloud-functions/prod/functions/creds
+# remove insensitve data
